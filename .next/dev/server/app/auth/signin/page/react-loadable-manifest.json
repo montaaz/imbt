@@ -1,0 +1,15 @@
+{
+  "[project]/components/three/particle-field.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/components/three/particle-field.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_react-reconciler_dd58c996._.js",
+      "static/chunks/node_modules_three_build_three_core_996ef05a.js",
+      "static/chunks/node_modules_three_build_three_module_0c59ee63.js",
+      "static/chunks/node_modules_three_build_three_module_f7d46d9b.js",
+      "static/chunks/node_modules_@react-three_fiber_dist_fa75a5fe._.js",
+      "static/chunks/node_modules_7c834bab._.js",
+      "static/chunks/components_three_particle-field_tsx_f7ccb5c8._.js",
+      "static/chunks/components_three_particle-field_tsx_ff5c5a28._.js"
+    ]
+  }
+}
