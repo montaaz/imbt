@@ -12,11 +12,14 @@ import Navigation from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { GoogleSignInButton } from "@/components/google-signin-button-simple"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 const ParticleField = dynamic(() => import("@/components/three/particle-field"), { ssr: false })
 
 export default function SignUpPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -36,33 +39,59 @@ export default function SignUpPage() {
     setError("")
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Les mots de passe ne correspondent pas")
+      setError(t.auth.passwordsMismatch)
       setIsLoading(false)
       return
     }
 
-    if (formData.password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères")
+    if (formData.password.length < 6) {
+      setError(t.auth.passwordTooShort)
       setIsLoading(false)
       return
     }
 
-    // Simulate registration
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const response = await fetch("/api/client/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          company: formData.company,
+        }),
+      })
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        email: formData.email,
-        role: "user",
-        name: `${formData.firstName} ${formData.lastName}`,
-        company: formData.company,
-        phone: formData.phone,
-      }),
-    )
+      const data = await response.json()
 
-    router.push("/reservation")
-    setIsLoading(false)
+      if (!response.ok) {
+        setError(data.error || t.errors.somethingWrong)
+        setIsLoading(false)
+        return
+      }
+
+      // Store token and client data
+      localStorage.setItem("client_token", data.token)
+      localStorage.setItem(
+        "client",
+        JSON.stringify({
+          id: data.client.id,
+          email: data.client.email,
+          name: `${data.client.firstName} ${data.client.lastName}`,
+        }),
+      )
+
+      // Redirect to dashboard
+      router.push("/dashboard")
+    } catch (error) {
+      console.error("Signup error:", error)
+      setError(t.errors.somethingWrong)
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -87,8 +116,8 @@ export default function SignUpPage() {
               <Link href="/" className="inline-block mb-6">
                 <span className="text-3xl font-bold gradient-text">IMBT</span>
               </Link>
-              <h1 className="text-3xl font-bold mb-2">Créer un compte</h1>
-              <p className="text-foreground/60">Rejoignez IMBT Consulting</p>
+              <h1 className="text-3xl font-bold mb-2">{t.auth.signUp}</h1>
+              <p className="text-foreground/60">{t.auth.joinIMBT}</p>
             </div>
 
             <div className="p-8 rounded-3xl glass glow-primary">
@@ -101,26 +130,26 @@ export default function SignUpPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">Prénom</Label>
+                    <Label htmlFor="firstName">{t.auth.firstName}</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                       <Input
                         id="firstName"
                         value={formData.firstName}
                         onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                        placeholder="Prénom"
+                        placeholder={t.auth.firstName}
                         required
                         className="pl-10 bg-card/50 border-border/50"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Nom</Label>
+                    <Label htmlFor="lastName">{t.auth.lastName}</Label>
                     <Input
                       id="lastName"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      placeholder="Nom"
+                      placeholder={t.auth.lastName}
                       required
                       className="bg-card/50 border-border/50"
                     />
@@ -128,7 +157,7 @@ export default function SignUpPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t.auth.email}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                     <Input
@@ -145,7 +174,7 @@ export default function SignUpPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Téléphone</Label>
+                    <Label htmlFor="phone">{t.auth.phone}</Label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                       <Input
@@ -159,14 +188,14 @@ export default function SignUpPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="company">Entreprise</Label>
+                    <Label htmlFor="company">{t.auth.company}</Label>
                     <div className="relative">
                       <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                       <Input
                         id="company"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="Votre entreprise"
+                        placeholder={t.auth.company}
                         className="pl-10 bg-card/50 border-border/50"
                       />
                     </div>
@@ -174,7 +203,7 @@ export default function SignUpPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Mot de passe</Label>
+                  <Label htmlFor="password">{t.auth.password}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                     <Input
@@ -194,11 +223,11 @@ export default function SignUpPage() {
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
-                  <p className="text-xs text-foreground/50">Minimum 8 caractères</p>
+                  <p className="text-xs text-foreground/50">{t.auth.minCharacters}</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+                  <Label htmlFor="confirmPassword">{t.auth.confirmPassword}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                     <Input
@@ -216,13 +245,13 @@ export default function SignUpPage() {
                 <div className="flex items-start gap-2">
                   <input type="checkbox" required className="w-4 h-4 rounded border-border bg-card/50 mt-1" />
                   <span className="text-sm text-foreground/60">
-                    {"J'accepte les "}
+                    {t.auth.acceptTerms}{" "}
                     <Link href="/cgv" className="text-primary hover:underline">
-                      conditions générales
+                      {t.auth.termsAndConditions}
                     </Link>
-                    {" et la "}
+                    {" "}{t.common.and}{" "}
                     <Link href="/confidentialite" className="text-primary hover:underline">
-                      politique de confidentialité
+                      {t.auth.privacyPolicy}
                     </Link>
                   </span>
                 </div>
@@ -231,22 +260,32 @@ export default function SignUpPage() {
                   {isLoading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2" />
-                      Création du compte...
+                      {t.auth.signingUp}
                     </>
                   ) : (
                     <>
-                      Créer mon compte
+                      {t.auth.signUpButton}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
                 </Button>
               </form>
 
+              <div className="my-6 flex items-center gap-4">
+                <div className="flex-1 border-t border-border/50"></div>
+                <span className="text-sm text-foreground/40">{t.auth.or}</span>
+                <div className="flex-1 border-t border-border/50"></div>
+              </div>
+
+              <GoogleSignInButton
+                onError={(error) => setError(error)}
+              />
+
               <div className="mt-6 text-center">
                 <p className="text-foreground/60 text-sm">
-                  {"Déjà un compte ? "}
+                  {t.auth.alreadyHaveAccount}{" "}
                   <Link href="/auth/signin" className="text-primary hover:underline font-medium">
-                    Se connecter
+                    {t.auth.signInButton}
                   </Link>
                 </p>
               </div>

@@ -22,84 +22,86 @@ import dynamic from "next/dynamic"
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"), { ssr: false })
 
 gsap.registerPlugin(ScrollTrigger)
 
-const services = [
-  {
-    icon: Rocket,
-    title: "Conseil en Transformation Digitale",
-    description:
-      "Nous élaborons des stratégies digitales personnalisées pour maximiser votre impact sur le marché. Nos experts analysent vos besoins et développent des plans d'action concrets pour vous aider à atteindre vos objectifs.",
-    features: [
-      "Audit digital complet",
-      "Stratégie de transformation",
-      "Accompagnement au changement",
-      "Mesure des performances",
-    ],
-    color: "from-primary to-primary/50",
-  },
-  {
-    icon: Monitor,
-    title: "Développement Web & Applications",
-    description:
-      "Nous créons des sites web performants et adaptés à votre activité. Que vous ayez besoin d'une vitrine en ligne ou d'une solution e-commerce, notre équipe de développeurs met en œuvre des technologies de pointe.",
-    features: ["Sites web sur mesure", "Applications mobiles", "E-commerce", "Maintenance & support"],
-    color: "from-accent to-accent/50",
-  },
-  {
-    icon: GraduationCap,
-    title: "Formations Digitales",
-    description:
-      "Nous proposons des formations complètes pour vous aider à maîtriser les outils et les technologies digitales. Que vous soyez débutant ou avancé, nos programmes sont conçus pour vous fournir les compétences nécessaires.",
-    features: ["Formations personnalisées", "Ateliers pratiques", "Certifications reconnues", "Suivi post-formation"],
-    color: "from-primary to-accent",
-  },
-  {
-    icon: Users,
-    title: "CRM - Gestion de la Relation Client",
-    description:
-      "Implémentation de systèmes de gestion de la relation client pour optimiser votre acquisition et fidélisation client. Nous vous aidons à mieux connaître vos clients.",
-    features: [
-      "Analyse des besoins CRM",
-      "Implémentation Salesforce/HubSpot",
-      "Migration des données",
-      "Formation des équipes",
-    ],
-    color: "from-accent to-primary",
-  },
-  {
-    icon: Settings,
-    title: "ERP - Gestion Intégrée",
-    description:
-      "Mise en place de systèmes de gestion intégrés pour une meilleure efficacité opérationnelle. Centralisez vos processus et optimisez vos ressources.",
-    features: [
-      "Audit des processus",
-      "Sélection de solution ERP",
-      "Déploiement & intégration",
-      "Optimisation continue",
-    ],
-    color: "from-primary/80 to-accent/80",
-  },
-  {
-    icon: TrendingUp,
-    title: "Marketing Digital",
-    description:
-      "Optimisation des campagnes digitales et mise en place d'une stratégie marketing omnicanal pour une meilleure acquisition et fidélisation client.",
-    features: ["SEO & SEA", "Réseaux sociaux", "Email marketing", "Analytics & reporting"],
-    color: "from-accent/80 to-primary/80",
-  },
-]
-
-const benefits = [
-  { icon: Zap, title: "Rapidité", description: "Résultats visibles en quelques semaines" },
-  { icon: Shield, title: "Expertise", description: "10+ ans d'expérience dans le digital" },
-  { icon: Clock, title: "Support 24/7", description: "Accompagnement continu" },
-]
-
 export default function ServicesPage() {
+  const { t } = useLanguage()
+
+  const services = [
+    {
+      icon: Rocket,
+      titleKey: t.serviceCards.transformation.title,
+      descriptionKey: t.serviceCards.transformation.description,
+      features: [
+        "Audit digital complet",
+        "Stratégie de transformation",
+        "Accompagnement au changement",
+        "Mesure des performances",
+      ],
+      color: "from-primary to-primary/50",
+      link: "/services/conseil-transformation-digitale",
+    },
+    {
+      icon: Monitor,
+      titleKey: t.serviceCards.development.title,
+      descriptionKey: t.serviceCards.development.description,
+      features: ["Sites web sur mesure", "Applications mobiles", "E-commerce", "Maintenance & support"],
+      color: "from-accent to-accent/50",
+      link: "/services/developpement-gestion-it",
+    },
+    {
+      icon: GraduationCap,
+      titleKey: t.serviceCards.training.title,
+      descriptionKey: t.serviceCards.training.description,
+      features: ["Formations personnalisées", "Ateliers pratiques", "Certifications reconnues", "Suivi post-formation"],
+      color: "from-primary to-accent",
+      link: "/services/formations-digitales",
+    },
+    {
+      icon: Users,
+      titleKey: t.serviceCards.crm.title,
+      descriptionKey: t.serviceCards.crm.description,
+      features: [
+        "Analyse des besoins CRM",
+        "Implémentation Salesforce/HubSpot",
+        "Migration des données",
+        "Formation des équipes",
+      ],
+      color: "from-accent to-primary",
+      link: "/services/crm-gestion-relation-client",
+    },
+    {
+      icon: Settings,
+      titleKey: t.serviceCards.erp.title,
+      descriptionKey: t.serviceCards.erp.description,
+      features: [
+        "Audit des processus",
+        "Sélection de solution ERP",
+        "Déploiement & intégration",
+        "Optimisation continue",
+      ],
+      color: "from-primary/80 to-accent/80",
+      link: "/services/erp-gestion-integree",
+    },
+    {
+      icon: TrendingUp,
+      titleKey: t.serviceCards.marketing.title,
+      descriptionKey: t.serviceCards.marketing.description,
+      features: ["SEO & SEA", "Réseaux sociaux", "Email marketing", "Analytics & reporting"],
+      color: "from-accent/80 to-primary/80",
+      link: "/services/marketing-digital",
+    },
+  ]
+
+  const benefits = [
+    { icon: Zap, title: "Rapidité", description: "Résultats visibles en quelques semaines" },
+    { icon: Shield, title: "Expertise", description: "10+ ans d'expérience dans le digital" },
+    { icon: Clock, title: "Support 24/7", description: "Accompagnement continu" },
+  ]
   const heroRef = useRef<HTMLElement>(null)
   const servicesRef = useRef<HTMLDivElement>(null)
 
@@ -144,13 +146,12 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">Nos Services</span>
+            <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">{t.common.services}</span>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
-              Une gamme complète de <span className="gradient-text">solutions digitales</span>
+              {t.servicesSection.title} <span className="gradient-text">{t.servicesSection.subtitle}</span>
             </h1>
             <p className="text-foreground/60 text-xl leading-relaxed max-w-2xl mx-auto">
-              Chacune de nos interventions est conçue pour stimuler votre croissance, améliorer votre efficacité
-              opérationnelle, et maximiser vos performances.
+              {t.servicesSection.description}
             </p>
           </motion.div>
 
@@ -191,8 +192,8 @@ export default function ServicesPage() {
                   >
                     <service.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-bold mb-4">{service.title}</h2>
-                  <p className="text-foreground/60 text-lg leading-relaxed mb-8">{service.description}</p>
+                  <h2 className="text-3xl sm:text-4xl font-bold mb-4">{service.titleKey}</h2>
+                  <p className="text-foreground/60 text-lg leading-relaxed mb-8">{service.descriptionKey}</p>
 
                   <div className="grid sm:grid-cols-2 gap-4 mb-8">
                     {service.features.map((feature, featureIndex) => (
@@ -203,12 +204,19 @@ export default function ServicesPage() {
                     ))}
                   </div>
 
-                  <Link href="/reservation">
-                    <Button className="group">
-                      Demander un devis
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link href={service.link}>
+                      <Button className="group">
+                        {t.servicesSection.learnMore}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                    <Link href="/reservation">
+                      <Button variant="outline" className="group bg-transparent">
+                        {t.common.reserve}
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
 
                 <div className={`relative ${index % 2 === 1 ? "lg:order-1" : ""}`}>
@@ -250,22 +258,21 @@ export default function ServicesPage() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center p-12 rounded-3xl glass glow-primary">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Prêt à transformer votre <span className="gradient-text">entreprise</span> ?
+              {t.ctaSection.title}
             </h2>
             <p className="text-foreground/60 text-lg mb-8 max-w-2xl mx-auto">
-              Contactez-nous pour une consultation gratuite et découvrez comment nous pouvons vous aider à atteindre vos
-              objectifs.
+              {t.ctaSection.description}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/reservation">
                 <Button size="lg" className="glow-primary">
-                  Réserver une consultation
+                  {t.ctaSection.bookConsultation}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button variant="outline" size="lg" className="bg-transparent">
-                  Nous contacter
+                  {t.ctaSection.contactUs}
                 </Button>
               </Link>
             </div>

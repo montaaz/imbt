@@ -7,11 +7,13 @@ import { ArrowRight, Calendar, Mail, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { TextReveal, Magnetic } from "@/components/gsap/section-transitions"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 export default function CTASection() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
   const [particles, setParticles] = useState<Array<{ id: number; left: number; bottom: number }>>([])
+  const { t } = useLanguage()
 
   useEffect(() => {
     setParticles(
@@ -86,11 +88,11 @@ export default function CTASection() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass border border-accent/40 mb-8"
           >
             <Sparkles className="h-4 w-4 text-accent animate-pulse" />
-            <span className="text-sm font-medium text-foreground/80">Prêt à transformer votre entreprise ?</span>
+            <span className="text-sm font-medium text-foreground/80">{t.ctaSection.badge}</span>
           </motion.div>
 
           <TextReveal
-            text="Commencez votre transformation digitale aujourd'hui"
+            text={t.ctaSection.title}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-8"
           />
 
@@ -100,8 +102,7 @@ export default function CTASection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-foreground/60 text-lg leading-relaxed mb-12 max-w-2xl mx-auto"
           >
-            Contactez-nous pour une consultation gratuite. Nos experts analyseront vos besoins et développeront un plan
-            d'action personnalisé pour atteindre vos objectifs.
+            {t.ctaSection.description}
           </motion.p>
 
           <motion.div
@@ -112,14 +113,14 @@ export default function CTASection() {
           >
             <Magnetic strength={0.4}>
               <Link href="/reservation">
-                <Button size="lg" className="glow-primary group text-lg px-10 py-7 relative overflow-hidden">
+                <Button size="lg" className="group text-lg px-10 py-7 relative overflow-hidden bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
                   <span className="relative z-10 flex items-center font-semibold">
                     <Calendar className="mr-2 h-5 w-5" />
-                    Réserver une consultation
+                    {t.ctaSection.bookConsultation}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
                   </span>
                   <div
-                    className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute inset-0 bg-gradient-to-r from-[#a80202] via-[#c00000] to-[#a80202] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ backgroundSize: "200% 100%" }}
                   />
                 </Button>
@@ -134,7 +135,7 @@ export default function CTASection() {
                   className="text-lg px-10 py-7 border-primary/40 hover:bg-primary/20 bg-transparent group"
                 >
                   <Mail className="mr-2 h-5 w-5" />
-                  Nous contacter
+                  {t.ctaSection.contactUs}
                 </Button>
               </Link>
             </Magnetic>
@@ -147,7 +148,7 @@ export default function CTASection() {
             transition={{ duration: 0.6, delay: 0.8 }}
             className="mt-10 text-foreground/50"
           >
-            Ou envoyez-nous un email à{" "}
+            {t.ctaSection.emailUs}{" "}
             <a
               href="mailto:contact@imbt-consulting.com"
               className="text-primary hover:text-accent transition-colors font-medium underline-offset-4 hover:underline"

@@ -19,6 +19,10 @@ import {
   TrendingUp,
   ChevronLeft,
   ChevronRight,
+  Lock,
+  Eye,
+  EyeOff,
+  LogIn,
 } from "lucide-react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
@@ -28,40 +32,21 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { GoogleSignInButton } from "@/components/google-signin-button-simple"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"), { ssr: false })
 
-const services = [
-  { id: "transformation", icon: Rocket, label: "Transformation Digitale", duration: "1h30" },
-  { id: "developpement", icon: Monitor, label: "Développement Web", duration: "1h" },
-  { id: "formation", icon: GraduationCap, label: "Formation", duration: "2h" },
-  { id: "marketing", icon: TrendingUp, label: "Marketing Digital", duration: "1h" },
-]
-
 const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"]
-
-const DAYS_FR = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]
-const MONTHS_FR = [
-  "Janvier",
-  "Février",
-  "Mars",
-  "Avril",
-  "Mai",
-  "Juin",
-  "Juillet",
-  "Août",
-  "Septembre",
-  "Octobre",
-  "Novembre",
-  "Décembre",
-]
 
 function FullCalendar({
   selectedDate,
   onSelectDate,
+  t,
 }: {
   selectedDate: string
   onSelectDate: (date: string) => void
+  t: any
 }) {
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState(today.getMonth())
@@ -126,40 +111,40 @@ function FullCalendar({
   return (
     <div className="w-full">
       {/* Month Navigation */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
         <Button
           variant="outline"
           size="icon"
           onClick={goToPreviousMonth}
           disabled={isPastMonth()}
-          className="bg-transparent border-border/50 hover:bg-primary/10 hover:border-primary disabled:opacity-30"
+          className="bg-transparent border-border/50 hover:bg-primary/10 hover:border-primary disabled:opacity-30 h-8 w-8 sm:h-10 sm:w-10"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
 
         <motion.h3
           key={`${currentMonth}-${currentYear}`}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-xl font-bold"
+          className="text-base sm:text-lg md:text-xl font-bold"
         >
-          {MONTHS_FR[currentMonth]} {currentYear}
+          {t.reservation.months[currentMonth]} {currentYear}
         </motion.h3>
 
         <Button
           variant="outline"
           size="icon"
           onClick={goToNextMonth}
-          className="bg-transparent border-border/50 hover:bg-primary/10 hover:border-primary"
+          className="bg-transparent border-border/50 hover:bg-primary/10 hover:border-primary h-8 w-8 sm:h-10 sm:w-10"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
       </div>
 
       {/* Days of Week Header */}
-      <div className="grid grid-cols-7 gap-1 mb-2">
-        {DAYS_FR.map((day) => (
-          <div key={day} className="text-center text-sm font-medium text-foreground/50 py-2">
+      <div className="grid grid-cols-7 gap-0.5 sm:gap-1 mb-1 sm:mb-2">
+        {t.reservation.days.map((day: string) => (
+          <div key={day} className="text-center text-[10px] sm:text-xs md:text-sm font-medium text-foreground/50 py-1 sm:py-2">
             {day}
           </div>
         ))}
@@ -173,14 +158,14 @@ function FullCalendar({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="grid grid-cols-7 gap-1"
+          className="grid grid-cols-7 gap-0.5 sm:gap-1"
         >
           {calendarDays.map((date, index) => {
             if (!date) {
               return <div key={`empty-${index}`} className="aspect-square" />
             }
 
-            const dateStr = date.toISOString().split("T")[0]
+            const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
             const isSelected = selectedDate === dateStr
             const isDisabled = isDateDisabled(date)
             const isToday = date.toDateString() === today.toDateString()
@@ -188,28 +173,28 @@ function FullCalendar({
             return (
               <motion.button
                 key={dateStr}
-                whileHover={!isDisabled ? { scale: 1.1 } : {}}
+                whileHover={!isDisabled ? { scale: 1.05 } : {}}
                 whileTap={!isDisabled ? { scale: 0.95 } : {}}
                 onClick={() => !isDisabled && onSelectDate(dateStr)}
                 disabled={isDisabled}
                 className={`
-                  aspect-square rounded-xl flex items-center justify-center text-sm font-medium
+                  aspect-square rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-sm font-medium
                   transition-all duration-200 relative
                   ${
                     isSelected
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                      ? "bg-primary text-primary-foreground shadow-md sm:shadow-lg shadow-primary/30"
                       : isDisabled
                         ? "text-foreground/20 cursor-not-allowed"
                         : "hover:bg-primary/20 hover:text-primary"
                   }
-                  ${isToday && !isSelected ? "ring-2 ring-accent ring-offset-2 ring-offset-background" : ""}
+                  ${isToday && !isSelected ? "ring-1 sm:ring-2 ring-accent ring-offset-1 sm:ring-offset-2 ring-offset-background" : ""}
                 `}
               >
                 {date.getDate()}
                 {isSelected && (
                   <motion.div
                     layoutId="selected-date"
-                    className="absolute inset-0 bg-primary rounded-xl -z-10"
+                    className="absolute inset-0 bg-primary rounded-lg sm:rounded-xl -z-10"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -220,18 +205,18 @@ function FullCalendar({
       </AnimatePresence>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-6 mt-6 text-sm text-foreground/50">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full ring-2 ring-accent" />
-          <span>Aujourd'hui</span>
+      <div className="flex items-center justify-center gap-3 sm:gap-6 mt-4 sm:mt-6 text-xs sm:text-sm text-foreground/50">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full ring-1 sm:ring-2 ring-accent" />
+          <span>{t.reservation.today}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-primary" />
-          <span>Sélectionné</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-primary" />
+          <span>{t.reservation.selected}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-foreground/20" />
-          <span>Indisponible</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-foreground/20" />
+          <span>{t.reservation.unavailable}</span>
         </div>
       </div>
     </div>
@@ -239,10 +224,20 @@ function FullCalendar({
 }
 
 export default function ReservationPage() {
+  const { t } = useLanguage()
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [user, setUser] = useState<{ name?: string; email?: string; phone?: string; company?: string } | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [clientToken, setClientToken] = useState<string | null>(null)
+
+  const services = [
+    { id: "transformation", icon: Rocket, label: t.serviceCards.transformation.title, duration: "30 m" },
+    { id: "developpement", icon: Monitor, label: t.serviceCards.development.title, duration: "30 m" },
+    { id: "formation", icon: GraduationCap, label: t.serviceCards.training.title, duration: "30 m" },
+    { id: "marketing", icon: TrendingUp, label: t.serviceCards.marketing.title, duration: "30 m" },
+  ]
 
   const [formData, setFormData] = useState({
     service: "",
@@ -254,6 +249,7 @@ export default function ReservationPage() {
     phone: "",
     company: "",
     message: "",
+    password: "",
   })
 
   useEffect(() => {
@@ -275,9 +271,56 @@ export default function ReservationPage() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    setSubmitted(true)
+
+    try {
+      const response = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          message: formData.message,
+          password: formData.password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de la réservation')
+      }
+
+      // If we got a token, store it for automatic login
+      if (data.token) {
+        setClientToken(data.token)
+        localStorage.setItem("client_token", data.token)
+        localStorage.setItem(
+          "client",
+          JSON.stringify({
+            id: data.clientId,
+            email: formData.email,
+            name: `${formData.firstName} ${formData.lastName}`,
+          })
+        )
+      }
+
+      // Success
+      setIsSubmitting(false)
+      setSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting reservation:', error)
+      setIsSubmitting(false)
+      // Show error to user
+      alert(error instanceof Error ? error.message : 'Erreur lors de la réservation. Veuillez réessayer.')
+    }
   }
 
   const selectedService = services.find((s) => s.id === formData.service)
@@ -298,45 +341,78 @@ export default function ReservationPage() {
               <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="h-10 w-10 text-accent" />
               </div>
-              <h1 className="text-3xl font-bold mb-4">Réservation confirmée !</h1>
+              <h1 className="text-3xl font-bold mb-4">{t.reservation.confirmed}</h1>
               <p className="text-foreground/60 mb-6">
-                Votre consultation a été réservée avec succès. Vous recevrez un email de confirmation avec tous les
-                détails.
+                {t.reservation.confirmationEmail}
               </p>
 
               <div className="p-6 rounded-2xl bg-card/50 mb-8 text-left">
-                <h3 className="font-semibold mb-4">Récapitulatif</h3>
+                <h3 className="font-semibold mb-4">{t.reservation.summary}</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-foreground/60">Service:</span>
+                    <span className="text-foreground/60">{t.reservation.service}:</span>
                     <span className="font-medium">{selectedService?.label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-foreground/60">Date:</span>
+                    <span className="text-foreground/60">{t.reservation.date}:</span>
                     <span className="font-medium">
                       {formData.date &&
-                        new Date(formData.date).toLocaleDateString("fr-FR", {
-                          weekday: "long",
-                          day: "numeric",
-                          month: "long",
-                        })}
+                        (() => {
+                          const [year, month, day] = formData.date.split('-').map(Number)
+                          const date = new Date(year, month - 1, day)
+                          return date.toLocaleDateString("fr-FR", {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                          })
+                        })()}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-foreground/60">Heure:</span>
+                    <span className="text-foreground/60">{t.reservation.time}:</span>
                     <span className="font-medium">{formData.time}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-foreground/60">Durée:</span>
+                    <span className="text-foreground/60">{t.reservation.duration}:</span>
                     <span className="font-medium">{selectedService?.duration}</span>
                   </div>
                 </div>
               </div>
 
+              {!clientToken && (
+                <div className="mb-6">
+                  <p className="text-foreground/60 mb-4 text-sm">
+                    {t.reservation.createAccountPrompt}
+                  </p>
+                  <GoogleSignInButton
+                    onSuccess={() => {
+                      // Redirect to dashboard after successful Google sign-in
+                      window.location.href = '/dashboard'
+                    }}
+                    onError={(error) => {
+                      console.error('Google sign-in error:', error)
+                    }}
+                  />
+                  <div className="mt-3 text-center">
+                    <Link href="/auth/client-login" className="text-sm text-primary hover:underline">
+                      {t.reservation.orSignInWithPassword}
+                    </Link>
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                {clientToken && (
+                  <Link href="/dashboard">
+                    <Button className="glow-primary w-full sm:w-auto">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      {t.reservation.viewDashboard}
+                    </Button>
+                  </Link>
+                )}
                 <Link href="/">
-                  <Button variant="outline" className="bg-transparent">
-                    Retour à l'accueil
+                  <Button variant="outline" className="bg-transparent w-full sm:w-auto">
+                    {t.reservation.backToHome}
                   </Button>
                 </Link>
                 <Button
@@ -349,11 +425,13 @@ export default function ReservationPage() {
                       date: "",
                       time: "",
                       message: "",
+                      password: "",
                     })
                   }}
-                  className="glow-primary"
+                  variant="outline"
+                  className="w-full sm:w-auto"
                 >
-                  Nouvelle réservation
+                  {t.reservation.newReservation}
                 </Button>
               </div>
             </motion.div>
@@ -368,40 +446,40 @@ export default function ReservationPage() {
       <FloatingShapes />
       <Navigation />
 
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-56 h-56 sm:w-80 sm:h-80 bg-accent/10 rounded-full blur-3xl" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="max-w-3xl mx-auto"
           >
-            <div className="text-center mb-12">
-              <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">Réservation</span>
-              <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-                Réservez votre <span className="gradient-text">consultation</span>
+            <div className="text-center mb-8 sm:mb-10 md:mb-12">
+              <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">{t.common.reservation}</span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 px-2">
+                {t.reservation.subtitle} <span className="gradient-text">{t.nav.consulting}</span>
               </h1>
-              <p className="text-foreground/60 text-lg">
-                Choisissez le service souhaité et sélectionnez un créneau qui vous convient.
+              <p className="text-foreground/60 text-sm sm:text-base md:text-lg px-4">
+                {t.reservation.description}
               </p>
 
               {!user && (
                 <p className="mt-4 text-sm text-foreground/50">
                   <Link href="/auth/signin" className="text-primary hover:underline">
-                    Connectez-vous
+                    {t.auth.signIn}
                   </Link>
-                  {" pour pré-remplir vos informations"}
+                  {" " + t.reservation.createAccountDesc.toLowerCase()}
                 </p>
               )}
             </div>
 
             {/* Progress Steps */}
-            <div className="flex items-center justify-center mb-12">
+            <div className="flex items-center justify-center mb-8 sm:mb-10 md:mb-12">
               {[1, 2, 3].map((s) => (
                 <div key={s} className="flex items-center">
                   <motion.div
@@ -410,24 +488,24 @@ export default function ReservationPage() {
                       scale: step === s ? 1.1 : 1,
                       backgroundColor: step >= s ? "hsl(var(--primary))" : "hsl(var(--muted))",
                     }}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm sm:text-base font-semibold transition-colors ${
                       step >= s ? "text-primary-foreground" : "text-muted-foreground"
                     }`}
                   >
-                    {step > s ? <CheckCircle2 className="h-5 w-5" /> : s}
+                    {step > s ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : s}
                   </motion.div>
                   {s < 3 && (
                     <motion.div
                       initial={false}
                       animate={{ backgroundColor: step > s ? "hsl(var(--primary))" : "hsl(var(--muted))" }}
-                      className="w-16 h-1 mx-2"
+                      className="w-8 sm:w-12 md:w-16 h-0.5 sm:h-1 mx-1 sm:mx-2"
                     />
                   )}
                 </div>
               ))}
             </div>
 
-            <div className="p-8 rounded-3xl glass glow-primary">
+            <div className="p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl glass glow-primary">
               <AnimatePresence mode="wait">
                 {/* Step 1: Select Service */}
                 {step === 1 && (
@@ -436,10 +514,10 @@ export default function ReservationPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="space-y-4 sm:space-y-6"
                   >
-                    <h2 className="text-2xl font-bold mb-6">Choisissez un service</h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{t.reservation.chooseService}</h2>
+                    <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                       {services.map((service, index) => (
                         <motion.button
                           key={service.id}
@@ -449,9 +527,9 @@ export default function ReservationPage() {
                           whileHover={{ scale: 1.02, y: -2 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => setFormData({ ...formData, service: service.id })}
-                          className={`p-6 rounded-2xl border-2 transition-all text-left ${
+                          className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all text-left ${
                             formData.service === service.id
-                              ? "border-primary bg-primary/10 shadow-lg shadow-primary/20"
+                              ? "border-primary bg-primary/10 shadow-md sm:shadow-lg shadow-primary/20"
                               : "border-border hover:border-primary/50 bg-card/50"
                           }`}
                         >
@@ -481,7 +559,7 @@ export default function ReservationPage() {
 
                     <div className="flex justify-end pt-4">
                       <Button onClick={() => setStep(2)} disabled={!formData.service} className="glow-primary">
-                        Continuer
+                        {t.reservation.continue}
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     </div>
@@ -497,17 +575,18 @@ export default function ReservationPage() {
                     exit={{ opacity: 0, x: -20 }}
                     className="space-y-8"
                   >
-                    <h2 className="text-2xl font-bold">Choisissez une date et un créneau</h2>
+                    <h2 className="text-2xl font-bold">{t.reservation.chooseDateTime}</h2>
 
                     {/* Full Calendar */}
                     <div className="p-6 rounded-2xl bg-card/30 border border-border/50">
                       <div className="flex items-center gap-2 mb-4">
                         <Calendar className="h-5 w-5 text-primary" />
-                        <Label className="text-lg font-medium">Sélectionnez une date</Label>
+                        <Label className="text-lg font-medium">{t.reservation.selectDate}</Label>
                       </div>
                       <FullCalendar
                         selectedDate={formData.date}
                         onSelectDate={(date) => setFormData({ ...formData, date, time: "" })}
+                        t={t}
                       />
                     </div>
 
@@ -523,12 +602,16 @@ export default function ReservationPage() {
                           <div className="flex items-center gap-2 mb-4">
                             <Clock className="h-5 w-5 text-primary" />
                             <Label className="text-lg font-medium">
-                              Horaires disponibles pour le{" "}
-                              {new Date(formData.date).toLocaleDateString("fr-FR", {
-                                weekday: "long",
-                                day: "numeric",
-                                month: "long",
-                              })}
+                              {t.reservation.availableSlots}{" "}
+                              {(() => {
+                                const [year, month, day] = formData.date.split('-').map(Number)
+                                const date = new Date(year, month - 1, day)
+                                return date.toLocaleDateString("fr-FR", {
+                                  weekday: "long",
+                                  day: "numeric",
+                                  month: "long",
+                                })
+                              })()}
                             </Label>
                           </div>
                           <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
@@ -561,14 +644,14 @@ export default function ReservationPage() {
                     <div className="flex justify-between pt-4">
                       <Button variant="outline" onClick={() => setStep(1)} className="bg-transparent">
                         <ArrowLeft className="mr-2 h-5 w-5" />
-                        Retour
+                        {t.common.back}
                       </Button>
                       <Button
                         onClick={() => setStep(3)}
                         disabled={!formData.date || !formData.time}
                         className="glow-primary"
                       >
-                        Continuer
+                        {t.reservation.continue}
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     </div>
@@ -584,30 +667,30 @@ export default function ReservationPage() {
                     exit={{ opacity: 0, x: -20 }}
                     className="space-y-6"
                   >
-                    <h2 className="text-2xl font-bold mb-6">Vos informations</h2>
+                    <h2 className="text-2xl font-bold mb-6">{t.reservation.yourInfo}</h2>
 
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">
                           <User className="h-4 w-4 inline mr-2" />
-                          Prénom
+                          {t.auth.firstName}
                         </Label>
                         <Input
                           id="firstName"
                           value={formData.firstName}
                           onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          placeholder="Votre prénom"
+                          placeholder={t.auth.firstName}
                           required
                           className="bg-card/50 border-border/50"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lastName">Nom</Label>
+                        <Label htmlFor="lastName">{t.auth.lastName}</Label>
                         <Input
                           id="lastName"
                           value={formData.lastName}
                           onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          placeholder="Votre nom"
+                          placeholder={t.auth.lastName}
                           required
                           className="bg-card/50 border-border/50"
                         />
@@ -617,7 +700,7 @@ export default function ReservationPage() {
                     <div className="space-y-2">
                       <Label htmlFor="email">
                         <Mail className="h-4 w-4 inline mr-2" />
-                        Email
+                        {t.auth.email}
                       </Label>
                       <Input
                         id="email"
@@ -634,7 +717,7 @@ export default function ReservationPage() {
                       <div className="space-y-2">
                         <Label htmlFor="phone">
                           <Phone className="h-4 w-4 inline mr-2" />
-                          Téléphone
+                          {t.auth.phone}
                         </Label>
                         <Input
                           id="phone"
@@ -648,28 +731,57 @@ export default function ReservationPage() {
                       <div className="space-y-2">
                         <Label htmlFor="company">
                           <Building className="h-4 w-4 inline mr-2" />
-                          Entreprise
+                          {t.auth.company}
                         </Label>
                         <Input
                           id="company"
                           value={formData.company}
                           onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                          placeholder="Votre entreprise"
+                          placeholder={t.auth.company}
                           className="bg-card/50 border-border/50"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
+                      <Label htmlFor="password">
+                        <Lock className="h-4 w-4 inline mr-2" />
+                        {t.reservation.createPassword}
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          value={formData.password}
+                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                          placeholder={t.auth.minCharacters}
+                          required
+                          minLength={6}
+                          className="bg-card/50 border-border/50 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground"
+                        >
+                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                      </div>
+                      <p className="text-xs text-foreground/60">
+                        {t.reservation.passwordHint}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
                       <Label htmlFor="message">
                         <MessageSquare className="h-4 w-4 inline mr-2" />
-                        Message (optionnel)
+                        {t.reservation.messageLabel}
                       </Label>
                       <Textarea
                         id="message"
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Décrivez brièvement votre projet ou vos besoins..."
+                        placeholder={t.reservation.messagePlaceholder}
                         rows={4}
                         className="bg-card/50 border-border/50 resize-none"
                       />
@@ -683,26 +795,30 @@ export default function ReservationPage() {
                     >
                       <h3 className="font-semibold mb-4 flex items-center gap-2">
                         <CheckCircle2 className="h-5 w-5 text-primary" />
-                        Récapitulatif de votre réservation
+                        {t.reservation.summary}
                       </h3>
                       <div className="grid sm:grid-cols-3 gap-4 text-sm">
                         <div className="p-3 rounded-lg bg-background/50">
-                          <span className="text-foreground/60 block mb-1">Service</span>
+                          <span className="text-foreground/60 block mb-1">{t.reservation.service}</span>
                           <p className="font-medium">{selectedService?.label}</p>
                         </div>
                         <div className="p-3 rounded-lg bg-background/50">
-                          <span className="text-foreground/60 block mb-1">Date</span>
+                          <span className="text-foreground/60 block mb-1">{t.reservation.date}</span>
                           <p className="font-medium">
                             {formData.date &&
-                              new Date(formData.date).toLocaleDateString("fr-FR", {
-                                weekday: "short",
-                                day: "numeric",
-                                month: "long",
-                              })}
+                              (() => {
+                                const [year, month, day] = formData.date.split('-').map(Number)
+                                const date = new Date(year, month - 1, day)
+                                return date.toLocaleDateString("fr-FR", {
+                                  weekday: "short",
+                                  day: "numeric",
+                                  month: "long",
+                                })
+                              })()}
                           </p>
                         </div>
                         <div className="p-3 rounded-lg bg-background/50">
-                          <span className="text-foreground/60 block mb-1">Heure</span>
+                          <span className="text-foreground/60 block mb-1">{t.reservation.time}</span>
                           <p className="font-medium">
                             {formData.time} ({selectedService?.duration})
                           </p>
@@ -713,7 +829,7 @@ export default function ReservationPage() {
                     <div className="flex justify-between pt-4">
                       <Button variant="outline" onClick={() => setStep(2)} className="bg-transparent">
                         <ArrowLeft className="mr-2 h-5 w-5" />
-                        Retour
+                        {t.common.back}
                       </Button>
                       <Button
                         onClick={handleSubmit}
@@ -728,7 +844,7 @@ export default function ReservationPage() {
                           />
                         ) : (
                           <>
-                            Confirmer
+                            {t.reservation.confirmReservation}
                             <CheckCircle2 className="ml-2 h-5 w-5" />
                           </>
                         )}

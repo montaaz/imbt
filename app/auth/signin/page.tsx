@@ -12,11 +12,13 @@ import Navigation from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 const ParticleField = dynamic(() => import("@/components/three/particle-field"), { ssr: false })
 
 export default function SignInPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -30,21 +32,53 @@ export default function SignInPage() {
     setIsLoading(true)
     setError("")
 
-    // Demo authentication - in production, this would connect to your backend
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
 
-    // For demo purposes - check for demo credentials
-    if (formData.email === "admin@imbt.com" && formData.password === "admin123") {
-      localStorage.setItem("user", JSON.stringify({ email: formData.email, role: "admin", name: "Admin" }))
-      router.push("/admin")
-    } else if (formData.email && formData.password) {
-      localStorage.setItem("user", JSON.stringify({ email: formData.email, role: "user", name: "Utilisateur" }))
-      router.push("/reservation")
-    } else {
-      setError("Identifiants incorrects")
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || t.auth.invalidCredentials)
+        setIsLoading(false)
+        return
+      }
+
+      // Store token and user data
+      localStorage.setItem("token", data.token)
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: data.user.id,
+          email: data.user.email,
+          name: `${data.user.firstName} ${data.user.lastName}`,
+          role: data.user.role,
+        })
+      )
+
+      // Redirect based on user role
+      if (data.user.role === "admin" || data.user.role === "manager") {
+        // Admins and managers go to admin dashboard
+        router.push("/admin")
+      } else {
+        // Regular users go to their client dashboard
+        // Also store client_token for dashboard compatibility
+        localStorage.setItem("client_token", data.token)
+        router.push("/dashboard")
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      setError(t.errors.somethingWrong)
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
 
   return (
@@ -69,8 +103,8 @@ export default function SignInPage() {
               <Link href="/" className="inline-block mb-6">
                 <span className="text-3xl font-bold gradient-text">IMBT</span>
               </Link>
-              <h1 className="text-3xl font-bold mb-2">Connexion</h1>
-              <p className="text-foreground/60">Accédez à votre espace personnel</p>
+              <h1 className="text-3xl font-bold mb-2">{t.auth.signIn}</h1>
+              <p className="text-foreground/60">{t.auth.allRolesSpace}</p>
             </div>
 
             <div className="p-8 rounded-3xl glass glow-primary">
@@ -82,7 +116,7 @@ export default function SignInPage() {
                 )}
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t.auth.email}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                     <Input
@@ -98,7 +132,7 @@ export default function SignInPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Mot de passe</Label>
+                  <Label htmlFor="password">{t.auth.password}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
                     <Input
@@ -123,10 +157,10 @@ export default function SignInPage() {
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" className="w-4 h-4 rounded border-border bg-card/50" />
-                    <span className="text-sm text-foreground/60">Se souvenir de moi</span>
+                    <span className="text-sm text-foreground/60">{t.auth.rememberMe}</span>
                   </label>
                   <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
-                    Mot de passe oublié ?
+                    {t.auth.forgotPassword}
                   </Link>
                 </div>
 
@@ -134,11 +168,11 @@ export default function SignInPage() {
                   {isLoading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2" />
-                      Connexion...
+                      {t.auth.signingIn}
                     </>
                   ) : (
                     <>
-                      Se connecter
+                      {t.auth.signInButton}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
@@ -147,18 +181,30 @@ export default function SignInPage() {
 
               <div className="mt-6 text-center">
                 <p className="text-foreground/60 text-sm">
-                  {"Pas encore de compte ? "}
+                  {t.auth.noAccount}{" "}
                   <Link href="/auth/signup" className="text-primary hover:underline font-medium">
-                    Créer un compte
+                    {t.auth.createAccount}
                   </Link>
                 </p>
               </div>
 
               {/* Demo credentials */}
               <div className="mt-6 p-4 rounded-lg bg-accent/10 border border-accent/20">
-                <p className="text-sm text-foreground/60 mb-2">Compte admin pour démo:</p>
-                <p className="text-xs text-foreground/50">Email: admin@imbt.com</p>
-                <p className="text-xs text-foreground/50">Mot de passe: admin123</p>
+                <p className="text-sm text-foreground/60 mb-3 font-medium">{t.auth.demoAccountsAvailable}</p>
+                <div className="space-y-3 text-xs">
+                  <div className="pb-2 border-b border-accent/20">
+                    <p className="text-foreground/70 font-medium mb-1">👨‍💼 {t.auth.administrator}:</p>
+                    <p className="text-foreground/50 font-mono">admin@imbt-consulting.com / admin123</p>
+                  </div>
+                  <div className="pb-2 border-b border-accent/20">
+                    <p className="text-foreground/70 font-medium mb-1">👔 {t.auth.manager}:</p>
+                    <p className="text-foreground/50 font-mono">manager@test.com / password123</p>
+                  </div>
+                  <div>
+                    <p className="text-foreground/70 font-medium mb-1">👤 {t.auth.client}:</p>
+                    <p className="text-foreground/50 font-mono">client@test.com / password123</p>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

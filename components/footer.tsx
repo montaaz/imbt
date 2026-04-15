@@ -1,35 +1,37 @@
 "use client"
 
 import Link from "next/link"
-import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from "lucide-react"
-
-const footerLinks = {
-  services: [
-    { label: "Transformation Digitale", href: "/services#transformation" },
-    { label: "Développement Web", href: "/services#developpement" },
-    { label: "Formation", href: "/services#formation" },
-    { label: "CRM & ERP", href: "/services#crm" },
-  ],
-  company: [
-    { label: "À Propos", href: "/a-propos" },
-    { label: "Nos Valeurs", href: "/a-propos#valeurs" },
-    { label: "Carrières", href: "/carrieres" },
-    { label: "Contact", href: "/contact" },
-  ],
-  legal: [
-    { label: "Mentions Légales", href: "/mentions-legales" },
-    { label: "Politique de Confidentialité", href: "/confidentialite" },
-    { label: "CGV", href: "/cgv" },
-  ],
-}
+import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook, Instagram } from "lucide-react"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 const socialLinks = [
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/imbt-consulting", label: "LinkedIn" },
+  { icon: Instagram, href: "https://www.instagram.com/imbt.consulting", label: "Instagram" },
+  { icon: Facebook, href: "https://www.facebook.com/IMBT.Consulting", label: "Facebook" },
 ]
 
 export default function Footer() {
+  const { t } = useLanguage()
+
+  const footerLinks = {
+    services: [
+      { label: t.footer.digitalTransformation, href: "/services#transformation" },
+      { label: t.footer.webDevelopment, href: "/services#developpement" },
+      { label: t.footer.training, href: "/services#formation" },
+      { label: t.footer.crmErp, href: "/services#crm" },
+    ],
+    company: [
+      { label: t.footer.about, href: "/a-propos" },
+      { label: t.footer.ourValues, href: "/a-propos#valeurs" },
+      { label: t.footer.caseStudies, href: "/etudes-de-cas" },
+      { label: t.common.contact, href: "/contact" },
+    ],
+    legal: [
+      { label: t.footer.privacyPolicy, href: "/politique-confidentialite" },
+      { label: t.footer.legalNotice, href: "/mentions-legales" },
+      { label: t.footer.termsConditions, href: "/cgv" },
+    ],
+  }
   return (
     <footer className="bg-card/50 border-t border-border">
       <div className="container mx-auto px-6 py-16">
@@ -41,15 +43,23 @@ export default function Footer() {
               <span className="text-foreground/60 ml-2">Consulting</span>
             </Link>
             <p className="text-foreground/60 leading-relaxed mb-6 max-w-sm">
-              Votre partenaire stratégique pour libérer le plein potentiel de votre entreprise dans l'univers de la
-              transformation digitale.
+              {t.footer.description}
             </p>
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
-                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:text-primary-foreground transition-colors"
+                  style={{
+                    transition: 'background-color 0.3s, color 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#a80202'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = ''
+                  }}
                   aria-label={social.label}
                 >
                   <social.icon className="h-5 w-5" />
@@ -60,11 +70,16 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-semibold mb-4 text-foreground">Services</h4>
+            <h4 className="font-semibold mb-4 text-foreground">{t.footer.services}</h4>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-foreground/60 hover:text-primary transition-colors">
+                  <Link
+                    href={link.href}
+                    className="text-foreground/60 transition-colors"
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -74,11 +89,16 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="font-semibold mb-4 text-foreground">Entreprise</h4>
+            <h4 className="font-semibold mb-4 text-foreground">{t.footer.company}</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-foreground/60 hover:text-primary transition-colors">
+                  <Link
+                    href={link.href}
+                    className="text-foreground/60 transition-colors"
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -88,12 +108,14 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-semibold mb-4 text-foreground">Contact</h4>
+            <h4 className="font-semibold mb-4 text-foreground">{t.footer.contact}</h4>
             <ul className="space-y-3">
               <li>
                 <a
                   href="mailto:contact@imbt-consulting.com"
-                  className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors"
+                  className="flex items-center gap-2 text-foreground/60 transition-colors"
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
                 >
                   <Mail className="h-4 w-4" />
                   contact@imbt-consulting.com
@@ -102,7 +124,9 @@ export default function Footer() {
               <li>
                 <a
                   href="tel:+21654621308"
-                  className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors"
+                  className="flex items-center gap-2 text-foreground/60 transition-colors"
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
                 >
                   <Phone className="h-4 w-4" />
                   +21654621308
@@ -121,14 +145,16 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-foreground/50 text-sm">
-            © {new Date().getFullYear()} IMBT Consulting. Tous droits réservés.
+            © {new Date().getFullYear()} IMBT Consulting. {t.footer.copyright}
           </p>
           <div className="flex items-center gap-6">
             {footerLinks.legal.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-foreground/50 text-sm hover:text-primary transition-colors"
+                className="text-foreground/50 text-sm transition-colors"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
                 {link.label}
               </Link>

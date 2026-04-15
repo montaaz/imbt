@@ -1,0 +1,5 @@
+make translate with arbic ar, fr, en 
+make users see the rendez vous 
+historique achat , produits consulting 
+add blog from admin and can share from the blog page fb , linkdin 
+can connect using google 

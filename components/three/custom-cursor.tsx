@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react"
 
 export default function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null)
   const cursorDotRef = useRef<HTMLDivElement>(null)
   const cursorRingRef = useRef<HTMLDivElement>(null)
+  const cursorGlowRef = useRef<HTMLDivElement>(null)
   const [isHovering, setIsHovering] = useState(false)
   const [isClicking, setIsClicking] = useState(false)
 
@@ -13,22 +13,25 @@ export default function CustomCursor() {
     // Only show custom cursor on desktop
     if (typeof window !== "undefined" && window.innerWidth < 1024) return
 
-    const cursor = cursorRef.current
     const dot = cursorDotRef.current
     const ring = cursorRingRef.current
+    const glow = cursorGlowRef.current
 
-    if (!cursor || !dot || !ring) return
-
-    let mouseX = 0
-    let mouseY = 0
-    let dotX = 0
-    let dotY = 0
-    let ringX = 0
-    let ringY = 0
+    if (!dot || !ring || !glow) return
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX
-      mouseY = e.clientY
+      // Instant position update - no animation loop needed
+      const transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`
+
+      if (dot) {
+        dot.style.transform = transform
+      }
+      if (ring) {
+        ring.style.transform = transform
+      }
+      if (glow) {
+        glow.style.transform = transform
+      }
     }
 
     const handleMouseDown = () => setIsClicking(true)
@@ -56,29 +59,6 @@ export default function CustomCursor() {
     document.addEventListener("mouseover", handleMouseOver)
     document.addEventListener("mouseout", handleMouseOut)
 
-    // Animation loop
-    const animate = () => {
-      // Smooth follow for dot
-      dotX += (mouseX - dotX) * 0.2
-      dotY += (mouseY - dotY) * 0.2
-
-      // Slower follow for ring
-      ringX += (mouseX - ringX) * 0.08
-      ringY += (mouseY - ringY) * 0.08
-
-      if (dot) {
-        dot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`
-      }
-
-      if (ring) {
-        ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`
-      }
-
-      requestAnimationFrame(animate)
-    }
-
-    animate()
-
     // Hide default cursor
     document.body.style.cursor = "none"
 
@@ -93,46 +73,51 @@ export default function CustomCursor() {
   }, [])
 
   return (
-    <div ref={cursorRef} className="hidden lg:block pointer-events-none fixed inset-0 z-[9999]">
+    <div className="hidden lg:block pointer-events-none fixed inset-0 z-[9999]">
       {/* Main dot */}
       <div
         ref={cursorDotRef}
-        className={`fixed top-0 left-0 rounded-full transition-all duration-150 ${
+        className={`fixed top-0 left-0 rounded-full ${
           isClicking
-            ? "w-3 h-3 bg-accent"
+            ? "w-3 h-3"
             : isHovering
-              ? "w-4 h-4 bg-primary mix-blend-difference"
+              ? "w-4 h-4 mix-blend-difference"
               : "w-2 h-2 bg-foreground"
         }`}
-        style={{ willChange: "transform" }}
+        style={{
+          willChange: "transform",
+          transition: "width 0.15s ease, height 0.15s ease",
+          backgroundColor: isClicking || isHovering ? '#a80202' : ''
+        }}
       />
 
       {/* Outer ring */}
       <div
         ref={cursorRingRef}
-        className={`fixed top-0 left-0 rounded-full border-2 transition-all duration-300 ${
+        className={`fixed top-0 left-0 rounded-full border-2 ${
           isClicking
-            ? "w-16 h-16 border-accent opacity-50"
+            ? "w-16 h-16 opacity-50"
             : isHovering
-              ? "w-16 h-16 border-primary opacity-80"
+              ? "w-16 h-16 opacity-80"
               : "w-10 h-10 border-foreground/30 opacity-100"
         }`}
-        style={{ willChange: "transform" }}
+        style={{
+          willChange: "transform",
+          transition: "width 0.15s ease, height 0.15s ease, opacity 0.15s ease",
+          borderColor: isClicking || isHovering ? '#a80202' : ''
+        }}
       />
 
       {/* Glow effect */}
       <div
-        ref={(el) => {
-          if (el && cursorDotRef.current) {
-            // Follow the dot position for glow
-          }
-        }}
-        className={`fixed top-0 left-0 rounded-full blur-xl transition-all duration-200 pointer-events-none ${
-          isHovering ? "w-20 h-20 bg-primary/30" : "w-8 h-8 bg-primary/20"
+        ref={cursorGlowRef}
+        className={`fixed top-0 left-0 rounded-full blur-xl pointer-events-none ${
+          isHovering ? "w-20 h-20" : "w-8 h-8"
         }`}
         style={{
-          transform: cursorDotRef.current?.style.transform,
           willChange: "transform",
+          transition: "width 0.2s ease, height 0.2s ease, background-color 0.2s ease",
+          backgroundColor: isHovering ? 'rgba(168, 2, 2, 0.3)' : 'rgba(168, 2, 2, 0.2)'
         }}
       />
     </div>

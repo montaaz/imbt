@@ -11,8 +11,6 @@ import {
   XCircle,
   Eye,
   MoreHorizontal,
-  LogOut,
-  Settings,
   Bell,
   Search,
   Filter,
@@ -23,6 +21,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import AdminSidebar from "@/components/admin-sidebar"
 
 // Mock data for reservations
 const mockReservations = [
@@ -102,7 +101,7 @@ export default function AdminDashboard() {
     const storedUser = localStorage.getItem("user")
     if (storedUser) {
       const userData = JSON.parse(storedUser)
-      if (userData.role !== "admin") {
+      if (userData.role !== "admin" && userData.role !== "manager") {
         router.push("/")
       } else {
         setUser(userData)
@@ -111,11 +110,6 @@ export default function AdminDashboard() {
       router.push("/auth/signin")
     }
   }, [router])
-
-  const handleLogout = () => {
-    localStorage.removeItem("user")
-    router.push("/")
-  }
 
   const updateReservationStatus = (id: number, status: string) => {
     setReservations((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)))
@@ -170,48 +164,10 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-border p-6 hidden lg:block">
-        <Link href="/" className="flex items-center gap-2 mb-10">
-          <span className="text-2xl font-bold gradient-text">IMBT</span>
-          <span className="text-xs text-foreground/50">Admin</span>
-        </Link>
-
-        <nav className="space-y-2">
-          <Link
-            href="/admin"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium"
-          >
-            <Calendar className="h-5 w-5" />
-            Réservations
-          </Link>
-          <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-foreground/60 hover:bg-muted w-full text-left">
-            <Users className="h-5 w-5" />
-            Clients
-          </button>
-          <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-foreground/60 hover:bg-muted w-full text-left">
-            <TrendingUp className="h-5 w-5" />
-            Statistiques
-          </button>
-          <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-foreground/60 hover:bg-muted w-full text-left">
-            <Settings className="h-5 w-5" />
-            Paramètres
-          </button>
-        </nav>
-
-        <div className="absolute bottom-6 left-6 right-6">
-          <div className="p-4 rounded-xl bg-muted mb-4">
-            <p className="font-medium text-sm">{user.name}</p>
-            <p className="text-xs text-foreground/50">Administrateur</p>
-          </div>
-          <Button variant="outline" onClick={handleLogout} className="w-full bg-transparent">
-            <LogOut className="h-4 w-4 mr-2" />
-            Déconnexion
-          </Button>
-        </div>
-      </aside>
+      <AdminSidebar />
 
       {/* Main Content */}
-      <main className="lg:ml-64 p-6 lg:p-10">
+      <main className="lg:ml-64 p-4 sm:p-6 lg:p-10 pt-20 lg:pt-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
           <div>
@@ -255,17 +211,17 @@ export default function AdminDashboard() {
 
         {/* Reservations Table */}
         <div className="rounded-2xl bg-card border border-border overflow-hidden">
-          <div className="p-6 border-b border-border">
+          <div className="p-4 sm:p-6 border-b border-border">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h2 className="text-xl font-semibold">Réservations récentes</h2>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40" />
                   <Input
                     placeholder="Rechercher..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-64 bg-muted border-0"
+                    className="pl-10 w-full sm:w-64 bg-muted border-0"
                   />
                 </div>
                 <DropdownMenu>

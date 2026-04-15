@@ -7,10 +7,12 @@ import { ArrowRight, Sparkles, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Magnetic } from "@/components/gsap/section-transitions"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -95,8 +97,8 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  const title = "Stratégies Digitales"
-  const subtitle = "pour un Avenir Durable"
+  const title = t.hero.title
+  const subtitle = t.hero.subtitle
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -120,26 +122,26 @@ export default function Hero() {
         />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass mb-10 border border-primary/40 backdrop-blur-xl"
+            className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full glass mb-8 sm:mb-10 border border-primary/40 backdrop-blur-xl"
           >
-            <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-            <span className="text-sm font-medium text-foreground/90">Votre partenaire stratégique</span>
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary animate-pulse" />
+            <span className="text-xs sm:text-sm font-medium text-foreground/90">{t.hero.badge}</span>
           </motion.div>
 
           {/* Main Title with 3D perspective */}
           <h1
             ref={titleRef}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 perspective-1000"
+            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 perspective-1000 px-2 sm:px-4"
             style={{ transformStyle: "preserve-3d" }}
           >
-            <span className="block" style={{ transformStyle: "preserve-3d" }}>
+            <span className="block leading-tight mb-1 sm:mb-2" style={{ transformStyle: "preserve-3d" }}>
               {title.split("").map((letter, index) => (
                 <span
                   key={index}
@@ -153,17 +155,23 @@ export default function Hero() {
                 </span>
               ))}
             </span>
-            <span className="block mt-4" style={{ transformStyle: "preserve-3d" }}>
-              {subtitle.split("").map((letter, index) => (
-                <span
-                  key={index}
-                  className="hero-letter inline-block text-foreground hover:text-primary transition-colors cursor-default"
-                  style={{
-                    display: letter === " " ? "inline" : "inline-block",
-                    transformStyle: "preserve-3d",
-                  }}
-                >
-                  {letter === " " ? "\u00A0" : letter}
+            <span className="block mt-1 sm:mt-2 md:mt-4 leading-tight text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl" style={{ transformStyle: "preserve-3d", wordBreak: "keep-all", whiteSpace: "normal" }}>
+              {subtitle.split(" ").map((word, wordIndex) => (
+                <span key={wordIndex} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                  {word.split("").map((letter, letterIndex) => (
+                    <span
+                      key={letterIndex}
+                      className="hero-letter inline-block text-foreground transition-colors cursor-default"
+                      style={{
+                        transformStyle: "preserve-3d",
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                    >
+                      {letter}
+                    </span>
+                  ))}
+                  {wordIndex < subtitle.split(" ").length - 1 && <span style={{ display: "inline" }}>&nbsp;</span>}
                 </span>
               ))}
             </span>
@@ -172,23 +180,22 @@ export default function Hero() {
           {/* Subtitle */}
           <p
             ref={subtitleRef}
-            className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto mb-14 leading-relaxed"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground/70 max-w-2xl mx-auto mb-8 sm:mb-10 md:mb-14 leading-relaxed px-4 sm:px-6"
           >
-            IMBT Consulting libère le plein potentiel de votre entreprise avec des solutions innovantes en
-            transformation digitale, développement sur mesure et marketing digital.
+            {t.hero.description}
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-5 px-4">
             <Magnetic strength={0.4}>
-              <Link href="/reservation" className="hero-cta block">
-                <Button size="lg" className="glow-primary group text-lg px-10 py-7 relative overflow-hidden">
-                  <span className="relative z-10 flex items-center font-semibold">
-                    Réserver une consultation
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-2" />
+              <Link href="/reservation" className="hero-cta block w-full sm:w-auto">
+                <Button size="lg" className="group text-sm sm:text-base md:text-lg px-5 sm:px-8 md:px-10 py-5 sm:py-6 md:py-7 relative overflow-hidden w-full sm:w-auto bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
+                  <span className="relative z-10 flex items-center justify-center font-semibold whitespace-nowrap">
+                    {t.hero.cta}
+                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-2" />
                   </span>
                   <div
-                    className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute inset-0 bg-gradient-to-r from-[#a80202] via-[#c00000] to-[#a80202] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{ backgroundSize: "200% 100%" }}
                   />
                 </Button>
@@ -196,34 +203,34 @@ export default function Hero() {
             </Magnetic>
 
             <Magnetic strength={0.4}>
-              <Link href="/services" className="hero-cta block">
+              <Link href="/services" className="hero-cta block w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
-                  className="text-lg px-10 py-7 border-primary/40 hover:bg-primary/20 bg-transparent group relative overflow-hidden"
+                  className="text-sm sm:text-base md:text-lg px-5 sm:px-8 md:px-10 py-5 sm:py-6 md:py-7 border-primary/40 hover:bg-primary/20 bg-transparent group relative overflow-hidden w-full sm:w-auto"
                 >
-                  <Play className="mr-2 h-5 w-5 group-hover:scale-125 transition-transform" />
-                  Découvrir nos services
+                  <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-125 transition-transform" />
+                  <span className="whitespace-nowrap">{t.hero.ctaSecondary}</span>
                 </Button>
               </Link>
             </Magnetic>
           </div>
 
           {/* Stats with enhanced animation */}
-          <div className="grid grid-cols-3 gap-6 mt-24 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mt-12 sm:mt-16 md:mt-24 max-w-3xl mx-auto px-2 sm:px-4">
             {[
-              { value: "150+", label: "Projets réalisés" },
-              { value: "98%", label: "Clients satisfaits" },
-              { value: "10+", label: "Années d'expérience" },
+              { value: "100+", label: t.stats.projects },
+              { value: "98%", label: t.stats.clients },
+              { value: "10+", label: t.stats.experience },
             ].map((stat, index) => (
               <div
                 key={index}
-                className="hero-stat text-center p-8 rounded-3xl glass hover:bg-card/70 transition-all duration-500 group cursor-default hover:scale-105 hover:-translate-y-2"
+                className="hero-stat text-center p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl glass hover:bg-card/70 transition-all duration-500 group cursor-default hover:scale-105 hover:-translate-y-2"
               >
-                <div className="stat-value text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text mb-3 group-hover:scale-110 transition-transform">
+                <div className="stat-value text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold gradient-text mb-1 sm:mb-2 md:mb-3 group-hover:scale-110 transition-transform">
                   {stat.value}
                 </div>
-                <div className="text-sm text-foreground/60 font-medium">{stat.label}</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-foreground/60 font-medium leading-tight">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -232,7 +239,7 @@ export default function Hero() {
 
       {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 hidden sm:block"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.3 }}
@@ -248,7 +255,7 @@ export default function Hero() {
             className="w-2.5 h-4 bg-gradient-to-b from-primary to-accent rounded-full mt-2"
           />
         </motion.div>
-        <p className="text-xs text-foreground/40 mt-3 text-center">Scroll pour explorer</p>
+        <p className="text-xs text-foreground/40 mt-3 text-center">{t.hero.scrollToExplore}</p>
       </motion.div>
     </section>
   )

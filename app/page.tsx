@@ -15,10 +15,6 @@ const ScrollExperience = dynamic(() => import("@/components/three/scroll-experie
   ssr: false,
 })
 
-const CustomCursor = dynamic(() => import("@/components/three/custom-cursor"), {
-  ssr: false,
-})
-
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
 
@@ -34,7 +30,6 @@ export default function Home() {
             className="min-h-screen bg-background"
           >
             <ScrollExperience />
-            <CustomCursor />
             <Navigation />
             <Hero />
             <ServicesPreview />

@@ -9,59 +9,53 @@ import { Monitor, Rocket, GraduationCap, Users, Settings, TrendingUp, ArrowRight
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { TextReveal, Magnetic } from "@/components/gsap/section-transitions"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const services = [
+const servicesConfig = [
   {
     icon: Rocket,
-    title: "Conseil en Transformation Digitale",
-    description: "Nous élaborons des stratégies digitales personnalisées pour maximiser votre impact sur le marché.",
+    key: "transformation" as const,
     color: "from-primary to-primary/50",
     gradient: "bg-gradient-to-br from-primary/20 to-accent/10",
   },
   {
     icon: Monitor,
-    title: "Développement Web & Applications",
-    description: "Nous créons des sites web performants et adaptés à votre activité avec des technologies de pointe.",
+    key: "development" as const,
     color: "from-accent to-accent/50",
     gradient: "bg-gradient-to-br from-accent/20 to-primary/10",
   },
   {
     icon: GraduationCap,
-    title: "Formations Digitales",
-    description: "Des programmes complets pour maîtriser les outils et technologies digitales, du débutant à l'avancé.",
+    key: "training" as const,
     color: "from-primary to-accent",
     gradient: "bg-gradient-to-br from-primary/15 to-accent/15",
   },
   {
     icon: Users,
-    title: "CRM & Gestion Client",
-    description:
-      "Implémentation de systèmes de gestion de la relation client pour optimiser votre acquisition et fidélisation.",
+    key: "crm" as const,
     color: "from-accent to-primary",
     gradient: "bg-gradient-to-br from-accent/15 to-primary/15",
   },
   {
     icon: Settings,
-    title: "ERP & Gestion Intégrée",
-    description: "Mise en place de systèmes de gestion intégrés pour une meilleure efficacité opérationnelle.",
+    key: "erp" as const,
     color: "from-primary/80 to-accent/80",
     gradient: "bg-gradient-to-br from-primary/10 to-accent/20",
   },
   {
     icon: TrendingUp,
-    title: "Marketing Digital",
-    description:
-      "Optimisation des campagnes digitales et stratégie marketing omnicanal pour une meilleure performance.",
+    key: "marketing" as const,
     color: "from-accent/80 to-primary/80",
     gradient: "bg-gradient-to-br from-accent/10 to-primary/20",
   },
 ]
 
-function ServiceCard({ service, index }: { service: (typeof services)[0]; index: number }) {
+function ServiceCard({ service, index }: { service: (typeof servicesConfig)[0]; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
+  const { t } = useLanguage()
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return
@@ -161,10 +155,10 @@ function ServiceCard({ service, index }: { service: (typeof services)[0]; index:
         className="relative text-xl font-bold mb-3 group-hover:text-primary transition-colors duration-300"
         style={{ transform: "translateZ(30px)" }}
       >
-        {service.title}
+        {t.serviceCards[service.key].title}
       </h3>
       <p className="relative text-foreground/60 leading-relaxed mb-5" style={{ transform: "translateZ(20px)" }}>
-        {service.description}
+        {t.serviceCards[service.key].description}
       </p>
 
       {/* Learn More */}
@@ -174,7 +168,7 @@ function ServiceCard({ service, index }: { service: (typeof services)[0]; index:
         style={{ transform: "translateZ(25px)" }}
       >
         <span className="relative">
-          En savoir plus
+          {t.servicesSection.learnMore}
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent group-hover:w-full transition-all duration-400" />
         </span>
         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform" />
@@ -192,6 +186,7 @@ export default function ServicesPreview() {
   const sectionRef = useRef<HTMLElement>(null)
   const cardsRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
+  const { t } = useLanguage()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -259,20 +254,19 @@ export default function ServicesPreview() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="text-center max-w-4xl mx-auto mb-24"
         >
-          <span className="text-primary text-sm font-semibold tracking-widest uppercase mb-5 block">Nos Services</span>
+          <span className="text-primary text-sm font-semibold tracking-widest uppercase mb-5 block">{t.servicesSection.title}</span>
           <TextReveal
-            text="Une gamme complète de solutions digitales"
+            text={t.servicesSection.subtitle}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-8"
           />
           <p className="text-foreground/60 text-lg leading-relaxed max-w-2xl mx-auto">
-            Chacune de nos interventions est conçue pour stimuler votre croissance, améliorer votre efficacité
-            opérationnelle, et maximiser vos performances.
+            {t.servicesSection.description}
           </p>
         </motion.div>
 
         {/* Grid */}
         <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+          {servicesConfig.map((service, index) => (
             <ServiceCard key={index} service={service} index={index} />
           ))}
         </div>
@@ -292,7 +286,7 @@ export default function ServicesPreview() {
                 className="group bg-transparent relative overflow-hidden px-10 py-7 text-lg"
               >
                 <span className="relative z-10 flex items-center font-semibold">
-                  Voir tous nos services
+                  {t.servicesSection.viewAll}
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
                 </span>
               </Button>
