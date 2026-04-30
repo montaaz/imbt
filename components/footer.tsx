@@ -134,7 +134,7 @@ export default function Footer() {
               <li>
                 <span className="flex items-start gap-2 text-foreground/60">
                   <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                  Tunis, Tunisia
+                  Immeuble Omar bloc A bureau 3-2 Montplaisir 1073, Tunis, Tunisie
                 </span>
               </li>
             </ul>

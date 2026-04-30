@@ -72,8 +72,8 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: t.contactPage.info.address.title,
-      value: "Tunis, Tunisia",
-      href: "#",
+      value: "Immeuble Omar bloc A bur 3-2, Montplaisir, Tunis",
+      href: "https://maps.app.goo.gl/q6ZXD1L7xKXNSD499",
     },
     {
       icon: Clock,
@@ -134,6 +134,8 @@ export default function ContactPage() {
               <a
                 key={index}
                 href={info.href}
+                target={info.href.startsWith('http') ? "_blank" : undefined}
+                rel={info.href.startsWith('http') ? "noopener noreferrer" : undefined}
                 className="group p-6 rounded-2xl glass hover:bg-card/60 transition-all duration-300"
               >
                 <div className={`w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors`}>
@@ -261,78 +263,31 @@ export default function ContactPage() {
               )}
             </motion.div>
 
-            {/* Map/Visual */}
+            {/* Map */}
             <motion.div
               initial={{ opacity: 0, x: dir === 'rtl' ? -50 : 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative"
+              className="relative h-full min-h-[400px]"
             >
-              <div className="aspect-square rounded-3xl glass p-8 glow-accent overflow-hidden">
-                <div className="w-full h-full relative flex items-center justify-center">
-                  {/* Abstract Location Visual */}
-                  <div className="relative w-full h-full">
-                    {/* Grid lines */}
-                    <div className="absolute inset-0">
-                      {[...Array(10)].map((_, i) => (
-                        <div
-                          key={`h-${i}`}
-                          className="absolute w-full h-px bg-primary/10"
-                          style={{ top: `${(i + 1) * 10}%` }}
-                        />
-                      ))}
-                      {[...Array(10)].map((_, i) => (
-                        <div
-                          key={`v-${i}`}
-                          className="absolute h-full w-px bg-primary/10"
-                          style={{ left: `${(i + 1) * 10}%` }}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Animated dots */}
-                    {[...Array(5)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-2 h-2 rounded-full bg-accent"
-                        style={{
-                          left: `${20 + Math.random() * 60}%`,
-                          top: `${20 + Math.random() * 60}%`,
-                        }}
-                        animate={{
-                          scale: [1, 1.5, 1],
-                          opacity: [0.5, 1, 0.5],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Number.POSITIVE_INFINITY,
-                          delay: i * 0.3,
-                        }}
-                      />
-                    ))}
-
-                    {/* Main location pin */}
-                    <motion.div
-                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                      animate={{ y: [0, -10, 0] }}
-                      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-                    >
-                      <div className="relative">
-                        <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                            <MapPin className="h-5 w-5 text-white" />
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full opacity-50 animate-ping" />
-                      </div>
-                    </motion.div>
-
-                    {/* City label */}
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-                      <div className="px-4 py-2 rounded-full glass">
-                        <span className="text-lg font-semibold">Tunis, Tunisia</span>
-                      </div>
-                    </div>
+              <div className="absolute inset-0 rounded-3xl glass overflow-hidden glow-accent border border-border/50">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194.1354714652433!2d10.183344675765964!3d36.81559817224419!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd3461427c3857%3A0xe5432d665f8d9560!2sImmeuble%20Omar!5e0!3m2!1sen!2stn!4v1714485000000!5m2!1sen!2stn"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, filter: 'grayscale(0.5) invert(0.9) contrast(0.9)' }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="dark:opacity-80"
+                />
+                <div className="absolute bottom-4 left-4 right-4 glass p-4 rounded-xl flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-primary">{t.contactPage.info.address.title}</p>
+                    <p className="text-sm font-medium">Immeuble Omar bloc A, Montplaisir, Tunis</p>
                   </div>
                 </div>
               </div>
