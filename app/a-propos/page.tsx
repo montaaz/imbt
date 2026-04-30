@@ -10,6 +10,7 @@ import dynamic from "next/dynamic"
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 const ParticleField = dynamic(() => import("@/components/three/particle-field"), { ssr: false })
 
@@ -51,22 +52,22 @@ const stats = [
 
 const team = [
   {
-    name: "Mohamed Ben Ahmed",
+    name: "Ismail Ferjani",
     role: "Fondateur & CEO",
     image: "/professional-man-suit-portrait.png",
   },
   {
-    name: "Sarah Martin",
+    name: "Sarra Khlifi",
     role: "Directrice Technique",
     image: "/professional-woman-tech-director-portrait.jpg",
   },
   {
-    name: "Thomas Durand",
+    name: "Mariem Khlaifi",
     role: "Responsable Marketing",
     image: "/professional-man-marketing-manager-portrait.jpg",
   },
   {
-    name: "Julie Moreau",
+    name: "Mondher Maamer",
     role: "Lead Developer",
     image: "/professional-woman-developer-portrait.jpg",
   },
@@ -75,7 +76,61 @@ const team = [
 export default function AboutPage() {
   const heroRef = useRef<HTMLElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
+  const { t, dir } = useLanguage()
   const isInView = useInView(valuesRef, { once: true, margin: "-100px" })
+
+  const valuesData = [
+    {
+      icon: Target,
+      title: t.aboutPage.values.items.excellence.title,
+      description: t.aboutPage.values.items.excellence.description,
+    },
+    {
+      icon: Lightbulb,
+      title: t.aboutPage.values.items.innovation.title,
+      description: t.aboutPage.values.items.innovation.description,
+    },
+    {
+      icon: Heart,
+      title: t.aboutPage.values.items.engagement.title,
+      description: t.aboutPage.values.items.engagement.description,
+    },
+    {
+      icon: Users,
+      title: t.aboutPage.values.items.collaboration.title,
+      description: t.aboutPage.values.items.collaboration.description,
+    },
+  ]
+
+  const statsData = [
+    { value: t.aboutPage.stats.projects.value, label: t.aboutPage.stats.projects.label },
+    { value: t.aboutPage.stats.clients.value, label: t.aboutPage.stats.clients.label },
+    { value: t.aboutPage.stats.experience.value, label: t.aboutPage.stats.experience.label },
+    { value: t.aboutPage.stats.experts.value, label: t.aboutPage.stats.experts.label },
+  ]
+
+  const teamData = [
+    {
+      name: "Ismail Ferjani",
+      role: t.aboutPage.team.members.mohamed.role,
+      image: "/professional-man-suit-portrait.png",
+    },
+    {
+      name: "Sarra Khlifi",
+      role: t.aboutPage.team.members.sarah.role,
+      image: "/professional-woman-tech-director-portrait.jpg",
+    },
+    {
+      name: "Mariem Khlaifi",
+      role: t.aboutPage.team.members.thomas.role,
+      image: "/professional-man-marketing-manager-portrait.jpg",
+    },
+    {
+      name: "Mondher Maamer",
+      role: t.aboutPage.team.members.julie.role,
+      image: "/professional-woman-developer-portrait.jpg",
+    },
+  ]
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -130,30 +185,31 @@ export default function AboutPage() {
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
-              <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">À Propos</span>
+            <motion.div
+              initial={{ opacity: 0, x: dir === 'rtl' ? 50 : -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">{t.aboutPage.hero.badge}</span>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                Votre partenaire pour la <span className="gradient-text">transformation digitale</span>
+                {t.aboutPage.hero.title} <span className="gradient-text">{t.aboutPage.hero.subtitle}</span>
               </h1>
               <p className="text-foreground/60 text-base sm:text-lg md:text-xl leading-relaxed mb-4 sm:mb-6 md:mb-8">
-                IMBT Consulting est votre partenaire stratégique pour libérer le plein potentiel de votre entreprise.
-                Nous offrons une gamme complète de services, incluant le conseil en transformation digitale, le
-                développement informatique sur mesure, et des solutions innovantes en marketing digital.
+                {t.aboutPage.hero.description1}
               </p>
               <p className="text-foreground/60 text-sm sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8">
-                Avec une approche personnalisée, nous vous accompagnons dans l'atteinte de vos objectifs, tout en vous
-                aidant à naviguer dans l'univers complexe de la transformation digitale.
+                {t.aboutPage.hero.description2}
               </p>
               <Link href="/reservation" className="inline-block w-full sm:w-auto">
-                <Button size="lg" className="glow-primary group w-full sm:w-auto text-sm sm:text-base px-5 sm:px-8 py-5 sm:py-6">
-                  Commencer un projet
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
+                <Button size="lg" className="glow-primary group w-full sm:w-auto text-sm sm:text-base px-5 sm:px-8 py-5 sm:py-6 bg-[#a80202] hover:bg-[#8a0101] border-0 text-white">
+                  {t.aboutPage.hero.cta}
+                  <ArrowRight className={`h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                 </Button>
               </Link>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: dir === 'rtl' ? -50 : 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative mt-8 lg:mt-0"
@@ -180,8 +236,8 @@ export default function AboutPage() {
                         }}
                       />
                     ))}
-                    <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center relative z-10">
-                      <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-foreground">IMBT</span>
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center relative z-10 p-5">
+                      <img src="/logo.png" alt="IMBT" className="w-full h-full object-contain" />
                     </div>
                   </div>
                 </div>
@@ -192,11 +248,11 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl glass glow-accent"
+                className={`absolute -bottom-2 sm:-bottom-4 px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl glass glow-accent ${dir === 'rtl' ? '-right-2 sm:-right-4' : '-left-2 sm:-left-4'}`}
               >
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <Award className="h-4 w-4 sm:h-5 sm:w-5 text-accent" />
-                  <span className="font-semibold text-xs sm:text-sm">Certifié Expert</span>
+                  <span className="font-semibold text-xs sm:text-sm">{t.aboutSection.certifiedExpert}</span>
                 </div>
               </motion.div>
 
@@ -204,7 +260,7 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl glass glow-primary"
+                className={`absolute -top-2 sm:-top-4 px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl glass glow-primary ${dir === 'rtl' ? '-left-2 sm:-left-4' : '-right-2 sm:-right-4'}`}
               >
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
@@ -220,7 +276,7 @@ export default function AboutPage() {
       <section className="py-10 sm:py-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
-            {stats.map((stat, index) => (
+            {statsData.map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -246,23 +302,23 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16"
           >
-            <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">Nos Valeurs</span>
+            <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">{t.aboutPage.values.title}</span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Les piliers de notre <span className="gradient-text">excellence</span>
+              {t.aboutPage.values.subtitle.split('excellence')[0]} <span className="gradient-text">excellence</span>
             </h2>
             <p className="text-foreground/60 text-sm sm:text-base md:text-lg">
-              Nos valeurs guident chacune de nos actions et définissent notre approche du conseil digital.
+              {t.aboutPage.values.description}
             </p>
           </motion.div>
 
           <div ref={valuesRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-            {values.map((value, index) => (
+            {valuesData.map((value, index) => (
               <div
                 key={index}
                 className="value-card group p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl glass hover:bg-card/60 transition-all duration-500"
               >
                 <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-500">
-                  <value.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
+                  <value.icon className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 group-hover:text-primary transition-colors">{value.title}</h3>
                 <p className="text-foreground/60 text-sm sm:text-base leading-relaxed">{value.description}</p>
@@ -281,17 +337,17 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16"
           >
-            <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">Notre Équipe</span>
+            <span className="text-primary text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4 block">{t.aboutPage.team.title}</span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Des experts <span className="gradient-text">passionnés</span>
+              {t.aboutPage.team.subtitle.split('passionnés')[0]} <span className="gradient-text">{t.aboutPage.team.subtitle.includes('passionnés') ? 'passionnés' : 'Passionate'}</span>
             </h2>
             <p className="text-foreground/60 text-sm sm:text-base md:text-lg">
-              Une équipe pluridisciplinaire dédiée à votre réussite digitale.
+              {t.aboutPage.team.description}
             </p>
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {team.map((member, index) => (
+            {teamData.map((member, index) => (
               <div key={index} className="team-card group">
                 <div className="relative rounded-xl sm:rounded-2xl overflow-hidden glass p-3 sm:p-4 glow-primary">
                   <div className="aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4">
@@ -317,21 +373,21 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl glass glow-primary">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
-              Rejoignez notre aventure <span className="gradient-text">digitale</span>
+              {t.aboutPage.cta.title} <span className="gradient-text">{t.aboutPage.cta.subtitle}</span>
             </h2>
             <p className="text-foreground/60 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Que vous souhaitiez devenir client ou rejoindre notre équipe, nous serions ravis de vous rencontrer.
+              {t.aboutPage.cta.description}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
               <Link href="/reservation" className="w-full sm:w-auto">
-                <Button size="lg" className="glow-primary w-full sm:w-auto text-sm sm:text-base px-5 sm:px-8 py-5 sm:py-6">
-                  Commencer un projet
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <Button size="lg" className="glow-primary w-full sm:w-auto text-sm sm:text-base px-5 sm:px-8 py-5 sm:py-6 bg-[#a80202] hover:bg-[#8a0101] border-0 text-white">
+                  {t.aboutPage.cta.button1}
+                  <ArrowRight className={`h-4 w-4 sm:h-5 sm:w-5 ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                 </Button>
               </Link>
               <Link href="/contact" className="w-full sm:w-auto">
                 <Button variant="outline" size="lg" className="bg-transparent w-full sm:w-auto text-sm sm:text-base px-5 sm:px-8 py-5 sm:py-6">
-                  Nous contacter
+                  {t.aboutPage.cta.button2}
                 </Button>
               </Link>
             </div>

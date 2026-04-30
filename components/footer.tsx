@@ -11,7 +11,7 @@ const socialLinks = [
 ]
 
 export default function Footer() {
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   const footerLinks = {
     services: [
@@ -39,8 +39,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <span className="text-3xl font-bold gradient-text">IMBT</span>
-              <span className="text-foreground/60 ml-2">Consulting</span>
+              <img src="/logo.png" alt="IMBT Consulting" className="h-30 w-auto" />
             </Link>
             <p className="text-foreground/60 leading-relaxed mb-6 max-w-sm">
               {t.footer.description}

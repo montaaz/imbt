@@ -16,9 +16,11 @@ export default function AboutPreview() {
   const sectionRef = useRef<HTMLElement>(null)
   const visualRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   useEffect(() => {
+    const slideFrom = dir === 'rtl' ? 60 : -60
+
     const ctx = gsap.context(() => {
       gsap.to(".about-ring", {
         rotation: 360,
@@ -41,7 +43,7 @@ export default function AboutPreview() {
 
       gsap.fromTo(
         ".value-item",
-        { x: -60, opacity: 0, filter: "blur(5px)" },
+        { x: slideFrom, opacity: 0, filter: "blur(5px)" },
         {
           x: 0,
           opacity: 1,
@@ -58,7 +60,7 @@ export default function AboutPreview() {
     })
 
     return () => ctx.revert()
-  }, [])
+  }, [dir])
 
   return (
     <section ref={sectionRef} className="py-16 sm:py-24 md:py-32 lg:py-40 relative overflow-hidden">
@@ -69,7 +71,7 @@ export default function AboutPreview() {
         <div className="grid lg:grid-cols-2 gap-10 sm:gap-12 md:gap-16 lg:gap-20 items-center">
           {/* Content */}
           <motion.div
-            initial={{ opacity: 0, x: -60 }}
+            initial={{ opacity: 0, x: dir === 'rtl' ? 60 : -60 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
@@ -103,7 +105,7 @@ export default function AboutPreview() {
               <Link href="/a-propos" className="inline-block w-full sm:w-auto">
                 <Button size="lg" className="group w-full sm:w-auto px-5 sm:px-6 md:px-8 py-5 sm:py-6 text-sm sm:text-base md:text-lg bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
                   {t.aboutSection.learnMore}
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight className={`h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                 </Button>
               </Link>
             </Magnetic>
@@ -111,7 +113,7 @@ export default function AboutPreview() {
 
           {/* Visual */}
           <motion.div
-            initial={{ opacity: 0, x: 60 }}
+            initial={{ opacity: 0, x: dir === 'rtl' ? -60 : 60 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="relative mt-10 lg:mt-0"
@@ -135,8 +137,8 @@ export default function AboutPreview() {
                     {/* Center logo */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 blur-xl absolute" />
-                      <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center relative shadow-2xl">
-                        <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight">IMBT</span>
+                      <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center relative shadow-2xl p-4">
+                        <img src="/logo.png" alt="IMBT" className="w-full h-full object-contain" />
                       </div>
                     </div>
 
@@ -175,7 +177,7 @@ export default function AboutPreview() {
                 initial={{ opacity: 0, y: 30, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
                 transition={{ duration: 0.4, delay: 0.4, ease: "backOut" }}
-                className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 md:-bottom-8 md:-left-8 p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl glass glow-accent hover:scale-105 transition-transform cursor-default"
+                className={`absolute p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl glass glow-accent hover:scale-105 transition-transform cursor-default -bottom-4 sm:-bottom-6 md:-bottom-8 ${dir === 'rtl' ? '-right-4 sm:-right-6 md:-right-8' : '-left-4 sm:-left-6 md:-left-8'}`}
               >
                 <div className="text-2xl sm:text-3xl md:text-4xl font-black gradient-text mb-1 sm:mb-2">
                   <Counter end={10} suffix="+" duration={2.5} />
@@ -188,7 +190,7 @@ export default function AboutPreview() {
                 initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
                 animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.5, ease: "backOut" }}
-                className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 md:-top-6 md:-right-6 px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 rounded-full bg-gradient-to-r from-accent to-primary text-white text-xs sm:text-sm font-bold shadow-xl"
+                className={`absolute px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 rounded-full bg-gradient-to-r from-accent to-primary text-white text-xs sm:text-sm font-bold shadow-xl -top-3 sm:-top-4 md:-top-6 ${dir === 'rtl' ? '-left-3 sm:-left-4 md:-left-6' : '-right-3 sm:-right-4 md:-right-6'}`}
               >
                 {t.aboutSection.certifiedExpert}
               </motion.div>
@@ -197,7 +199,7 @@ export default function AboutPreview() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.6 }}
-                className="absolute top-1/4 -right-6 sm:-right-8 md:-right-12 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl glass hover:scale-105 transition-transform cursor-default"
+                className={`absolute top-1/4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl glass hover:scale-105 transition-transform cursor-default ${dir === 'rtl' ? '-left-6 sm:-left-8 md:-left-12' : '-right-6 sm:-right-8 md:-right-12'}`}
               >
                 <div className="text-xl sm:text-2xl font-bold gradient-text">
                   <Counter end={150} suffix="+" duration={2} />

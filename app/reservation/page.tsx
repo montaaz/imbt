@@ -34,6 +34,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { GoogleSignInButton } from "@/components/google-signin-button-simple"
 import { useLanguage } from "@/lib/i18n/language-context"
+import { PhoneInput } from "@/components/ui/phone-input"
 
 const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"), { ssr: false })
 
@@ -43,10 +44,12 @@ function FullCalendar({
   selectedDate,
   onSelectDate,
   t,
+  dir,
 }: {
   selectedDate: string
   onSelectDate: (date: string) => void
   t: any
+  dir: string
 }) {
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState(today.getMonth())
@@ -119,7 +122,7 @@ function FullCalendar({
           disabled={isPastMonth()}
           className="bg-transparent border-border/50 hover:bg-primary/10 hover:border-primary disabled:opacity-30 h-8 w-8 sm:h-10 sm:w-10"
         >
-          <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+          <ChevronLeft className={`h-4 w-4 sm:h-5 sm:w-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
         </Button>
 
         <motion.h3
@@ -137,7 +140,7 @@ function FullCalendar({
           onClick={goToNextMonth}
           className="bg-transparent border-border/50 hover:bg-primary/10 hover:border-primary h-8 w-8 sm:h-10 sm:w-10"
         >
-          <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+          <ChevronRight className={`h-4 w-4 sm:h-5 sm:w-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
         </Button>
       </div>
 
@@ -224,13 +227,16 @@ function FullCalendar({
 }
 
 export default function ReservationPage() {
-  const { t } = useLanguage()
+  const { t, language, dir } = useLanguage()
+  const locale = language === 'ar' ? 'ar-TN' : language === 'en' ? 'en-US' : 'fr-FR'
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [user, setUser] = useState<{ name?: string; email?: string; phone?: string; company?: string } | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [clientToken, setClientToken] = useState<string | null>(null)
+  const [bookedSlots, setBookedSlots] = useState<string[]>([])
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false)
 
   const services = [
     { id: "transformation", icon: Rocket, label: t.serviceCards.transformation.title, duration: "30 m" },
@@ -268,6 +274,27 @@ export default function ReservationPage() {
       }))
     }
   }, [])
+
+  useEffect(() => {
+    if (formData.date) {
+      fetchAvailability(formData.date)
+    }
+  }, [formData.date])
+
+  const fetchAvailability = async (date: string) => {
+    setIsLoadingSlots(true)
+    try {
+      const response = await fetch(`/api/reservations?availability=true&date=${date}`)
+      if (response.ok) {
+        const data = await response.json()
+        setBookedSlots(data.bookedSlots || [])
+      }
+    } catch (error) {
+      console.error('Error fetching availability:', error)
+    } finally {
+      setIsLoadingSlots(false)
+    }
+  }
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
@@ -336,31 +363,31 @@ export default function ReservationPage() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="max-w-lg mx-auto text-center p-12 rounded-3xl glass glow-accent"
+              className="max-w-xl mx-auto text-center p-6 sm:p-10 md:p-12 rounded-[2rem] sm:rounded-[3rem] glass glow-accent"
             >
-              <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="h-10 w-10 text-accent" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6 sm:mb-8">
+                <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-accent" />
               </div>
-              <h1 className="text-3xl font-bold mb-4">{t.reservation.confirmed}</h1>
-              <p className="text-foreground/60 mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">{t.reservation.confirmed}</h1>
+              <p className="text-foreground/60 mb-6 sm:mb-8 text-sm sm:text-base px-2 sm:px-4 leading-relaxed">
                 {t.reservation.confirmationEmail}
               </p>
 
-              <div className="p-6 rounded-2xl bg-card/50 mb-8 text-left">
-                <h3 className="font-semibold mb-4">{t.reservation.summary}</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-foreground/60">{t.reservation.service}:</span>
-                    <span className="font-medium">{selectedService?.label}</span>
+              <div className="p-4 sm:p-6 rounded-2xl bg-card/40 border border-border/30 mb-8 sm:mb-10 text-left">
+                <h3 className="font-semibold mb-4 text-accent/80 uppercase tracking-wider text-xs sm:text-sm">{t.reservation.summary}</h3>
+                <div className="space-y-3 text-sm sm:text-base">
+                  <div className="flex flex-col sm:flex-row sm:justify-between border-b border-border/10 pb-2 sm:pb-3">
+                    <span className="text-foreground/50 mb-1 sm:mb-0">{t.reservation.service}:</span>
+                    <span className="font-medium text-foreground">{selectedService?.label}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-foreground/60">{t.reservation.date}:</span>
-                    <span className="font-medium">
+                  <div className="flex flex-col sm:flex-row sm:justify-between border-b border-border/10 pb-2 sm:pb-3">
+                    <span className="text-foreground/50 mb-1 sm:mb-0">{t.reservation.date}:</span>
+                    <span className="font-medium text-foreground">
                       {formData.date &&
                         (() => {
                           const [year, month, day] = formData.date.split('-').map(Number)
                           const date = new Date(year, month - 1, day)
-                          return date.toLocaleDateString("fr-FR", {
+                          return date.toLocaleDateString(locale, {
                             weekday: "long",
                             day: "numeric",
                             month: "long",
@@ -368,50 +395,51 @@ export default function ReservationPage() {
                         })()}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-foreground/60">{t.reservation.time}:</span>
-                    <span className="font-medium">{formData.time}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between border-b border-border/10 pb-2 sm:pb-3">
+                    <span className="text-foreground/50 mb-1 sm:mb-0">{t.reservation.time}:</span>
+                    <span className="font-medium text-foreground">{formData.time}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-foreground/60">{t.reservation.duration}:</span>
-                    <span className="font-medium">{selectedService?.duration}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
+                    <span className="text-foreground/50 mb-1 sm:mb-0">{t.reservation.duration}:</span>
+                    <span className="font-medium text-foreground">{selectedService?.duration}</span>
                   </div>
                 </div>
               </div>
 
               {!clientToken && (
-                <div className="mb-6">
-                  <p className="text-foreground/60 mb-4 text-sm">
+                <div className="mb-8 p-6 rounded-2xl bg-primary/5 border border-primary/10">
+                  <p className="text-foreground/60 mb-4 text-sm leading-relaxed">
                     {t.reservation.createAccountPrompt}
                   </p>
-                  <GoogleSignInButton
-                    onSuccess={() => {
-                      // Redirect to dashboard after successful Google sign-in
-                      window.location.href = '/dashboard'
-                    }}
-                    onError={(error) => {
-                      console.error('Google sign-in error:', error)
-                    }}
-                  />
-                  <div className="mt-3 text-center">
-                    <Link href="/auth/client-login" className="text-sm text-primary hover:underline">
+                  <div className="flex justify-center">
+                    <GoogleSignInButton
+                      onSuccess={() => {
+                        window.location.href = '/dashboard'
+                      }}
+                      onError={(error) => {
+                        console.error('Google sign-in error:', error)
+                      }}
+                    />
+                  </div>
+                  <div className="mt-4 text-center">
+                    <Link href="/auth/client-login" className="text-sm text-primary hover:underline font-medium">
                       {t.reservation.orSignInWithPassword}
                     </Link>
                   </div>
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
                 {clientToken && (
-                  <Link href="/dashboard">
-                    <Button className="glow-primary w-full sm:w-auto">
+                  <Link href="/dashboard" className="w-full sm:w-auto">
+                    <Button className="glow-primary w-full sm:w-auto min-w-[140px]">
                       <LogIn className="mr-2 h-4 w-4" />
                       {t.reservation.viewDashboard}
                     </Button>
                   </Link>
                 )}
-                <Link href="/">
-                  <Button variant="outline" className="bg-transparent w-full sm:w-auto">
+                <Link href="/" className="w-full sm:w-auto">
+                  <Button variant="outline" className="bg-transparent w-full sm:w-auto min-w-[140px]">
                     {t.reservation.backToHome}
                   </Button>
                 </Link>
@@ -429,7 +457,7 @@ export default function ReservationPage() {
                     })
                   }}
                   variant="outline"
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto min-w-[140px]"
                 >
                   {t.reservation.newReservation}
                 </Button>
@@ -558,9 +586,9 @@ export default function ReservationPage() {
                     </div>
 
                     <div className="flex justify-end pt-4">
-                      <Button onClick={() => setStep(2)} disabled={!formData.service} className="glow-primary">
+                      <Button onClick={() => setStep(2)} disabled={!formData.service} className="glow-primary bg-[#a80202] hover:bg-[#8a0101] border-0 text-white">
                         {t.reservation.continue}
-                        <ArrowRight className="ml-2 h-5 w-5" />
+                        <ArrowRight className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                       </Button>
                     </div>
                   </motion.div>
@@ -587,6 +615,7 @@ export default function ReservationPage() {
                         selectedDate={formData.date}
                         onSelectDate={(date) => setFormData({ ...formData, date, time: "" })}
                         t={t}
+                        dir={dir}
                       />
                     </div>
 
@@ -606,7 +635,7 @@ export default function ReservationPage() {
                               {(() => {
                                 const [year, month, day] = formData.date.split('-').map(Number)
                                 const date = new Date(year, month - 1, day)
-                                return date.toLocaleDateString("fr-FR", {
+                                return date.toLocaleDateString(locale, {
                                   weekday: "long",
                                   day: "numeric",
                                   month: "long",
@@ -614,25 +643,39 @@ export default function ReservationPage() {
                               })()}
                             </Label>
                           </div>
-                          <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                          <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 relative">
+                            {isLoadingSlots && (
+                              <div className="absolute inset-0 bg-background/50 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl">
+                                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                              </div>
+                            )}
                             {timeSlots.map((time, index) => {
                               const isSelected = formData.time === time
+                              const isBooked = bookedSlots.includes(time)
                               return (
                                 <motion.button
                                   key={time}
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.05 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  onClick={() => setFormData({ ...formData, time })}
-                                  className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${
+                                  whileHover={!isBooked ? { scale: 1.05 } : {}}
+                                  whileTap={!isBooked ? { scale: 0.95 } : {}}
+                                  onClick={() => !isBooked && setFormData({ ...formData, time })}
+                                  disabled={isBooked}
+                                  className={`px-4 py-3 rounded-xl border-2 font-medium transition-all relative ${
                                     isSelected
                                       ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                                      : "border-border hover:border-primary/50 hover:bg-primary/10"
+                                      : isBooked
+                                        ? "border-border/30 bg-muted/20 text-foreground/20 cursor-not-allowed"
+                                        : "border-border hover:border-primary/50 hover:bg-primary/10"
                                   }`}
                                 >
                                   {time}
+                                  {isBooked && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <div className="w-full h-[1px] bg-foreground/20 rotate-12" />
+                                    </div>
+                                  )}
                                 </motion.button>
                               )
                             })}
@@ -643,16 +686,16 @@ export default function ReservationPage() {
 
                     <div className="flex justify-between pt-4">
                       <Button variant="outline" onClick={() => setStep(1)} className="bg-transparent">
-                        <ArrowLeft className="mr-2 h-5 w-5" />
+                        <ArrowLeft className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'ml-2 rotate-180' : 'mr-2'}`} />
                         {t.common.back}
                       </Button>
                       <Button
                         onClick={() => setStep(3)}
                         disabled={!formData.date || !formData.time}
-                        className="glow-primary"
+                        className="glow-primary bg-[#a80202] hover:bg-[#8a0101] border-0 text-white"
                       >
                         {t.reservation.continue}
-                        <ArrowRight className="ml-2 h-5 w-5" />
+                        <ArrowRight className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                       </Button>
                     </div>
                   </motion.div>
@@ -719,12 +762,11 @@ export default function ReservationPage() {
                           <Phone className="h-4 w-4 inline mr-2" />
                           {t.auth.phone}
                         </Label>
-                        <Input
+                        <PhoneInput
                           id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+33 6 12 34 56 78"
+                          value={formData.phone as any}
+                          onChange={(value) => setFormData({ ...formData, phone: value || "" })}
+                          defaultCountry="FR"
                           className="bg-card/50 border-border/50"
                         />
                       </div>
@@ -826,26 +868,25 @@ export default function ReservationPage() {
                       </div>
                     </motion.div>
 
-                    <div className="flex justify-between pt-4">
+                    <div className="flex justify-between pt-6">
                       <Button variant="outline" onClick={() => setStep(2)} className="bg-transparent">
-                        <ArrowLeft className="mr-2 h-5 w-5" />
+                        <ArrowLeft className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'ml-2 rotate-180' : 'mr-2'}`} />
                         {t.common.back}
                       </Button>
                       <Button
                         onClick={handleSubmit}
-                        disabled={!formData.firstName || !formData.lastName || !formData.email || isSubmitting}
-                        className="glow-primary min-w-[180px]"
+                        disabled={isSubmitting || !formData.firstName || !formData.lastName || !formData.email || (formData.password.length > 0 && formData.password.length < 6)}
+                        className="glow-primary bg-[#a80202] hover:bg-[#8a0101] border-0 text-white"
                       >
                         {isSubmitting ? (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                            className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full"
-                          />
+                          <>
+                            <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2" />
+                            {t.auth.signingUp}
+                          </>
                         ) : (
                           <>
                             {t.reservation.confirmReservation}
-                            <CheckCircle2 className="ml-2 h-5 w-5" />
+                            <ArrowRight className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                           </>
                         )}
                       </Button>

@@ -71,6 +71,7 @@
     "react-dom": "19.2.0",
     "react-hook-form": "^7.60.0",
     "react-native": "latest",
+    "react-phone-number-input": "^3.4.16",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.4",
     "sonner": "^1.7.4",
@@ -82,7 +83,9 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8.5",

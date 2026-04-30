@@ -4,8 +4,9 @@ import { useRef, useMemo } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Points, PointMaterial, Sphere, MeshDistortMaterial, Trail, Float } from "@react-three/drei"
 import * as THREE from "three"
+import { useTheme } from "next-themes"
 
-function ParticleSystem() {
+function ParticleSystem({ isDark }: { isDark: boolean }) {
   const ref = useRef<THREE.Points>(null)
   const count = 5000
   const mouse = useRef({ x: 0, y: 0 })
@@ -60,7 +61,8 @@ function ParticleSystem() {
         size={0.04}
         sizeAttenuation={true}
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
+        blending={isDark ? THREE.AdditiveBlending : THREE.NormalBlending}
+        opacity={isDark ? 1 : 0.6}
       />
     </Points>
   )
@@ -292,15 +294,18 @@ function MouseLight() {
 }
 
 export default function ParticleField() {
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
+
   return (
     <div className="absolute inset-0 -z-10">
       <Canvas camera={{ position: [0, 0, 12], fov: 60 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-        <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} color="#6366f1" />
-        <pointLight position={[-10, -10, -10]} intensity={1} color="#14b8a6" />
+        <ambientLight intensity={isDark ? 0.3 : 0.8} />
+        <pointLight position={[10, 10, 10]} intensity={isDark ? 1.5 : 1} color="#6366f1" />
+        <pointLight position={[-10, -10, -10]} intensity={isDark ? 1 : 0.5} color="#14b8a6" />
         <MouseLight />
 
-        <ParticleSystem />
+        <ParticleSystem isDark={isDark} />
         <DNAHelix />
         <MorphingBlob />
         <WireframeTorus />

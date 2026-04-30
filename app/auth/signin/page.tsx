@@ -18,7 +18,7 @@ const ParticleField = dynamic(() => import("@/components/three/particle-field"),
 
 export default function SignInPage() {
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -101,7 +101,7 @@ export default function SignInPage() {
           >
             <div className="text-center mb-8">
               <Link href="/" className="inline-block mb-6">
-                <span className="text-3xl font-bold gradient-text">IMBT</span>
+                <img src="/logo.png" alt="IMBT Consulting" className="h-12 w-auto mx-auto" />
               </Link>
               <h1 className="text-3xl font-bold mb-2">{t.auth.signIn}</h1>
               <p className="text-foreground/60">{t.auth.allRolesSpace}</p>
@@ -118,7 +118,7 @@ export default function SignInPage() {
                 <div className="space-y-2">
                   <Label htmlFor="email">{t.auth.email}</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
+                    <Mail className={`absolute ${dir === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40`} />
                     <Input
                       id="email"
                       type="email"
@@ -126,7 +126,7 @@ export default function SignInPage() {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="votre@email.com"
                       required
-                      className="pl-10 bg-card/50 border-border/50"
+                      className={`${dir === 'rtl' ? 'pr-10' : 'pl-10'} bg-card/50 border-border/50`}
                     />
                   </div>
                 </div>
@@ -134,7 +134,7 @@ export default function SignInPage() {
                 <div className="space-y-2">
                   <Label htmlFor="password">{t.auth.password}</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
+                    <Lock className={`absolute ${dir === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40`} />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -142,12 +142,12 @@ export default function SignInPage() {
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       placeholder="••••••••"
                       required
-                      className="pl-10 pr-10 bg-card/50 border-border/50"
+                      className={`${dir === 'rtl' ? 'pr-10 pl-10' : 'pl-10 pr-10'} bg-card/50 border-border/50`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground"
+                      className={`absolute ${dir === 'rtl' ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground`}
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -164,16 +164,16 @@ export default function SignInPage() {
                   </Link>
                 </div>
 
-                <Button type="submit" className="w-full glow-primary" disabled={isLoading}>
+                <Button type="submit" className="w-full glow-primary bg-[#a80202] text-white hover:bg-[#8a0101] border-0" disabled={isLoading}>
                   {isLoading ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2" />
+                      <div className={`w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                       {t.auth.signingIn}
                     </>
                   ) : (
                     <>
                       {t.auth.signInButton}
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <ArrowRight className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                     </>
                   )}
                 </Button>

@@ -64,30 +64,89 @@ export interface Translations {
     transformation: {
       title: string
       description: string
+      features: string[]
     }
     development: {
       title: string
       description: string
+      features: string[]
     }
     marketing: {
       title: string
       description: string
+      features: string[]
     }
     crm: {
       title: string
       description: string
+      features: string[]
     }
     erp: {
       title: string
       description: string
+      features: string[]
     }
     training: {
       title: string
       description: string
+      features: string[]
     }
   }
 
-  // About Section
+  // Benefits
+  benefits: {
+    speed: { title: string; description: string }
+    expertise: { title: string; description: string }
+    support: { title: string; description: string }
+  }
+
+  aboutPage: {
+    hero: {
+      badge: string
+      title: string
+      subtitle: string
+      description1: string
+      description2: string
+      cta: string
+    }
+    stats: {
+      projects: { value: string; label: string }
+      clients: { value: string; label: string }
+      experience: { value: string; label: string }
+      experts: { value: string; label: string }
+    }
+    values: {
+      title: string
+      subtitle: string
+      description: string
+      items: {
+        excellence: { title: string; description: string }
+        innovation: { title: string; description: string }
+        engagement: { title: string; description: string }
+        collaboration: { title: string; description: string }
+      }
+    }
+    team: {
+      title: string
+      subtitle: string
+      description: string
+      members: {
+        mohamed: { role: string }
+        sarah: { role: string }
+        thomas: { role: string }
+        julie: { role: string }
+      }
+    }
+    cta: {
+      title: string
+      subtitle: string
+      description: string
+      button1: string
+      button2: string
+    }
+  }
+
+  // About Section (Preview)
   aboutSection: {
     title: string
     subtitle: string
@@ -140,8 +199,13 @@ export interface Translations {
   auth: {
     signIn: string
     signUp: string
+    signInButton: string
+    signUpButton: string
+    signingIn: string
+    signingUp: string
     email: string
     password: string
+    confirmPassword: string
     firstName: string
     lastName: string
     phone: string
@@ -149,32 +213,28 @@ export interface Translations {
     rememberMe: string
     forgotPassword: string
     noAccount: string
-    createAccount: string
     alreadyHaveAccount: string
-    invalidCredentials: string
-    accountDeactivated: string
-    passwordTooShort: string
-    adminSpace: string
-    clientSpace: string
-    managerSpace: string
+    createAccount: string
+    joinIMBT: string
     allRolesSpace: string
-    signInButton: string
-    signUpButton: string
-    signingIn: string
-    signingUp: string
-    confirmPassword: string
+    demoAccountsAvailable: string
+    administrator: string
+    manager: string
+    client: string
     passwordsMismatch: string
+    passwordTooShort: string
     minCharacters: string
     acceptTerms: string
     termsAndConditions: string
     privacyPolicy: string
     or: string
-    joinIMBT: string
-    demoAccountsAvailable: string
-    administrator: string
-    manager: string
-    client: string
+    invalidCredentials: string
+    accountDeactivated: string
+    adminSpace: string
+    clientSpace: string
+    managerSpace: string
   }
+
 
   // Dashboard
   dashboard: {
@@ -270,18 +330,126 @@ export interface Translations {
   // Admin
   admin: {
     dashboard: string
-    manageReservations: string
+    manageReservationsDesc: string
     manageClients: string
     blogManagement: string
     statistics: string
     settings: string
+    totalReservations: string
+    activeClients: string
+    confirmationRate: string
+    averageDuration: string
+    totalRevenue: string
+    title: string
+    author: string
+    views: string
     recentReservations: string
+    client: string
+    service: string
+    dateTime: string
+    status: string
+    actions: string
+    viewDetails: string
+    confirm: string
+    cancel: string
+    noReservationsFound: string
+    reservationDetails: string
+    email: string
+    phone: string
+    company: string
+    date: string
+    time: string
+    close: string
+    searchPlaceholder: string
+    statusFilter: string
+    allStatus: string
+    confirmedStatus: string
+    pendingStatus: string
+    cancelledStatus: string
     viewSite: string
     newArticle: string
     createPost: string
     editPost: string
     deletePost: string
     confirmDelete: string
+    manageClientsTitle: string
+    manageClientsDesc: string
+    newClient: string
+    searchClientsPlaceholder: string
+    firstName: string
+    lastName: string
+    confirmDeleteClient: string
+    create: string
+    update: string
+    noClientsFound: string
+    pageOf: string
+    clientDetails: string
+    editClient: string
+    addClient: string
+    position: string
+    city: string
+    country: string
+    address: string
+    notes: string
+    blogManagementTitle: string
+    blogManagementDesc: string
+    totalArticles: string
+    published: string
+    drafts: string
+    totalViews: string
+    basicInfo: string
+    mainTitle: string
+    subtitle: string
+    slug: string
+    excerpt: string
+    featuredImage: string
+    tags: string
+    articleContent: string
+    addSection: string
+    addParagraph: string
+    addList: string
+    sectionTitle: string
+    listTitle: string
+    listItemPlaceholder: string
+    save: string
+    saving: string
+    successSave: string
+    errorSave: string
+    confirmDeletePost: string
+    articleSubtitlePlaceholder: string
+    articleTitlePlaceholder: string
+    articleSlugPlaceholder: string
+    articleExcerptPlaceholder: string
+    notPublished: string
+    statsTitle: string
+    statsDesc: string
+    thisWeek: string
+    thisMonth: string
+    perMonth: string
+    popularServices: string
+    monthlyEvolution: string
+    recentReservationsTitle: string
+    topClients: string
+    reservations: string
+    completedLabel: string
+    cancelledLabel: string
+    totalLabel: string
+    upcoming: string
+    settingsTitle: string
+    settingsDesc: string
+    saveSettings: string
+    savingSettings: string
+    reset: string
+    successSettings: string
+    errorSettings: string
+    generalSettings: string
+    notifications: string
+    reservationsCategory: string
+    securityNotice: string
+    securityNoticeDesc: string
+    publicBadge: string
+    enabled: string
+    disabled: string
   }
 
   // Blog
@@ -298,15 +466,32 @@ export interface Translations {
   contactPage: {
     title: string
     subtitle: string
-    name: string
-    email: string
-    subject: string
-    message: string
-    send: string
-    address: string
-    phone: string
-    emailLabel: string
-    hours: string
+    description: string
+    info: {
+      email: { title: string }
+      phone: { title: string }
+      address: { title: string }
+      hours: { title: string; value: string }
+    }
+    form: {
+      title: string
+      subtitle: string
+      nameLabel: string
+      emailLabel: string
+      companyLabel: string
+      subjectLabel: string
+      messageLabel: string
+      namePlaceholder: string
+      emailPlaceholder: string
+      companyPlaceholder: string
+      subjectPlaceholder: string
+      messagePlaceholder: string
+      submitButton: string
+      submitting: string
+      successTitle: string
+      successMessage: string
+      sendAnother: string
+    }
   }
 
   // Errors
@@ -316,6 +501,32 @@ export interface Translations {
     notFound: string
     unauthorized: string
     serverError: string
+  }
+
+  privacyPolicy: {
+    title: string
+    subtitle: string
+    description: string
+    protectionBadge: string
+    conformityBadge: string
+    secureBadge: string
+    transparencyBadge: string
+    legalInfoTitle: string
+    companyLabel: string
+    managerLabel: string
+    addressLabel: string
+    emailLabel: string
+    phoneLabel: string
+    lastUpdateLabel: string
+    lastUpdateValue: string
+    sections: {
+      title: string
+      content: string
+      list?: string[]
+    }[]
+    ctaTitle: string
+    ctaDescription: string
+    ctaButton: string
   }
 }
 
@@ -373,26 +584,109 @@ export const translations: Record<Language, Translations> = {
       transformation: {
         title: 'Conseil en Transformation Digitale',
         description: 'Nous élaborons des stratégies digitales personnalisées pour maximiser votre impact sur le marché.',
+        features: [
+          "Audit digital complet",
+          "Stratégie de transformation",
+          "Accompagnement au changement",
+          "Mesure des performances",
+        ],
       },
       development: {
         title: 'Développement Web & Applications',
         description: 'Nous créons des sites web performants et adaptés à votre activité avec des technologies de pointe.',
+        features: ["Sites web sur mesure", "Applications mobiles", "E-commerce", "Maintenance & support"],
       },
       marketing: {
         title: 'Marketing Digital',
         description: 'Optimisation des campagnes digitales et stratégie marketing omnicanal pour une meilleure performance.',
+        features: ["SEO & SEA", "Réseaux sociaux", "Email marketing", "Analytics & reporting"],
       },
       crm: {
         title: 'CRM & Gestion Client',
         description: 'Implémentation de systèmes de gestion de la relation client pour optimiser votre acquisition et fidélisation.',
+        features: [
+          "Analyse des besoins CRM",
+          "Implémentation Salesforce/HubSpot",
+          "Migration des données",
+          "Formation des équipes",
+        ],
       },
       erp: {
         title: 'ERP & Gestion Intégrée',
         description: 'Mise en place de systèmes de gestion intégrés pour une meilleure efficacité opérationnelle.',
+        features: [
+          "Audit des processus",
+          "Sélection de solution ERP",
+          "Déploiement & intégration",
+          "Optimisation continue",
+        ],
       },
       training: {
         title: 'Formations Digitales',
         description: 'Des programmes complets pour maîtriser les outils et technologies digitales, du débutant à l\'avancé.',
+        features: ["Formations personnalisées", "Ateliers pratiques", "Certifications reconnues", "Suivi post-formation"],
+      },
+    },
+    benefits: {
+      speed: { title: "Rapidité", description: "Résultats visibles en quelques semaines" },
+      expertise: { title: "Expertise", description: "10+ ans d'expérience dans le digital" },
+      support: { title: "Support 24/7", description: "Accompagnement continu" },
+    },
+    aboutPage: {
+      hero: {
+        badge: 'À Propos',
+        title: 'Votre partenaire pour la',
+        subtitle: 'transformation digitale',
+        description1: "IMBT Consulting est votre partenaire stratégique pour libérer le plein potentiel de votre entreprise. Nous offrons une gamme complète de services, incluant le conseil en transformation digitale, le développement informatique sur mesure, et des solutions innovantes en marketing digital.",
+        description2: "Avec une approche personnalisée, nous vous accompagnons dans l'atteinte de vos objectifs, tout en vous aidant à naviguer dans l'univers complexe de la transformation digitale.",
+        cta: 'Commencer un projet',
+      },
+      stats: {
+        projects: { value: "100+", label: "Projets réalisés" },
+        clients: { value: "98%", label: "Clients satisfaits" },
+        experience: { value: "10+", label: "Années d'expérience" },
+        experts: { value: "50+", label: "Experts" },
+      },
+      values: {
+        title: 'Nos Valeurs',
+        subtitle: 'Les piliers de notre excellence',
+        description: 'Nos valeurs guident chacune de nos actions et définissent notre approche du conseil digital.',
+        items: {
+          excellence: {
+            title: "Excellence",
+            description: "Nous visons l'excellence dans chaque projet, en dépassant les attentes de nos clients grâce à un travail rigoureux et une attention aux détails.",
+          },
+          innovation: {
+            title: "Innovation",
+            description: "Nous restons à la pointe des technologies et des tendances pour offrir des solutions innovantes et performantes.",
+          },
+          engagement: {
+            title: "Engagement",
+            description: "Nous nous engageons pleinement auprès de nos clients, avec transparence et intégrité, pour bâtir des relations durables.",
+          },
+          collaboration: {
+            title: "Collaboration",
+            description: "Nous croyons en la force du travail d'équipe et de la collaboration étroite avec nos clients pour atteindre les meilleurs résultats.",
+          },
+        },
+      },
+      team: {
+        title: 'Notre Équipe',
+        subtitle: 'Des experts passionnés',
+        description: 'Une équipe pluridisciplinaire dédiée à votre réussite digitale.',
+        members: {
+          mohamed: { role: "Fondateur & CEO" },
+          sarah: { role: "Directrice Technique" },
+          thomas: { role: "Responsable Marketing" },
+          julie: { role: "Lead Developer" },
+        },
+      },
+      cta: {
+        title: 'Rejoignez notre aventure',
+        subtitle: 'digitale',
+        description: 'Que vous souhaitiez devenir client ou rejoindre notre équipe, nous serions ravis de vous rencontrer.',
+        button1: 'Commencer un projet',
+        button2: 'Nous contacter',
       },
     },
     aboutSection: {
@@ -566,18 +860,126 @@ export const translations: Record<Language, Translations> = {
     },
     admin: {
       dashboard: 'Tableau de bord',
-      manageReservations: 'Gérez vos réservations et clients',
+      manageReservationsDesc: 'Gérez vos réservations et clients',
       manageClients: 'Gestion des clients',
       blogManagement: 'Gestion du blog',
       statistics: 'Statistiques',
       settings: 'Paramètres',
+      totalReservations: 'Réservations totales',
+      activeClients: 'Clients actifs',
+      confirmationRate: 'Taux de confirmation',
+      averageDuration: 'Durée moyenne',
+      totalRevenue: 'Revenus Total',
+      title: 'Titre',
+      author: 'Auteur',
+      views: 'Vues',
       recentReservations: 'Réservations récentes',
+      client: 'Client',
+      service: 'Service',
+      dateTime: 'Date & Heure',
+      status: 'Statut',
+      actions: 'Actions',
+      viewDetails: 'Voir détails',
+      confirm: 'Confirmer',
+      cancel: 'Annuler',
+      noReservationsFound: 'Aucune réservation trouvée',
+      reservationDetails: 'Détails de la réservation',
+      email: 'Email',
+      phone: 'Téléphone',
+      company: 'Entreprise',
+      date: 'Date',
+      time: 'Heure',
+      close: 'Fermer',
+      searchPlaceholder: 'Rechercher...',
+      statusFilter: 'Statut',
+      allStatus: 'Tous',
+      confirmedStatus: 'Confirmés',
+      pendingStatus: 'En attente',
+      cancelledStatus: 'Annulés',
       viewSite: 'Voir le site',
       newArticle: 'Nouvel Article',
       createPost: 'Créer un article',
       editPost: 'Modifier l\'article',
       deletePost: 'Supprimer l\'article',
       confirmDelete: 'Êtes-vous sûr de vouloir supprimer cet article ?',
+      manageClientsTitle: 'Gestion des Clients',
+      manageClientsDesc: 'Gérez votre base de données clients',
+      newClient: 'Nouveau Client',
+      searchClientsPlaceholder: 'Rechercher par nom, email ou entreprise...',
+      firstName: 'Prénom',
+      lastName: 'Nom',
+      confirmDeleteClient: 'Êtes-vous sûr de vouloir supprimer ce client ?',
+      create: 'Créer',
+      update: 'Mettre à jour',
+      noClientsFound: 'Aucun client trouvé',
+      pageOf: 'Page {page} sur {total}',
+      clientDetails: 'Détails Client',
+      editClient: 'Modifier Client',
+      addClient: 'Nouveau Client',
+      position: 'Poste',
+      city: 'Ville',
+      country: 'Pays',
+      address: 'Adresse',
+      notes: 'Notes',
+      blogManagementTitle: 'Gestion du Blog',
+      blogManagementDesc: 'Créez et gérez vos articles de blog',
+      totalArticles: 'Total Articles',
+      published: 'Publiés',
+      drafts: 'Brouillons',
+      totalViews: 'Vues Totales',
+      basicInfo: 'Informations de base',
+      mainTitle: 'Titre Principal',
+      subtitle: 'Sous-titre (optionnel)',
+      slug: 'URL (Slug)',
+      excerpt: 'Résumé',
+      featuredImage: 'Image (URL)',
+      tags: 'Tags',
+      articleContent: 'Contenu de l\'article',
+      addSection: 'Section',
+      addParagraph: 'Paragraphe',
+      addList: 'Liste',
+      sectionTitle: 'Titre de la section',
+      listTitle: 'Titre de la liste',
+      listItemPlaceholder: 'Élément de liste...',
+      save: 'Enregistrer',
+      saving: 'Enregistrement...',
+      successSave: 'Article enregistré avec succès',
+      errorSave: 'Erreur lors de l\'enregistrement',
+      confirmDeletePost: 'Êtes-vous sûr de vouloir supprimer cet article ?',
+      articleSubtitlePlaceholder: 'Découvrez les principales tendances...',
+      articleTitlePlaceholder: 'Les 5 tendances...',
+      articleSlugPlaceholder: 'tendances-transformation-digitale-2025',
+      articleExcerptPlaceholder: 'Résumé court qui apparaîtra...',
+      notPublished: 'Non publié',
+      statsTitle: 'Statistiques',
+      statsDesc: 'Vue d\'ensemble de votre activité',
+      thisWeek: 'cette semaine',
+      thisMonth: 'ce mois',
+      perMonth: 'par mois',
+      popularServices: 'Services Populaires',
+      monthlyEvolution: 'Évolution Mensuelle',
+      recentReservationsTitle: 'Réservations Récentes',
+      topClients: 'Meilleurs Clients',
+      reservations: 'réservations',
+      completedLabel: 'terminées',
+      cancelledLabel: 'annulées',
+      totalLabel: 'total',
+      upcoming: 'À Venir',
+      settingsTitle: 'Paramètres',
+      settingsDesc: 'Configurez votre application',
+      saveSettings: 'Enregistrer',
+      savingSettings: 'Enregistrement...',
+      reset: 'Annuler',
+      successSettings: 'Paramètres enregistrés avec succès',
+      errorSettings: 'Une erreur est survenue lors de l\'enregistrement',
+      generalSettings: 'Paramètres Généraux',
+      notifications: 'Notifications',
+      reservationsCategory: 'Réservations',
+      securityNotice: 'Note de Sécurité',
+      securityNoticeDesc: 'Les paramètres marqués comme "Public" sont accessibles via l\'API publique. Assurez-vous de ne pas exposer d\'informations sensibles dans ces paramètres.',
+      publicBadge: 'Public',
+      enabled: 'Activé',
+      disabled: 'Désactivé',
     },
     blog: {
       title: 'Blog',
@@ -588,17 +990,34 @@ export const translations: Record<Language, Translations> = {
       tags: 'Tags',
     },
     contactPage: {
-      title: 'Contactez-nous',
-      subtitle: 'Nous sommes là pour répondre à vos questions',
-      name: 'Nom',
-      email: 'Email',
-      subject: 'Sujet',
-      message: 'Message',
-      send: 'Envoyer',
-      address: 'Adresse',
-      phone: 'Téléphone',
-      emailLabel: 'Email',
-      hours: 'Horaires',
+      title: 'Contact',
+      subtitle: 'Parlons de votre',
+      description: 'Vous avez des questions ? Contactez-nous pour en savoir plus sur nos services et comment nous pouvons vous aider.',
+      info: {
+        email: { title: "Email" },
+        phone: { title: "Téléphone" },
+        address: { title: "Adresse" },
+        hours: { title: "Horaires", value: "Lun-Ven: 9h-18h" },
+      },
+      form: {
+        title: 'Envoyez-nous un message',
+        subtitle: 'Nous vous répondrons dans les 24h',
+        nameLabel: 'Nom complet',
+        emailLabel: 'Email',
+        companyLabel: 'Entreprise',
+        subjectLabel: 'Sujet',
+        messageLabel: 'Message',
+        namePlaceholder: 'Votre nom',
+        emailPlaceholder: 'votre@email.com',
+        companyPlaceholder: 'Votre entreprise',
+        subjectPlaceholder: 'Objet de votre message',
+        messagePlaceholder: 'Décrivez votre projet ou votre demande...',
+        submitButton: 'Envoyer le message',
+        submitting: 'Envoi en cours...',
+        successTitle: 'Message envoyé !',
+        successMessage: 'Merci pour votre message. Notre équipe vous contactera très bientôt.',
+        sendAnother: 'Envoyer un autre message',
+      },
     },
     errors: {
       somethingWrong: 'Une erreur est survenue',
@@ -606,6 +1025,89 @@ export const translations: Record<Language, Translations> = {
       notFound: 'Page non trouvée',
       unauthorized: 'Non autorisé',
       serverError: 'Erreur serveur',
+    },
+    privacyPolicy: {
+      title: 'Confidentialité',
+      subtitle: 'Politique de',
+      description: 'Votre vie privée est notre priorité. Découvrez comment nous protégeons et utilisons vos données personnelles.',
+      protectionBadge: 'Protection des Données',
+      conformityBadge: 'Conforme RGPD',
+      secureBadge: 'Données Sécurisées',
+      transparencyBadge: 'Transparence Totale',
+      legalInfoTitle: 'Informations Légales',
+      companyLabel: 'Société',
+      managerLabel: 'Responsable',
+      addressLabel: 'Adresse',
+      emailLabel: 'Email',
+      phoneLabel: 'Téléphone',
+      lastUpdateLabel: 'Dernière mise à jour',
+      lastUpdateValue: '17 juillet 2025',
+      sections: [
+        {
+          title: "1. Responsable du Traitement",
+          content: "IMBT Consulting est l'entité responsable du traitement des informations personnelles conformément à la loi tunisienne n° 2004-63 et au RGPD de l'UE.",
+        },
+        {
+          title: "2. Collecte de Données",
+          content: "Nous collectons les informations nécessaires incluant :",
+          list: [
+            "Détails d'identification (nom, entreprise, poste)",
+            "Informations de contact (email, téléphone, adresse)",
+            "Données techniques (adresse IP, navigateur, cookies)",
+            "Informations professionnelles (besoins en conseil, historique de contact)",
+          ],
+        },
+        {
+          title: "3. Finalités du Traitement",
+          content: "Les données sont utilisées pour :",
+          list: [
+            "Répondre aux demandes de contact et devis",
+            "Fournir des services de conseil, développement et marketing digital",
+            "Gestion administrative et commerciale",
+            "Communications liées aux services (avec consentement)",
+            "Amélioration du site web et des services",
+          ],
+        },
+        {
+          title: "4. Base Légale",
+          content: "Le traitement repose sur : le consentement pour les communications marketing, l'exécution du contrat, les obligations légales et les intérêts commerciaux légitimes.",
+        },
+        {
+          title: "5. Conservation des Données",
+          content: "Les informations sont conservées pendant la durée de la relation contractuelle, jusqu'à 5 ans après le contact, ou plus longtemps si requis légalement.",
+        },
+        {
+          title: "6. Destinataires des Données",
+          content: "Les informations peuvent être partagées avec le personnel, les partenaires techniques et les autorités légales si nécessaire.",
+        },
+        {
+          title: "7. Droits Individuels",
+          content: "Les utilisateurs peuvent accéder, corriger, s'opposer, supprimer, porter ou retirer leur consentement concernant leurs données.",
+        },
+        {
+          title: "8. Mesures de Sécurité",
+          content: "Nous mettons en œuvre des protections techniques et organisationnelles incluant le chiffrement et l'accès restreint.",
+        },
+        {
+          title: "9. Transfert International de Données",
+          content: "Les transferts hors Tunisie/UE incluent des garanties appropriées via des clauses contractuelles et des évaluations d'adéquation des pays.",
+        },
+        {
+          title: "10. Cookies",
+          content: "Le site utilise des cookies pour l'analytique, la navigation et le marketing, gérables via les paramètres du navigateur.",
+        },
+        {
+          title: "11. Réclamations",
+          content: "Les litiges peuvent être déposés auprès de l'INPDP de Tunisie ou des autorités respectives de protection des données de l'UE.",
+        },
+        {
+          title: "12. Mises à Jour de la Politique",
+          content: "Les modifications seront communiquées via le site web ou par email.",
+        },
+      ],
+      ctaTitle: 'Des Questions sur Vos Données ?',
+      ctaDescription: 'Notre équipe est disponible pour répondre à toutes vos questions concernant la confidentialité et la protection de vos données.',
+      ctaButton: 'Nous Contacter',
     },
   },
 
@@ -662,26 +1164,109 @@ export const translations: Record<Language, Translations> = {
       transformation: {
         title: 'Digital Transformation Consulting',
         description: 'We develop personalized digital strategies to maximize your market impact.',
+        features: [
+          "Full digital audit",
+          "Transformation strategy",
+          "Change management",
+          "Performance measurement",
+        ],
       },
       development: {
         title: 'Web & Application Development',
         description: 'We create high-performance websites tailored to your business with cutting-edge technologies.',
+        features: ["Custom websites", "Mobile applications", "E-commerce", "Maintenance & support"],
       },
       marketing: {
         title: 'Digital Marketing',
         description: 'Optimization of digital campaigns and omnichannel marketing strategy for better performance.',
+        features: ["SEO & SEA", "Social media", "Email marketing", "Analytics & reporting"],
       },
       crm: {
         title: 'CRM & Customer Management',
         description: 'Implementation of customer relationship management systems to optimize your acquisition and retention.',
+        features: [
+          "CRM needs analysis",
+          "Salesforce/HubSpot implementation",
+          "Data migration",
+          "Team training",
+        ],
       },
       erp: {
         title: 'ERP & Integrated Management',
         description: 'Implementation of integrated management systems for better operational efficiency.',
+        features: [
+          "Process audit",
+          "ERP solution selection",
+          "Deployment & integration",
+          "Continuous optimization",
+        ],
       },
       training: {
         title: 'Digital Training',
         description: 'Comprehensive programs to master digital tools and technologies, from beginner to advanced.',
+        features: ["Custom training", "Practical workshops", "Recognized certifications", "Post-training follow-up"],
+      },
+    },
+    benefits: {
+      speed: { title: "Speed", description: "Visible results in a few weeks" },
+      expertise: { title: "Expertise", description: "10+ years of digital experience" },
+      support: { title: "24/7 Support", description: "Continuous guidance" },
+    },
+    aboutPage: {
+      hero: {
+        badge: 'About Us',
+        title: 'Your partner for',
+        subtitle: 'digital transformation',
+        description1: "IMBT Consulting is your strategic partner to unlock the full potential of your business. We offer a full range of services, including digital transformation consulting, custom IT development, and innovative digital marketing solutions.",
+        description2: "With a personalized approach, we support you in achieving your goals, while helping you navigate the complex world of digital transformation.",
+        cta: 'Start a project',
+      },
+      stats: {
+        projects: { value: "100+", label: "Completed projects" },
+        clients: { value: "98%", label: "Satisfied clients" },
+        experience: { value: "10+", label: "Years of experience" },
+        experts: { value: "50+", label: "Experts" },
+      },
+      values: {
+        title: 'Our Values',
+        subtitle: 'The pillars of our excellence',
+        description: 'Our values guide every action we take and define our approach to digital consulting.',
+        items: {
+          excellence: {
+            title: "Excellence",
+            description: "We strive for excellence in every project, exceeding our clients' expectations through rigorous work and attention to detail.",
+          },
+          innovation: {
+            title: "Innovation",
+            description: "We stay at the forefront of technology and trends to offer innovative and high-performance solutions.",
+          },
+          engagement: {
+            title: "Engagement",
+            description: "We are fully committed to our clients, with transparency and integrity, to build long-lasting relationships.",
+          },
+          collaboration: {
+            title: "Collaboration",
+            description: "We believe in the power of teamwork and close collaboration with our clients to achieve the best results.",
+          },
+        },
+      },
+      team: {
+        title: 'Our Team',
+        subtitle: 'Passionate experts',
+        description: 'A multidisciplinary team dedicated to your digital success.',
+        members: {
+          mohamed: { role: "Founder & CEO" },
+          sarah: { role: "Technical Director" },
+          thomas: { role: "Marketing Manager" },
+          julie: { role: "Lead Developer" },
+        },
+      },
+      cta: {
+        title: 'Join our digital',
+        subtitle: 'adventure',
+        description: 'Whether you want to become a client or join our team, we would love to meet you.',
+        button1: 'Start a project',
+        button2: 'Contact us',
       },
     },
     aboutSection: {
@@ -855,18 +1440,126 @@ export const translations: Record<Language, Translations> = {
     },
     admin: {
       dashboard: 'Dashboard',
-      manageReservations: 'Manage your reservations and clients',
-      manageClients: 'Client management',
-      blogManagement: 'Blog management',
+      manageReservationsDesc: 'Manage your reservations and clients',
+      manageClients: 'Manage Clients',
+      blogManagement: 'Blog Management',
       statistics: 'Statistics',
       settings: 'Settings',
-      recentReservations: 'Recent reservations',
-      viewSite: 'View site',
+      totalReservations: 'Total Reservations',
+      activeClients: 'Active Clients',
+      confirmationRate: 'Confirmation Rate',
+      averageDuration: 'Average Duration',
+      totalRevenue: 'Total Revenue',
+      title: 'Title',
+      author: 'Author',
+      views: 'Views',
+      recentReservations: 'Recent Reservations',
+      client: 'Client',
+      service: 'Service',
+      dateTime: 'Date & Time',
+      status: 'Status',
+      actions: 'Actions',
+      viewDetails: 'View details',
+      confirm: 'Confirm',
+      cancel: 'Cancel',
+      noReservationsFound: 'No reservations found',
+      reservationDetails: 'Reservation Details',
+      email: 'Email',
+      phone: 'Phone',
+      company: 'Company',
+      date: 'Date',
+      time: 'Time',
+      close: 'Close',
+      searchPlaceholder: 'Search...',
+      statusFilter: 'Status',
+      allStatus: 'All',
+      confirmedStatus: 'Confirmed',
+      pendingStatus: 'Pending',
+      cancelledStatus: 'Cancelled',
+      viewSite: 'View Site',
       newArticle: 'New Article',
-      createPost: 'Create article',
+      createPost: 'Create an article',
       editPost: 'Edit article',
       deletePost: 'Delete article',
       confirmDelete: 'Are you sure you want to delete this article?',
+      manageClientsTitle: 'Client Management',
+      manageClientsDesc: 'Manage your client database',
+      newClient: 'New Client',
+      searchClientsPlaceholder: 'Search by name, email or company...',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      confirmDeleteClient: 'Are you sure you want to delete this client?',
+      create: 'Create',
+      update: 'Update',
+      noClientsFound: 'No clients found',
+      pageOf: 'Page {page} of {total}',
+      clientDetails: 'Client Details',
+      editClient: 'Edit Client',
+      addClient: 'Add Client',
+      position: 'Position',
+      city: 'City',
+      country: 'Country',
+      address: 'Address',
+      notes: 'Notes',
+      blogManagementTitle: 'Blog Management',
+      blogManagementDesc: 'Create and manage your blog posts',
+      totalArticles: 'Total Articles',
+      published: 'Published',
+      drafts: 'Drafts',
+      totalViews: 'Total Views',
+      basicInfo: 'Basic Information',
+      mainTitle: 'Main Title',
+      subtitle: 'Subtitle (optional)',
+      slug: 'URL (Slug)',
+      excerpt: 'Excerpt',
+      featuredImage: 'Image (URL)',
+      tags: 'Tags',
+      articleContent: 'Article Content',
+      addSection: 'Section',
+      addParagraph: 'Paragraph',
+      addList: 'List',
+      sectionTitle: 'Section Title',
+      listTitle: 'List Title',
+      listItemPlaceholder: 'List item...',
+      save: 'Save',
+      saving: 'Saving...',
+      successSave: 'Article saved successfully',
+      errorSave: 'Error saving article',
+      confirmDeletePost: 'Are you sure you want to delete this article?',
+      articleSubtitlePlaceholder: 'Discover the main trends...',
+      articleTitlePlaceholder: 'The 5 trends...',
+      articleSlugPlaceholder: 'digital-transformation-trends-2025',
+      articleExcerptPlaceholder: 'Short summary that will appear...',
+      notPublished: 'Not published',
+      statsTitle: 'Statistics',
+      statsDesc: 'Overview of your activity',
+      thisWeek: 'this week',
+      thisMonth: 'this month',
+      perMonth: 'per month',
+      popularServices: 'Popular Services',
+      monthlyEvolution: 'Monthly Evolution',
+      recentReservationsTitle: 'Recent Reservations',
+      topClients: 'Top Clients',
+      reservations: 'reservations',
+      completedLabel: 'completed',
+      cancelledLabel: 'cancelled',
+      totalLabel: 'total',
+      upcoming: 'Upcoming',
+      settingsTitle: 'Settings',
+      settingsDesc: 'Configure your application',
+      saveSettings: 'Save',
+      savingSettings: 'Saving...',
+      reset: 'Reset',
+      successSettings: 'Settings saved successfully',
+      errorSettings: 'An error occurred while saving',
+      generalSettings: 'General Settings',
+      notifications: 'Notifications',
+      reservationsCategory: 'Reservations',
+      securityNotice: 'Security Notice',
+      securityNoticeDesc: 'Settings marked as "Public" are accessible via the public API. Make sure not to expose sensitive information in these settings.',
+      publicBadge: 'Public',
+      enabled: 'Enabled',
+      disabled: 'Disabled',
     },
     blog: {
       title: 'Blog',
@@ -877,17 +1570,34 @@ export const translations: Record<Language, Translations> = {
       tags: 'Tags',
     },
     contactPage: {
-      title: 'Contact us',
-      subtitle: 'We are here to answer your questions',
-      name: 'Name',
-      email: 'Email',
-      subject: 'Subject',
-      message: 'Message',
-      send: 'Send',
-      address: 'Address',
-      phone: 'Phone',
-      emailLabel: 'Email',
-      hours: 'Hours',
+      title: 'Contact',
+      subtitle: "Let's talk about your",
+      description: 'Have questions? Contact us to learn more about our services and how we can help you.',
+      info: {
+        email: { title: "Email" },
+        phone: { title: "Phone" },
+        address: { title: "Address" },
+        hours: { title: "Hours", value: "Mon-Fri: 9am-6pm" },
+      },
+      form: {
+        title: 'Send us a message',
+        subtitle: 'We will get back to you within 24h',
+        nameLabel: 'Full Name',
+        emailLabel: 'Email',
+        companyLabel: 'Company',
+        subjectLabel: 'Subject',
+        messageLabel: 'Message',
+        namePlaceholder: 'Your name',
+        emailPlaceholder: 'your@email.com',
+        companyPlaceholder: 'Your company',
+        subjectPlaceholder: 'Subject of your message',
+        messagePlaceholder: 'Describe your project or request...',
+        submitButton: 'Send message',
+        submitting: 'Sending...',
+        successTitle: 'Message sent!',
+        successMessage: 'Thank you for your message. Our team will contact you very soon.',
+        sendAnother: 'Send another message',
+      },
     },
     errors: {
       somethingWrong: 'Something went wrong',
@@ -895,6 +1605,89 @@ export const translations: Record<Language, Translations> = {
       notFound: 'Page not found',
       unauthorized: 'Unauthorized',
       serverError: 'Server error',
+    },
+    privacyPolicy: {
+      title: 'Privacy',
+      subtitle: 'Policy',
+      description: 'Your privacy is our priority. Discover how we protect and use your personal data.',
+      protectionBadge: 'Data Protection',
+      conformityBadge: 'GDPR Compliant',
+      secureBadge: 'Secure Data',
+      transparencyBadge: 'Total Transparency',
+      legalInfoTitle: 'Legal Information',
+      companyLabel: 'Company',
+      managerLabel: 'Manager',
+      addressLabel: 'Address',
+      emailLabel: 'Email',
+      phoneLabel: 'Phone',
+      lastUpdateLabel: 'Last update',
+      lastUpdateValue: 'July 17, 2025',
+      sections: [
+        {
+          title: "1. Data Controller",
+          content: "IMBT Consulting is the entity responsible for processing personal information in accordance with Tunisian Law No. 2004-63 and the EU GDPR.",
+        },
+        {
+          title: "2. Data Collection",
+          content: "We collect necessary information including:",
+          list: [
+            "Identification details (name, company, position)",
+            "Contact information (email, phone, address)",
+            "Technical data (IP address, browser, cookies)",
+            "Professional information (consulting needs, contact history)",
+          ],
+        },
+        {
+          title: "3. Purposes of Processing",
+          content: "Data is used to:",
+          list: [
+            "Respond to contact requests and quotes",
+            "Provide consulting, development, and digital marketing services",
+            "Administrative and commercial management",
+            "Service-related communications (with consent)",
+            "Improvement of the website and services",
+          ],
+        },
+        {
+          title: "4. Legal Basis",
+          content: "Processing is based on: consent for marketing communications, contract execution, legal obligations, and legitimate business interests.",
+        },
+        {
+          title: "5. Data Retention",
+          content: "Information is kept for the duration of the contractual relationship, up to 5 years after contact, or longer if legally required.",
+        },
+        {
+          title: "6. Data Recipients",
+          content: "Information may be shared with personnel, technical partners, and legal authorities if necessary.",
+        },
+        {
+          title: "7. Individual Rights",
+          content: "Users can access, correct, object to, delete, port, or withdraw their consent regarding their data.",
+        },
+        {
+          title: "8. Security Measures",
+          content: "We implement technical and organizational protections including encryption and restricted access.",
+        },
+        {
+          title: "9. International Data Transfer",
+          content: "Transfers outside Tunisia/EU include appropriate safeguards via contractual clauses and country adequacy assessments.",
+        },
+        {
+          title: "10. Cookies",
+          content: "The site uses cookies for analytics, navigation, and marketing, manageable via browser settings.",
+        },
+        {
+          title: "11. Complaints",
+          content: "Disputes can be filed with the INPDP of Tunisia or respective EU data protection authorities.",
+        },
+        {
+          title: "12. Policy Updates",
+          content: "Changes will be communicated via the website or email.",
+        },
+      ],
+      ctaTitle: 'Questions about Your Data?',
+      ctaDescription: 'Our team is available to answer all your questions regarding privacy and data protection.',
+      ctaButton: 'Contact Us',
     },
   },
 
@@ -951,26 +1744,109 @@ export const translations: Record<Language, Translations> = {
       transformation: {
         title: 'استشارات التحول الرقمي',
         description: 'نطور استراتيجيات رقمية مخصصة لتعظيم تأثيرك في السوق.',
+        features: [
+          "تدقيق رقمي كامل",
+          "استراتيجية التحول",
+          "إدارة التغيير",
+          "قياس الأداء",
+        ],
       },
       development: {
         title: 'تطوير الويب والتطبيقات',
         description: 'نقوم بإنشاء مواقع ويب عالية الأداء مصممة خصيصًا لنشاطك التجاري بتقنيات متطورة.',
+        features: ["مواقع ويب مخصصة", "تطبيقات جوال", "تجارة إلكترونية", "الصيانة والدعم"],
       },
       marketing: {
         title: 'التسويق الرقمي',
         description: 'تحسين الحملات الرقمية واستراتيجية التسويق متعددة القنوات لأداء أفضل.',
+        features: ["SEO و SEA", "وسائل التواصل الاجتماعي", "التسويق عبر البريد الإلكتروني", "التحليلات والتقارير"],
       },
       crm: {
         title: 'إدارة علاقات العملاء وإدارة العملاء',
         description: 'تطبيق أنظمة إدارة علاقات العملاء لتحسين الاستحواذ والاحتفاظ.',
+        features: [
+          "تحليل احتياجات CRM",
+          "تنفيذ Salesforce/HubSpot",
+          "هجرة البيانات",
+          "تدريب الفريق",
+        ],
       },
       erp: {
         title: 'أنظمة الإدارة المتكاملة',
         description: 'تطبيق أنظمة إدارة متكاملة لكفاءة تشغيلية أفضل.',
+        features: [
+          "تدقيق العمليات",
+          "اختيار حل ERP",
+          "النشر والتكامل",
+          "التحسين المستمر",
+        ],
       },
       training: {
         title: 'التدريب الرقمي',
         description: 'برامج شاملة لإتقان الأدوات والتقنيات الرقمية، من المبتدئ إلى المتقدم.',
+        features: ["تدريب مخصص", "ورش عمل عملية", "شهادات معترف بها", "متابعة ما بعد التدريب"],
+      },
+    },
+    benefits: {
+      speed: { title: "السرعة", description: "نتائج مرئية في غضون أسابيع قليلة" },
+      expertise: { title: "الخبرة", description: "أكثر من 10 سنوات من الخبرة الرقمية" },
+      support: { title: "دعم 24/7", description: "توجيه مستمر" },
+    },
+    aboutPage: {
+      hero: {
+        badge: 'من نحن',
+        title: 'شريكك من أجل',
+        subtitle: 'التحول الرقمي',
+        description1: "IMBT Consulting هي شريكك الاستراتيجي لإطلاق الإمكانات الكاملة لعملك. نحن نقدم مجموعة كاملة من الخدمات، بما في ذلك استشارات التحول الرقمي، وتطوير تكنولوجيا المعلومات المخصص، وحلول التسويق الرقمي المبتكرة.",
+        description2: "من خلال نهج مخصص، ندعمك في تحقيق أهدافك، بينما نساعدك على التنقل في عالم التحول الرقمي المعقد.",
+        cta: 'ابدأ مشروعاً',
+      },
+      stats: {
+        projects: { value: "100+", label: "مشاريع منجزة" },
+        clients: { value: "98%", label: "عملاء راضون" },
+        experience: { value: "10+", label: "سنوات خبرة" },
+        experts: { value: "50+", label: "خبراء" },
+      },
+      values: {
+        title: 'قيمنا',
+        subtitle: 'ركائز تميزنا',
+        description: 'توجه قيمنا كل إجراء نتخذه وتحدد نهجنا في الاستشارات الرقمية.',
+        items: {
+          excellence: {
+            title: "التميز",
+            description: "نحن نسعى جاهدين للتميز في كل مشروع، متجاوزين توقعات عملائنا من خلال العمل الجاد والاهتمام بالتفاصيل.",
+          },
+          innovation: {
+            title: "الابتكار",
+            description: "نحن نبقى في طليعة التكنولوجيا والاتجاهات لتقديم حلول مبتكرة وعالية الأداء.",
+          },
+          engagement: {
+            title: "الالتزام",
+            description: "نحن ملتزمون تماماً تجاه عملائنا، بشفافية ونزاهة، لبناء علاقات طويلة الأمد.",
+          },
+          collaboration: {
+            title: "التعاون",
+            description: "نحن نؤمن بقوة العمل الجماعي والتعاون الوثيق مع عملائنا لتحقيق أفضل النتائج.",
+          },
+        },
+      },
+      team: {
+        title: 'فريقنا',
+        subtitle: 'خبراء شغوفون',
+        description: 'فريق متعدد التخصصات مكرس لنجاحك الرقمي.',
+        members: {
+          mohamed: { role: "المؤسس والرئيس التنفيذي" },
+          sarah: { role: "المدير التقني" },
+          thomas: { role: "مدير التسويق" },
+          julie: { role: "مطور رئيسي" },
+        },
+      },
+      cta: {
+        title: 'انضم إلى مغامرتنا',
+        subtitle: 'الرقمية',
+        description: 'سواء كنت ترغب في أن تصبح عميلاً أو تنضم إلى فريقنا، يسعدنا مقابلتك.',
+        button1: 'ابدأ مشروعاً',
+        button2: 'اتصل بنا',
       },
     },
     aboutSection: {
@@ -1143,19 +2019,127 @@ export const translations: Record<Language, Translations> = {
       months: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
     },
     admin: {
-      dashboard: 'لوحة التحكم',
-      manageReservations: 'إدارة حجوزاتك وعملائك',
+      dashboard: 'لوحة القيادة',
+      manageReservationsDesc: 'إدارة الحجوزات والعملاء الخاصين بك',
       manageClients: 'إدارة العملاء',
       blogManagement: 'إدارة المدونة',
       statistics: 'الإحصائيات',
       settings: 'الإعدادات',
+      totalReservations: 'إجمالي الحجوزات',
+      activeClients: 'العملاء النشطون',
+      confirmationRate: 'معدل التأكيد',
+      averageDuration: 'متوسط المدة',
+      totalRevenue: 'إجمالي الإيرادات',
+      title: 'العنوان',
+      author: 'الكاتب',
+      views: 'المشاهدات',
       recentReservations: 'الحجوزات الأخيرة',
+      client: 'العميل',
+      service: 'الخدمة',
+      dateTime: 'التاريخ والوقت',
+      status: 'الحالة',
+      actions: 'الإجراءات',
+      viewDetails: 'عرض التفاصيل',
+      confirm: 'تأكيد',
+      cancel: 'إلغاء',
+      noReservationsFound: 'لم يتم العثور على حجوزات',
+      reservationDetails: 'تفاصيل الحجز',
+      email: 'البريد الإلكتروني',
+      phone: 'الهاتف',
+      company: 'الشركة',
+      date: 'التاريخ',
+      time: 'الوقت',
+      close: 'إغلاق',
+      searchPlaceholder: 'بحث...',
+      statusFilter: 'الحالة',
+      allStatus: 'الكل',
+      confirmedStatus: 'مؤكد',
+      pendingStatus: 'قيد الانتظار',
+      cancelledStatus: 'ملغى',
       viewSite: 'عرض الموقع',
       newArticle: 'مقال جديد',
       createPost: 'إنشاء مقال',
       editPost: 'تعديل المقال',
       deletePost: 'حذف المقال',
-      confirmDelete: 'هل أنت متأكد أنك تريد حذف هذا المقال؟',
+      confirmDelete: 'هل أنت متأكد من حذف هذا المقال؟',
+      manageClientsTitle: 'إدارة العملاء',
+      manageClientsDesc: 'إدارة قاعدة بيانات عملائك',
+      newClient: 'عميل جديد',
+      searchClientsPlaceholder: 'البحث بالاسم أو البريد الإلكتروني أو الشركة...',
+      firstName: 'الاسم الأول',
+      lastName: 'اللقب',
+      confirmDeleteClient: 'هل أنت متأكد من حذف هذا العميل؟',
+      create: 'إنشاء',
+      update: 'تحديث',
+      noClientsFound: 'لم يتم العثور على عملاء',
+      pageOf: 'الصفحة {page} من {total}',
+      clientDetails: 'تفاصيل العميل',
+      editClient: 'تعديل العميل',
+      addClient: 'إضافة عميل',
+      position: 'المنصب',
+      city: 'المدينة',
+      country: 'البلد',
+      address: 'العنوان',
+      notes: 'ملاحظات',
+      blogManagementTitle: 'إدارة المدونة',
+      blogManagementDesc: 'إنشاء وإدارة مقالات مدونتك',
+      totalArticles: 'إجمالي المقالات',
+      published: 'المنشورة',
+      drafts: 'المسودات',
+      totalViews: 'إجمالي المشاهدات',
+      basicInfo: 'معلومات أساسية',
+      mainTitle: 'العنوان الرئيسي',
+      subtitle: 'عنوان فرعي (اختياري)',
+      slug: 'الرابط الثابت (Slug)',
+      excerpt: 'مقتطف',
+      featuredImage: 'الصورة البارزة (URL)',
+      tags: 'العلامات',
+      articleContent: 'محتوى المقال',
+      addSection: 'قسم',
+      addParagraph: 'فقرة',
+      addList: 'قائمة',
+      sectionTitle: 'عنوان القسم',
+      listTitle: 'عنوان القائمة',
+      listItemPlaceholder: 'عنصر القائمة...',
+      save: 'حفظ',
+      saving: 'جاري الحفظ...',
+      successSave: 'تم حفظ المقال بنجاح',
+      errorSave: 'خطأ في حفظ المقال',
+      confirmDeletePost: 'هل أنت متأكد من حذف هذا المقال؟',
+      articleSubtitlePlaceholder: 'اكتشف الاتجاهات الرئيسية...',
+      articleTitlePlaceholder: 'أهم 5 اتجاهات...',
+      articleSlugPlaceholder: 'اتجاهات-التحول-الرقمي-2025',
+      articleExcerptPlaceholder: 'ملخص قصير سيظهر...',
+      notPublished: 'غير منشور',
+      statsTitle: 'الإحصائيات',
+      statsDesc: 'نظرة عامة على نشاطك',
+      thisWeek: 'هذا الأسبوع',
+      thisMonth: 'هذا الشهر',
+      perMonth: 'لكل شهر',
+      popularServices: 'الخدمات الأكثر شعبية',
+      monthlyEvolution: 'التطور الشهري',
+      recentReservationsTitle: 'الحجوزات الأخيرة',
+      topClients: 'أفضل العملاء',
+      reservations: 'حجوزات',
+      completedLabel: 'مكتملة',
+      cancelledLabel: 'ملغاة',
+      totalLabel: 'الإجمالي',
+      upcoming: 'قادمة',
+      settingsTitle: 'الإعدادات',
+      settingsDesc: 'تكوين تطبيقك',
+      saveSettings: 'حفظ',
+      savingSettings: 'جاري الحفظ...',
+      reset: 'إلغاء',
+      successSettings: 'تم حفظ الإعدادات بنجاح',
+      errorSettings: 'حدث خطأ أثناء الحفظ',
+      generalSettings: 'الإعدادات العامة',
+      notifications: 'التنبيهات',
+      reservationsCategory: 'الحجوزات',
+      securityNotice: 'ملاحظة أمنية',
+      securityNoticeDesc: 'الإعدادات التي تحمل علامة "عام" يمكن الوصول إليها عبر واجهة برمجة التطبيقات العامة. تأكد من عدم عرض معلومات حساسة في هذه الإعدادات.',
+      publicBadge: 'عام',
+      enabled: 'مفعل',
+      disabled: 'معطل',
     },
     blog: {
       title: 'المدونة',
@@ -1167,16 +2151,33 @@ export const translations: Record<Language, Translations> = {
     },
     contactPage: {
       title: 'اتصل بنا',
-      subtitle: 'نحن هنا للإجابة على أسئلتك',
-      name: 'الاسم',
-      email: 'البريد الإلكتروني',
-      subject: 'الموضوع',
-      message: 'الرسالة',
-      send: 'إرسال',
-      address: 'العنوان',
-      phone: 'الهاتف',
-      emailLabel: 'البريد الإلكتروني',
-      hours: 'ساعات العمل',
+      subtitle: 'دعونا نتحدث عن',
+      description: 'لديك أسئلة؟ اتصل بنا لمعرفة المزيد عن خدماتنا وكيف يمكننا مساعدتك.',
+      info: {
+        email: { title: "البريد الإلكتروني" },
+        phone: { title: "الهاتف" },
+        address: { title: "العنوان" },
+        hours: { title: "ساعات العمل", value: "الاثنين-الجمعة: 9 صباحاً - 6 مساءً" },
+      },
+      form: {
+        title: 'أرسل لنا رسالة',
+        subtitle: 'سنرد عليك في غضون 24 ساعة',
+        nameLabel: 'الاسم الكامل',
+        emailLabel: 'البريد الإلكتروني',
+        companyLabel: 'الشركة',
+        subjectLabel: 'الموضوع',
+        messageLabel: 'الرسالة',
+        namePlaceholder: 'اسمك',
+        emailPlaceholder: 'your@email.com',
+        companyPlaceholder: 'شركتك',
+        subjectPlaceholder: 'موضوع رسالتك',
+        messagePlaceholder: 'صف مشروعك أو طلبك...',
+        submitButton: 'إرسال الرسالة',
+        submitting: 'جاري الإرسال...',
+        successTitle: 'تم إرسال الرسالة!',
+        successMessage: 'شكراً لرسالتك. سيتصل بك فريقنا قريباً جداً.',
+        sendAnother: 'إرسال رسالة أخرى',
+      },
     },
     errors: {
       somethingWrong: 'حدث خطأ ما',
@@ -1184,6 +2185,89 @@ export const translations: Record<Language, Translations> = {
       notFound: 'الصفحة غير موجودة',
       unauthorized: 'غير مصرح',
       serverError: 'خطأ في الخادم',
+    },
+    privacyPolicy: {
+      title: 'الخصوصية',
+      subtitle: 'سياسة',
+      description: 'خصوصيتك هي أولويتنا. اكتشف كيف نحمي ونستخدم بياناتك الشخصية.',
+      protectionBadge: 'حماية البيانات',
+      conformityBadge: 'متوافق مع GDPR',
+      secureBadge: 'بيانات آمنة',
+      transparencyBadge: 'شفافية كاملة',
+      legalInfoTitle: 'معلومات قانونية',
+      companyLabel: 'الشركة',
+      managerLabel: 'المسؤول',
+      addressLabel: 'العنوان',
+      emailLabel: 'البريد الإلكتروني',
+      phoneLabel: 'الهاتف',
+      lastUpdateLabel: 'آخر تحديث',
+      lastUpdateValue: '17 يوليو 2025',
+      sections: [
+        {
+          title: "1. مسؤول معالجة البيانات",
+          content: "IMBT Consulting هي الكيان المسؤول عن معالجة المعلومات الشخصية وفقاً للقانون التونسي رقم 2004-63 واللائحة العامة لحماية البيانات (GDPR) للاتحاد الأوروبي.",
+        },
+        {
+          title: "2. جمع البيانات",
+          content: "نحن نجمع المعلومات الضرورية بما في ذلك:",
+          list: [
+            "تفاصيل الهوية (الاسم، الشركة، المنصب)",
+            "معلومات الاتصال (البريد الإلكتروني، الهاتف، العنوان)",
+            "البيانات التقنية (عنوان IP، المتصفح، ملفات تعريف الارتباط)",
+            "المعلومات المهنية (احتياجات الاستشارة، سجل الاتصال)",
+          ],
+        },
+        {
+          title: "3. أغراض المعالجة",
+          content: "تستخدم البيانات من أجل:",
+          list: [
+            "الرد على طلبات الاتصال وعروض الأسعار",
+            "تقديم خدمات الاستشارة والتطوير والتسويق الرقمي",
+            "الإدارة الإدارية والتجارية",
+            "الاتصالات المتعلقة بالخدمة (بموافقة)",
+            "تحسين الموقع والخدمات",
+          ],
+        },
+        {
+          title: "4. الأساس القانوني",
+          content: "تعتمد المعالجة على: الموافقة لاتصالات التسويق، تنفيذ العقد، الالتزامات القانونية والمصالح التجارية المشروعة.",
+        },
+        {
+          title: "5. الاحتفاظ بالبيانات",
+          content: "يتم الاحتفاظ بالمعلومات طوال مدة العلاقة التعاقدية، ولمدة تصل إلى 5 سنوات بعد الاتصال، أو لفترة أطول إذا كان ذلك مطلوباً قانوناً.",
+        },
+        {
+          title: "6. مستلمو البيانات",
+          content: "يمكن مشاركة المعلومات مع الموظفين والشركاء التقنيين والسلطات القانونية إذا لزم الأمر.",
+        },
+        {
+          title: "7. الحقوق الفردية",
+          content: "يمكن للمستخدمين الوصول إلى بياناتهم أو تصحيحها أو الاعتراض عليها أو حذفها أو نقلها أو سحب موافقتهم عليها.",
+        },
+        {
+          title: "8. تدابير الأمن",
+          content: "نحن ننفذ حماية تقنية وتنظيمية بما في ذلك التشفير والوصول المقيد.",
+        },
+        {
+          title: "9. نقل البيانات الدولي",
+          content: "تشمل التحويلات خارج تونس/الاتحاد الأوروبي ضمانات مناسبة عبر بنود تعاقدية وتقييمات كفاية الدولة.",
+        },
+        {
+          title: "10. ملفات تعريف الارتباط (Cookies)",
+          content: "يستخدم الموقع ملفات تعريف الارتباط للتحليلات والملاحة والتسويق، ويمكن إدارتها عبر إعدادات المتصفح.",
+        },
+        {
+          title: "11. الشكاوى",
+          content: "يمكن تقديم النزاعات إلى الهيئة الوطنية لحماية المعطيات الشخصية (INPDP) في تونس أو سلطات حماية البيانات المعنية في الاتحاد الأوروبي.",
+        },
+        {
+          title: "12. تحديثات السياسة",
+          content: "سيتم الإبلاغ عن التغييرات عبر الموقع الإلكتروني أو البريد الإلكتروني.",
+        },
+      ],
+      ctaTitle: 'أسئلة حول بياناتك؟',
+      ctaDescription: 'فريقنا متاح للإجابة على جميع أسئلتك المتعلقة بالخصوصية وحماية البيانات.',
+      ctaButton: 'اتصل بنا',
     },
   },
 }

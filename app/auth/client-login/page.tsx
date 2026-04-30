@@ -91,7 +91,7 @@ export default function ClientLoginPage() {
           >
             <div className="text-center mb-8">
               <Link href="/" className="inline-block mb-6">
-                <span className="text-3xl font-bold gradient-text">IMBT</span>
+                <img src="/logo.png" alt="IMBT Consulting" className="h-12 w-auto mx-auto" />
               </Link>
               <h1 className="text-3xl font-bold mb-2">Connexion Client</h1>
               <p className="text-foreground/60">Accédez à votre espace client</p>

@@ -1,4 +1,4 @@
-import { Pool, PoolClient, QueryResult } from 'pg'
+import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg'
 
 // Create a connection pool
 const pool = new Pool({
@@ -9,14 +9,14 @@ const pool = new Pool({
 })
 
 // Log pool errors
-pool.on('error', (err) => {
+pool.on('error', (err: Error) => {
   console.error('Unexpected error on idle client', err)
 })
 
 /**
  * Execute a SQL query
  */
-export async function query<T = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
+export async function query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
   const start = Date.now()
   try {
     const res = await pool.query<T>(text, params)

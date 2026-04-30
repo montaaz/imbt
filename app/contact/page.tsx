@@ -42,7 +42,10 @@ const contactInfo = [
   },
 ]
 
+import { useLanguage } from "@/lib/i18n/language-context"
+
 export default function ContactPage() {
+  const { t, dir } = useLanguage()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,6 +55,33 @@ export default function ContactPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: t.contactPage.info.email.title,
+      value: "contact@imbt-consulting.com",
+      href: "mailto:contact@imbt-consulting.com",
+    },
+    {
+      icon: Phone,
+      title: t.contactPage.info.phone.title,
+      value: "+216 54 621 308",
+      href: "tel:+21654621308",
+    },
+    {
+      icon: MapPin,
+      title: t.contactPage.info.address.title,
+      value: "Tunis, Tunisia",
+      href: "#",
+    },
+    {
+      icon: Clock,
+      title: t.contactPage.info.hours.title,
+      value: t.contactPage.info.hours.value,
+      href: "#",
+    },
+  ]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,13 +114,12 @@ export default function ContactPage() {
             transition={{ duration: 0.8 }}
             className="max-w-3xl mx-auto text-center mb-16"
           >
-            <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">Contact</span>
-            <h1 className="text-5xl sm:text-6xl font-bold mb-6">
-              Parlons de votre <span className="gradient-text">projet</span>
+            <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">{t.common.contact}</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+              {t.contactPage.subtitle} <span className="gradient-text">{t.contactPage.title}</span>
             </h1>
-            <p className="text-foreground/60 text-xl leading-relaxed">
-              Vous avez des questions ? Contactez-nous pour en savoir plus sur nos services et comment nous pouvons vous
-              aider.
+            <p className="text-foreground/60 text-lg md:text-xl leading-relaxed">
+              {t.contactPage.description}
             </p>
           </motion.div>
 
@@ -107,7 +136,7 @@ export default function ContactPage() {
                 href={info.href}
                 className="group p-6 rounded-2xl glass hover:bg-card/60 transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+                <div className={`w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors`}>
                   <info.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="font-semibold mb-1">{info.title}</h3>
@@ -119,7 +148,7 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: dir === 'rtl' ? 50 : -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
@@ -128,8 +157,8 @@ export default function ContactPage() {
                   <MessageSquare className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold">Envoyez-nous un message</h2>
-                  <p className="text-foreground/60">Nous vous répondrons dans les 24h</p>
+                  <h2 className="text-2xl font-bold">{t.contactPage.form.title}</h2>
+                  <p className="text-foreground/60">{t.contactPage.form.subtitle}</p>
                 </div>
               </div>
 
@@ -140,38 +169,38 @@ export default function ContactPage() {
                   className="p-8 rounded-2xl glass text-center"
                 >
                   <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
-                    <Send className="h-8 w-8 text-accent" />
+                    <Send className={`h-8 w-8 text-accent ${dir === 'rtl' ? 'rotate-180' : ''}`} />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Message envoyé !</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t.contactPage.form.successTitle}</h3>
                   <p className="text-foreground/60">
-                    Merci pour votre message. Notre équipe vous contactera très bientôt.
+                    {t.contactPage.form.successMessage}
                   </p>
                   <Button onClick={() => setSubmitted(false)} variant="outline" className="mt-6 bg-transparent">
-                    Envoyer un autre message
+                    {t.contactPage.form.sendAnother}
                   </Button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Nom complet</Label>
+                      <Label htmlFor="name">{t.contactPage.form.nameLabel}</Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Votre nom"
+                        placeholder={t.contactPage.form.namePlaceholder}
                         required
                         className="bg-card/50 border-border/50"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">{t.contactPage.form.emailLabel}</Label>
                       <Input
                         id="email"
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="votre@email.com"
+                        placeholder={t.contactPage.form.emailPlaceholder}
                         required
                         className="bg-card/50 border-border/50"
                       />
@@ -180,22 +209,22 @@ export default function ContactPage() {
 
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="company">Entreprise</Label>
+                      <Label htmlFor="company">{t.contactPage.form.companyLabel}</Label>
                       <Input
                         id="company"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="Votre entreprise"
+                        placeholder={t.contactPage.form.companyPlaceholder}
                         className="bg-card/50 border-border/50"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="subject">Sujet</Label>
+                      <Label htmlFor="subject">{t.contactPage.form.subjectLabel}</Label>
                       <Input
                         id="subject"
                         value={formData.subject}
                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        placeholder="Objet de votre message"
+                        placeholder={t.contactPage.form.subjectPlaceholder}
                         required
                         className="bg-card/50 border-border/50"
                       />
@@ -203,28 +232,28 @@ export default function ContactPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
+                    <Label htmlFor="message">{t.contactPage.form.messageLabel}</Label>
                     <Textarea
                       id="message"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Décrivez votre projet ou votre demande..."
+                      placeholder={t.contactPage.form.messagePlaceholder}
                       rows={6}
                       required
                       className="bg-card/50 border-border/50 resize-none"
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full glow-primary" disabled={isSubmitting}>
+                  <Button type="submit" size="lg" className="w-full glow-primary bg-[#a80202] hover:bg-[#8a0101] border-0 text-white" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
                         <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin mr-2" />
-                        Envoi en cours...
+                        {t.contactPage.form.submitting}
                       </>
                     ) : (
                       <>
-                        Envoyer le message
-                        <Send className="ml-2 h-5 w-5" />
+                        {t.contactPage.form.submitButton}
+                        <Send className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                       </>
                     )}
                   </Button>
@@ -234,7 +263,7 @@ export default function ContactPage() {
 
             {/* Map/Visual */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: dir === 'rtl' ? -50 : 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="relative"
@@ -291,7 +320,7 @@ export default function ContactPage() {
                       <div className="relative">
                         <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
                           <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                            <MapPin className="h-5 w-5 text-primary-foreground" />
+                            <MapPin className="h-5 w-5 text-white" />
                           </div>
                         </div>
                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full opacity-50 animate-ping" />

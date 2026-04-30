@@ -80,8 +80,13 @@ const sections = [
   },
 ]
 
+import { useLanguage } from "@/lib/i18n/language-context"
+
 export default function PolitiqueConfidentialitePage() {
   const router = useRouter()
+  const { t, dir } = useLanguage()
+
+  const icons = [Users, FileText, Target, Scale, Clock, Users, Eye, Lock, Globe, Cookie, AlertCircle, FileText]
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,8 +107,8 @@ export default function PolitiqueConfidentialitePage() {
               onClick={() => router.back()}
               className="flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors mb-8 group"
             >
-              <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-              <span>Retour</span>
+              <ArrowLeft className={`h-5 w-5 transition-transform ${dir === 'rtl' ? 'rotate-180 group-hover:translate-x-1' : 'group-hover:-translate-x-1'}`} />
+              <span>{t.common.back}</span>
             </button>
 
             <div className="text-center">
@@ -114,27 +119,27 @@ export default function PolitiqueConfidentialitePage() {
                 className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-primary/10 border border-primary/20 mb-6"
               >
                 <Shield className="h-5 w-5 text-primary" />
-                <span className="text-primary font-semibold">Protection des Données</span>
+                <span className="text-primary font-semibold">{t.privacyPolicy.protectionBadge}</span>
               </motion.div>
 
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Politique de <span className="gradient-text">Confidentialité</span>
+                {t.privacyPolicy.subtitle} <span className="gradient-text">{t.privacyPolicy.title}</span>
               </h1>
               <p className="text-xl text-foreground/70 mb-8">
-                Votre vie privée est notre priorité. Découvrez comment nous protégeons et utilisons vos données personnelles.
+                {t.privacyPolicy.description}
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-sm text-foreground/60">
                 <div className="flex items-center gap-2">
                   <Lock className="h-4 w-4" />
-                  <span>Conforme RGPD</span>
+                  <span>{t.privacyPolicy.conformityBadge}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4" />
-                  <span>Données Sécurisées</span>
+                  <span>{t.privacyPolicy.secureBadge}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Eye className="h-4 w-4" />
-                  <span>Transparence Totale</span>
+                  <span>{t.privacyPolicy.transparencyBadge}</span>
                 </div>
               </div>
             </div>
@@ -153,26 +158,26 @@ export default function PolitiqueConfidentialitePage() {
           >
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
               <FileText className="h-6 w-6 text-primary" />
-              Informations Légales
+              {t.privacyPolicy.legalInfoTitle}
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <p className="text-sm text-foreground/60 mb-1">Société</p>
+                <p className="text-sm text-foreground/60 mb-1">{t.privacyPolicy.companyLabel}</p>
                 <p className="font-semibold">IMBT Consulting</p>
               </div>
               <div>
-                <p className="text-sm text-foreground/60 mb-1">Responsable</p>
+                <p className="text-sm text-foreground/60 mb-1">{t.privacyPolicy.managerLabel}</p>
                 <p className="font-semibold">Ismail Ferjani</p>
               </div>
               <div className="md:col-span-2">
-                <p className="text-sm text-foreground/60 mb-1">Adresse</p>
+                <p className="text-sm text-foreground/60 mb-1">{t.privacyPolicy.addressLabel}</p>
                 <div className="flex items-start gap-2">
                   <MapPin className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                   <p className="font-semibold">Immeuble Omar bloc A bureau 3-2 Montplaisir 1073, Tunis, Tunisie</p>
                 </div>
               </div>
               <div>
-                <p className="text-sm text-foreground/60 mb-1">Email</p>
+                <p className="text-sm text-foreground/60 mb-1">{t.privacyPolicy.emailLabel}</p>
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-primary" />
                   <a href="mailto:contact@imbt-consulting.com" className="font-semibold hover:text-primary transition-colors">
@@ -181,17 +186,17 @@ export default function PolitiqueConfidentialitePage() {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-foreground/60 mb-1">Téléphone</p>
+                <p className="text-sm text-foreground/60 mb-1">{t.privacyPolicy.phoneLabel}</p>
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-primary" />
-                  <a href="tel:+21693286677" className="font-semibold hover:text-primary transition-colors">
-                    +216 93 286 677
+                  <a href="tel:+21654621308" className="font-semibold hover:text-primary transition-colors">
+                    +216 54 621 308
                   </a>
                 </div>
               </div>
               <div className="md:col-span-2">
-                <p className="text-sm text-foreground/60 mb-1">Dernière mise à jour</p>
-                <p className="font-semibold">17 juillet 2025</p>
+                <p className="text-sm text-foreground/60 mb-1">{t.privacyPolicy.lastUpdateLabel}</p>
+                <p className="font-semibold">{t.privacyPolicy.lastUpdateValue}</p>
               </div>
             </div>
           </motion.div>
@@ -202,36 +207,39 @@ export default function PolitiqueConfidentialitePage() {
       <section className="py-12 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="space-y-8">
-            {sections.map((section, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="glass rounded-2xl p-8 hover:glow-primary transition-all duration-300"
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-primary/10 flex-shrink-0">
-                    <section.icon className="h-6 w-6 text-primary" />
+            {t.privacyPolicy.sections.map((section, index) => {
+              const Icon = icons[index] || FileText
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className="glass rounded-2xl p-8 hover:glow-primary transition-all duration-300"
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="p-3 rounded-xl bg-primary/10 flex-shrink-0">
+                      <Icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold mb-3">{section.title}</h3>
+                      <p className="text-foreground/80 mb-4">{section.content}</p>
+                      {section.list && (
+                        <ul className="space-y-2">
+                          {section.list.map((item, i) => (
+                            <li key={i} className="flex items-start gap-3">
+                              <div className={`mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0`} />
+                              <span className="text-foreground/80">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-3">{section.title}</h3>
-                    <p className="text-foreground/80 mb-4">{section.content}</p>
-                    {section.list && (
-                      <ul className="space-y-2">
-                        {section.list.map((item, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            <div className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                            <span className="text-foreground/80">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -246,24 +254,24 @@ export default function PolitiqueConfidentialitePage() {
             className="glass glow-primary rounded-3xl p-12 text-center"
           >
             <Shield className="h-16 w-16 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Des Questions sur Vos Données ?</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.privacyPolicy.ctaTitle}</h2>
             <p className="text-xl text-foreground/70 mb-8">
-              Notre équipe est disponible pour répondre à toutes vos questions concernant la confidentialité et la protection de vos données.
+              {t.privacyPolicy.ctaDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="mailto:contact@imbt-consulting.com"
-                className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
+                className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity bg-[#a80202] text-white"
               >
-                <Mail className="inline-block h-5 w-5 mr-2" />
-                Nous Contacter
+                <Mail className={`inline-block h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                {t.privacyPolicy.ctaButton}
               </a>
               <a
-                href="tel:+21693286677"
+                href="tel:+21654621308"
                 className="px-8 py-3 rounded-xl border border-border hover:bg-muted transition-colors font-semibold"
               >
-                <Phone className="inline-block h-5 w-5 mr-2" />
-                +216 93 286 677
+                <Phone className={`inline-block h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                +216 54 621 308
               </a>
             </div>
           </motion.div>
@@ -274,7 +282,7 @@ export default function PolitiqueConfidentialitePage() {
       <section className="py-8 px-6 border-t border-border">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-sm text-foreground/60">
-            © 2025 IMBT Consulting. Tous droits réservés.
+            © 2025 IMBT Consulting. {t.footer.copyright}
           </p>
         </div>
       </section>

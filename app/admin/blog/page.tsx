@@ -47,8 +47,11 @@ interface ContentSection {
   items?: string[]
 }
 
+import { useLanguage } from '@/lib/i18n/language-context'
+
 export default function AdminBlogPage() {
   const router = useRouter()
+  const { t, dir, language } = useLanguage()
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -64,7 +67,7 @@ export default function AdminBlogPage() {
     tags: '',
   })
   const [contentSections, setContentSections] = useState<ContentSection[]>([
-    { id: '1', type: 'heading', title: 'Introduction', content: '' },
+    { id: '1', type: 'heading', title: language === 'ar' ? 'مقدمة' : 'Introduction', content: '' },
   ])
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function AdminBlogPage() {
         },
       })
 
-      if (!response.ok) throw new Error('Failed to fetch posts')
+      if (!response.ok) throw new Error(t.common.error)
 
       const data = await response.json()
       setPosts(data.posts)
@@ -158,7 +161,7 @@ export default function AdminBlogPage() {
     }
 
     if (sections.length === 0) {
-      sections.push({ id: '1', type: 'heading', title: 'Introduction', content: html })
+      sections.push({ id: '1', type: 'heading', title: language === 'ar' ? 'مقدمة' : 'Introduction', content: html })
     }
 
     return sections
@@ -212,7 +215,7 @@ export default function AdminBlogPage() {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Failed to save post')
+        throw new Error(error.error || t.admin.errorSave)
       }
 
       // Reset form and close modal
@@ -226,13 +229,14 @@ export default function AdminBlogPage() {
         status: 'draft',
         tags: '',
       })
-      setContentSections([{ id: '1', type: 'heading', title: 'Introduction', content: '' }])
+      setContentSections([{ id: '1', type: 'heading', title: language === 'ar' ? 'مقدمة' : 'Introduction', content: '' }])
       setShowCreateModal(false)
       setEditingPost(null)
       fetchPosts()
+      alert(t.admin.successSave)
     } catch (error) {
       console.error('Error saving post:', error)
-      alert(error instanceof Error ? error.message : 'Failed to save post')
+      alert(error instanceof Error ? error.message : t.admin.errorSave)
     } finally {
       setIsLoading(false)
     }
@@ -258,7 +262,7 @@ export default function AdminBlogPage() {
     const newSection: ContentSection = {
       id: String(Date.now()),
       type,
-      title: type === 'heading' ? 'Nouveau Titre' : type === 'list' ? 'Liste' : undefined,
+      title: type === 'heading' ? (language === 'ar' ? 'قسم جديد' : 'New Section') : type === 'list' ? (language === 'ar' ? 'قائمة' : 'List') : undefined,
       content: '',
       items: type === 'list' ? [''] : undefined,
     }
@@ -328,7 +332,7 @@ export default function AdminBlogPage() {
   }
 
   const handleDelete = async (slug: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return
+    if (!confirm(t.admin.confirmDeletePost)) return
 
     try {
       const token = localStorage.getItem('token')
@@ -344,12 +348,12 @@ export default function AdminBlogPage() {
         },
       })
 
-      if (!response.ok) throw new Error('Failed to delete post')
+      if (!response.ok) throw new Error(t.common.error)
 
       fetchPosts()
     } catch (error) {
       console.error('Error deleting post:', error)
-      alert('Failed to delete post')
+      alert(t.common.error)
     }
   }
 
@@ -363,17 +367,17 @@ export default function AdminBlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex" dir={dir}>
       <AdminSidebar />
 
-      <main className="flex-1 p-8 ml-64">
+      <main className={`flex-1 p-8 ${dir === 'rtl' ? 'mr-64' : 'ml-64'}`}>
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Gestion du Blog</h1>
+            <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+              <h1 className="text-3xl font-bold mb-2">{t.admin.blogManagementTitle}</h1>
               <p className="text-foreground/60">
-                Créez et gérez vos articles de blog
+                {t.admin.blogManagementDesc}
               </p>
             </div>
             <Button
@@ -390,14 +394,14 @@ export default function AdminBlogPage() {
                   tags: '',
                 })
                 setContentSections([
-                  { id: '1', type: 'heading', title: 'Introduction', content: '' },
+                  { id: '1', type: 'heading', title: language === 'ar' ? 'مقدمة' : 'Introduction', content: '' },
                 ])
                 setShowCreateModal(true)
               }}
-              className="glow-primary"
+              className="glow-primary bg-[#a80202] text-white hover:bg-[#8a0101] border-0"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              Nouvel Article
+              <Plus className={`${dir === 'rtl' ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+              {t.admin.newArticle}
             </Button>
           </div>
 
@@ -410,7 +414,7 @@ export default function AdminBlogPage() {
                   {posts.length}
                 </span>
               </div>
-              <p className="text-sm text-foreground/60">Total Articles</p>
+              <p className="text-sm text-foreground/60">{t.admin.totalArticles}</p>
             </div>
             <div className="p-6 rounded-2xl glass">
               <div className="flex items-center justify-between mb-2">
@@ -419,7 +423,7 @@ export default function AdminBlogPage() {
                   {posts.filter((p) => p.status === 'published').length}
                 </span>
               </div>
-              <p className="text-sm text-foreground/60">Publiés</p>
+              <p className="text-sm text-foreground/60">{t.admin.published}</p>
             </div>
             <div className="p-6 rounded-2xl glass">
               <div className="flex items-center justify-between mb-2">
@@ -428,7 +432,7 @@ export default function AdminBlogPage() {
                   {posts.filter((p) => p.status === 'draft').length}
                 </span>
               </div>
-              <p className="text-sm text-foreground/60">Brouillons</p>
+              <p className="text-sm text-foreground/60">{t.admin.drafts}</p>
             </div>
             <div className="p-6 rounded-2xl glass">
               <div className="flex items-center justify-between mb-2">
@@ -437,7 +441,7 @@ export default function AdminBlogPage() {
                   {posts.reduce((sum, p) => sum + p.views, 0)}
                 </span>
               </div>
-              <p className="text-sm text-foreground/60">Vues Totales</p>
+              <p className="text-sm text-foreground/60">{t.admin.totalViews}</p>
             </div>
           </div>
 
@@ -447,68 +451,68 @@ export default function AdminBlogPage() {
               <table className="w-full">
                 <thead className="bg-card/50 border-b border-border/50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-foreground/70">
-                      Titre
+                    <th className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'} text-sm font-medium text-foreground/70`}>
+                      {t.admin.title}
                     </th>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-foreground/70">
-                      Statut
+                    <th className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'} text-sm font-medium text-foreground/70`}>
+                      {t.admin.status}
                     </th>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-foreground/70">
-                      Auteur
+                    <th className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'} text-sm font-medium text-foreground/70`}>
+                      {t.admin.author}
                     </th>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-foreground/70">
-                      Vues
+                    <th className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'} text-sm font-medium text-foreground/70`}>
+                      {t.admin.views}
                     </th>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-foreground/70">
-                      Date
+                    <th className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'} text-sm font-medium text-foreground/70`}>
+                      {t.admin.date}
                     </th>
-                    <th className="px-6 py-4 text-right text-sm font-medium text-foreground/70">
-                      Actions
+                    <th className={`px-6 py-4 ${dir === 'rtl' ? 'text-left' : 'text-right'} text-sm font-medium text-foreground/70`}>
+                      {t.admin.actions}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/30">
                   {posts.map((post) => (
                     <tr key={post.id} className="hover:bg-card/30 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                         <div>
                           <p className="font-medium">{post.title}</p>
                           <p className="text-sm text-foreground/50">/{post.slug}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(
                             post.status
                           )}`}
                         >
-                          {post.status}
+                          {t.status[post.status as keyof typeof t.status] || post.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                         <div className="flex items-center gap-2">
                           <User className="h-4 w-4 text-foreground/40" />
                           <span className="text-sm">{post.author_name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                         <div className="flex items-center gap-2">
                           <Eye className="h-4 w-4 text-foreground/40" />
                           <span className="text-sm">{post.views}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className={`px-6 py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-foreground/40" />
                           <span className="text-sm">
                             {post.published_at
-                              ? new Date(post.published_at).toLocaleDateString('fr-FR')
-                              : 'Non publié'}
+                              ? new Date(post.published_at).toLocaleDateString(language === 'ar' ? 'ar-TN' : 'fr-FR')
+                              : t.admin.notPublished}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className={`flex items-center ${dir === 'rtl' ? 'justify-start' : 'justify-end'} gap-2`}>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -547,46 +551,51 @@ export default function AdminBlogPage() {
         {showCreateModal && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-card rounded-3xl p-8 max-w-5xl w-full my-8 glass">
-              <h2 className="text-2xl font-bold mb-6">
-                {editingPost ? "Modifier l'Article" : 'Nouvel Article'}
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">
+                  {editingPost ? t.admin.editPost : t.admin.createPost}
+                </h2>
+                <button onClick={() => setShowCreateModal(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title and Metadata */}
                 <div className="space-y-4 p-6 rounded-2xl bg-card/30 border border-border/20">
-                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <h3 className={`text-lg font-semibold flex items-center gap-2 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'text-left'}`}>
                     <FileText className="h-5 w-5" />
-                    Informations de base
+                    {t.admin.basicInfo}
                   </h3>
 
                   <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <Label htmlFor="title">Titre Principal *</Label>
+                    <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                      <Label htmlFor="title">{t.admin.mainTitle} *</Label>
                       <Input
                         id="title"
                         value={formData.title}
                         onChange={(e) => handleTitleChange(e.target.value)}
                         required
-                        placeholder="Les 5 tendances de la transformation digitale en 2025"
-                        className="bg-card/50 border-border/50 text-lg font-semibold"
+                        placeholder={t.admin.articleTitlePlaceholder}
+                        className={`bg-card/50 border-border/50 text-lg font-semibold ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="subtitle">Sous-titre (optionnel)</Label>
+                    <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                      <Label htmlFor="subtitle">{t.admin.subtitle}</Label>
                       <Input
                         id="subtitle"
                         value={formData.subtitle}
                         onChange={(e) =>
                           setFormData({ ...formData, subtitle: e.target.value })
                         }
-                        placeholder="Découvrez les principales tendances qui vont façonner..."
-                        className="bg-card/50 border-border/50"
+                        placeholder={t.admin.articleSubtitlePlaceholder}
+                        className={`bg-card/50 border-border/50 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="slug">URL (Slug) *</Label>
+                    <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                      <Label htmlFor="slug">{t.admin.slug} *</Label>
                       <Input
                         id="slug"
                         value={formData.slug}
@@ -594,31 +603,31 @@ export default function AdminBlogPage() {
                           setFormData({ ...formData, slug: e.target.value })
                         }
                         required
-                        placeholder="tendances-transformation-digitale-2025"
-                        className="bg-card/50 border-border/50 font-mono text-sm"
+                        placeholder={t.admin.articleSlugPlaceholder}
+                        className={`bg-card/50 border-border/50 font-mono text-sm ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                       />
                       <p className="text-xs text-foreground/50 mt-1">
                         URL: /blog/{formData.slug || 'slug-de-article'}
                       </p>
                     </div>
 
-                    <div>
-                      <Label htmlFor="excerpt">Résumé *</Label>
+                    <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                      <Label htmlFor="excerpt">{t.admin.excerpt} *</Label>
                       <Textarea
                         id="excerpt"
                         value={formData.excerpt}
                         onChange={(e) =>
                           setFormData({ ...formData, excerpt: e.target.value })
                         }
-                        placeholder="Résumé court qui apparaîtra dans la liste des articles..."
+                        placeholder={t.admin.articleExcerptPlaceholder}
                         rows={2}
-                        className="bg-card/50 border-border/50"
+                        className={`bg-card/50 border-border/50 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="featuredImage">Image (URL)</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                        <Label htmlFor="featuredImage">{t.admin.featuredImage}</Label>
                         <Input
                           id="featuredImage"
                           value={formData.featuredImage}
@@ -629,12 +638,12 @@ export default function AdminBlogPage() {
                             })
                           }
                           placeholder="https://example.com/image.jpg"
-                          className="bg-card/50 border-border/50 text-sm"
+                          className={`bg-card/50 border-border/50 text-sm ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                         />
                       </div>
 
-                      <div>
-                        <Label htmlFor="tags">Tags</Label>
+                      <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                        <Label htmlFor="tags">{t.admin.tags}</Label>
                         <Input
                           id="tags"
                           value={formData.tags}
@@ -642,47 +651,64 @@ export default function AdminBlogPage() {
                             setFormData({ ...formData, tags: e.target.value })
                           }
                           placeholder="Transformation Digitale, Tendances, IA"
-                          className="bg-card/50 border-border/50"
+                          className={`bg-card/50 border-border/50 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                         />
                       </div>
+                    </div>
+
+                    <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
+                      <Label htmlFor="status">{t.admin.status}</Label>
+                      <select
+                        id="status"
+                        value={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                        className={`w-full bg-card/50 border border-border/50 rounded-md p-2 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
+                      >
+                        <option value="draft">{t.status.draft}</option>
+                        <option value="published">{t.status.published}</option>
+                        <option value="archived">{t.status.archived}</option>
+                      </select>
                     </div>
                   </div>
                 </div>
 
                 {/* Content Sections */}
                 <div className="space-y-4 p-6 rounded-2xl bg-card/30 border border-border/20">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <div className={`flex items-center justify-between ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
+                    <h3 className={`text-lg font-semibold flex items-center gap-2 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'text-left'}`}>
                       <Heading2 className="h-5 w-5" />
-                      Contenu de l'article
+                      {t.admin.articleContent}
                     </h3>
-                    <div className="flex gap-2">
+                    <div className={`flex gap-2 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
                         onClick={() => addSection('heading')}
+                        className="bg-white/5"
                       >
-                        <Heading2 className="h-4 w-4 mr-2" />
-                        Section
+                        <Heading2 className={`${dir === 'rtl' ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                        {t.admin.addSection}
                       </Button>
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
                         onClick={() => addSection('paragraph')}
+                        className="bg-white/5"
                       >
-                        <Type className="h-4 w-4 mr-2" />
-                        Paragraphe
+                        <Type className={`${dir === 'rtl' ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                        {t.admin.addParagraph}
                       </Button>
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
                         onClick={() => addSection('list')}
+                        className="bg-white/5"
                       >
-                        <List className="h-4 w-4 mr-2" />
-                        Liste
+                        <List className={`${dir === 'rtl' ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                        {t.admin.addList}
                       </Button>
                     </div>
                   </div>
@@ -693,7 +719,7 @@ export default function AdminBlogPage() {
                         key={section.id}
                         className="p-4 rounded-xl bg-card/50 border border-border/30"
                       >
-                        <div className="flex items-start gap-3">
+                        <div className={`flex items-start gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                           <div className="flex flex-col gap-1 mt-1">
                             <button
                               type="button"
@@ -713,7 +739,7 @@ export default function AdminBlogPage() {
                             </button>
                           </div>
 
-                          <div className="flex-1 space-y-3">
+                          <div className={`flex-1 space-y-3 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                             {section.type === 'heading' && (
                               <>
                                 <Input
@@ -723,8 +749,8 @@ export default function AdminBlogPage() {
                                       title: e.target.value,
                                     })
                                   }
-                                  placeholder="Titre de la section"
-                                  className="font-semibold text-lg"
+                                  placeholder={t.admin.sectionTitle}
+                                  className={`font-semibold text-lg ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                                 />
                                 <Textarea
                                   value={section.content}
@@ -733,8 +759,9 @@ export default function AdminBlogPage() {
                                       content: e.target.value,
                                     })
                                   }
-                                  placeholder="Contenu de cette section..."
+                                  placeholder={t.admin.articleContent}
                                   rows={3}
+                                  className={dir === 'rtl' ? 'text-right' : 'text-left'}
                                 />
                               </>
                             )}
@@ -747,8 +774,9 @@ export default function AdminBlogPage() {
                                     content: e.target.value,
                                   })
                                 }
-                                placeholder="Paragraphe de texte..."
+                                placeholder={t.admin.articleContent}
                                 rows={3}
+                                className={dir === 'rtl' ? 'text-right' : 'text-left'}
                               />
                             )}
 
@@ -761,14 +789,14 @@ export default function AdminBlogPage() {
                                       title: e.target.value,
                                     })
                                   }
-                                  placeholder="Titre de la liste"
-                                  className="font-semibold"
+                                  placeholder={t.admin.listTitle}
+                                  className={`font-semibold ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                                 />
                                 <div className="space-y-2">
                                   {section.items?.map((item, itemIndex) => (
                                     <div
                                       key={itemIndex}
-                                      className="flex gap-2 items-center"
+                                      className={`flex gap-2 items-center ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
                                     >
                                       <span className="text-foreground/40">•</span>
                                       <Input
@@ -780,8 +808,8 @@ export default function AdminBlogPage() {
                                             e.target.value
                                           )
                                         }
-                                        placeholder="Élément de liste..."
-                                        className="flex-1"
+                                        placeholder={t.admin.listItemPlaceholder}
+                                        className={`flex-1 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                                       />
                                       <Button
                                         type="button"
@@ -798,69 +826,48 @@ export default function AdminBlogPage() {
                                   <Button
                                     type="button"
                                     size="sm"
-                                    variant="outline"
+                                    variant="ghost"
                                     onClick={() => addListItem(section.id)}
-                                    className="w-full"
+                                    className={`mt-2 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
                                   >
-                                    <Plus className="h-4 w-4 mr-2" />
-                                    Ajouter un élément
+                                    <Plus className={`${dir === 'rtl' ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                                    {t.admin.addList}
                                   </Button>
                                 </div>
                               </>
                             )}
                           </div>
 
-                          <button
+                          <Button
                             type="button"
+                            size="sm"
+                            variant="ghost"
                             onClick={() => removeSection(section.id)}
-                            className="p-1 rounded hover:bg-destructive/20 text-destructive mt-1"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="h-4 w-4" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Status */}
-                <div className="flex items-center gap-4">
-                  <Label htmlFor="status">Statut:</Label>
-                  <select
-                    id="status"
-                    value={formData.status}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        status: e.target.value as any,
-                      })
-                    }
-                    className="px-4 py-2 rounded-lg bg-card/50 border border-border/50"
+                <div className={`flex gap-4 pt-4 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="flex-1 glow-primary bg-[#a80202] text-white hover:bg-[#8a0101] border-0"
                   >
-                    <option value="draft">Brouillon</option>
-                    <option value="published">Publié</option>
-                    <option value="archived">Archivé</option>
-                  </select>
-                </div>
-
-                {/* Actions */}
-                <div className="flex justify-end gap-4 pt-4 border-t border-border/30">
+                    {isLoading ? t.admin.saving : t.admin.save}
+                  </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => {
-                      setShowCreateModal(false)
-                      setEditingPost(null)
-                    }}
+                    onClick={() => setShowCreateModal(false)}
+                    className="flex-1 bg-transparent"
                   >
-                    Annuler
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="glow-primary"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Enregistrement...' : 'Enregistrer'}
+                    {t.common.cancel}
                   </Button>
                 </div>
               </form>

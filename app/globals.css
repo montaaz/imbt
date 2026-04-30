@@ -4,6 +4,42 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.65 0.22 270);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.72 0.17 175);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.65 0.22 270);
+  --chart-1: oklch(0.646 0.222 0);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.706 0 0);
+}
+
+.dark {
   --background: oklch(0.08 0.02 270);
   --foreground: oklch(0.95 0.01 270);
   --card: oklch(0.12 0.02 270);
@@ -18,17 +54,16 @@
   --muted-foreground: oklch(0.65 0.02 270);
   --accent: oklch(0.72 0.17 175);
   --accent-foreground: oklch(0.08 0.02 270);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.25 0.03 270);
   --input: oklch(0.18 0.02 270);
   --ring: oklch(0.65 0.22 270);
-  --chart-1: oklch(0.65 0.22 270);
-  --chart-2: oklch(0.72 0.17 175);
-  --chart-3: oklch(0.75 0.18 320);
-  --chart-4: oklch(0.8 0.15 80);
-  --chart-5: oklch(0.7 0.2 30);
-  --radius: 0.75rem;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.12 0.02 270);
   --sidebar-foreground: oklch(0.95 0.01 270);
   --sidebar-primary: oklch(0.65 0.22 270);
@@ -41,6 +76,7 @@
 
 @theme inline {
   --font-sans: "Inter", "Geist", "Geist Fallback", system-ui, sans-serif;
+  --font-arabic: var(--font-cairo), "Cairo", "Noto Kufi Arabic", sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -91,9 +127,9 @@
 
 @layer utilities {
   .glass {
-    background: oklch(0.12 0.02 270 / 0.5);
+    background: color-mix(in oklch, var(--background), transparent 50%);
     backdrop-filter: blur(24px);
-    border: 1px solid oklch(0.25 0.03 270 / 0.4);
+    border: 1px solid var(--border);
   }
 
   .gradient-text {
@@ -271,126 +307,48 @@
   width: 100%;
 }
 
-/* RTL Support for Arabic */
-[dir="rtl"] {
-  direction: rtl;
+[dir="rtl"] .hover-underline::after {
+  left: auto;
+  right: 0;
 }
 
-/* Reverse margins for RTL */
-[dir="rtl"] .ml-1 {
-  margin-left: 0;
-  margin-right: 0.25rem;
-}
+/* ============================================
+   RTL / Arabic Support
+   ============================================ */
 
-[dir="rtl"] .mr-1 {
-  margin-right: 0;
-  margin-left: 0.25rem;
-}
-
-[dir="rtl"] .ml-2 {
-  margin-left: 0;
-  margin-right: 0.5rem;
-}
-
-[dir="rtl"] .mr-2 {
-  margin-right: 0;
-  margin-left: 0.5rem;
-}
-
-[dir="rtl"] .ml-3 {
-  margin-left: 0;
-  margin-right: 0.75rem;
-}
-
-[dir="rtl"] .mr-3 {
-  margin-right: 0;
-  margin-left: 0.75rem;
-}
-
-[dir="rtl"] .ml-4 {
-  margin-left: 0;
-  margin-right: 1rem;
-}
-
-[dir="rtl"] .mr-4 {
-  margin-right: 0;
-  margin-left: 1rem;
-}
-
-[dir="rtl"] .ml-auto {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-[dir="rtl"] .mr-auto {
-  margin-right: 0;
-  margin-left: auto;
-}
-
-/* Reverse padding for RTL */
-[dir="rtl"] .pl-2 {
-  padding-left: 0;
-  padding-right: 0.5rem;
-}
-
-[dir="rtl"] .pr-2 {
-  padding-right: 0;
-  padding-left: 0.5rem;
-}
-
-[dir="rtl"] .pl-4 {
-  padding-left: 0;
-  padding-right: 1rem;
-}
-
-[dir="rtl"] .pr-4 {
-  padding-right: 0;
-  padding-left: 1rem;
-}
-
-/* Reverse flex direction for RTL */
-[dir="rtl"] .flex-row {
-  flex-direction: row-reverse;
-}
-
-/* Reverse text alignment */
-[dir="rtl"] .text-left {
-  text-align: right;
-}
-
-[dir="rtl"] .text-right {
-  text-align: left;
-}
-
-/* Arabic font support */
+/* Arabic font via CSS variable set in layout */
 [dir="rtl"] body {
-  font-family: 'Tajawal', 'Cairo', 'Amiri', 'Noto Kufi Arabic', sans-serif;
+  font-family: var(--font-cairo), 'Cairo', 'Noto Kufi Arabic', sans-serif;
+  letter-spacing: 0;
 }
 
-/* Reverse border radius for RTL */
-[dir="rtl"] .rounded-l {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
-}
-
-[dir="rtl"] .rounded-r {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: var(--radius);
-  border-bottom-left-radius: var(--radius);
-}
-
-/* Fix icons orientation in RTL */
-[dir="rtl"] .lucide {
+/* Inline icons inside buttons/links: flip spacing so icon trails text */
+[dir="rtl"] .rtl-flip-icon {
   transform: scaleX(-1);
 }
 
-/* Don't flip these icons */
+/* Directional arrow/chevron icons that should flip in RTL */
 [dir="rtl"] .lucide-arrow-right,
 [dir="rtl"] .lucide-arrow-left,
 [dir="rtl"] .lucide-chevron-right,
 [dir="rtl"] .lucide-chevron-left {
-  transform: scaleX(1) rotate(180deg);
+  transform: scaleX(-1);
+}
+
+/* Navigation underline active indicator */
+[dir="rtl"] .nav-indicator {
+  left: auto;
+  right: 0;
+}
+
+/* Navigation dropdown: open to the right in RTL */
+[dir="rtl"] .nav-dropdown {
+  left: auto;
+  right: 0;
+}
+
+/* Mobile menu slides from left in RTL */
+[dir="rtl"] .mobile-menu {
+  right: auto;
+  left: 0;
 }

@@ -82,20 +82,24 @@ const mockReservations = [
   },
 ]
 
-const stats = [
-  { label: "Réservations totales", value: "156", change: "+12%", icon: Calendar },
-  { label: "Clients actifs", value: "89", change: "+5%", icon: Users },
-  { label: "Taux de confirmation", value: "94%", change: "+2%", icon: TrendingUp },
-  { label: "Durée moyenne", value: "1h15", change: "-5min", icon: Clock },
-]
+import { useLanguage } from "@/lib/i18n/language-context"
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const { t, language, dir } = useLanguage()
+  const locale = language === 'ar' ? 'ar-TN' : language === 'en' ? 'en-US' : 'fr-FR'
   const [user, setUser] = useState<{ name?: string; role?: string } | null>(null)
   const [reservations, setReservations] = useState(mockReservations)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [selectedReservation, setSelectedReservation] = useState<(typeof mockReservations)[0] | null>(null)
+
+  const stats = [
+    { label: t.admin.totalReservations, value: "156", change: "+12%", icon: Calendar },
+    { label: t.admin.activeClients, value: "89", change: "+5%", icon: Users },
+    { label: t.admin.confirmationRate, value: "94%", change: "+2%", icon: TrendingUp },
+    { label: t.admin.averageDuration, value: language === 'ar' ? "1س 15د" : "1h15", change: language === 'ar' ? "-5دق" : "-5min", icon: Clock },
+  ]
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
@@ -130,22 +134,22 @@ export default function AdminDashboard() {
       case "confirmed":
         return (
           <span className="px-3 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent">
-            <CheckCircle2 className="h-3 w-3 inline mr-1" />
-            Confirmé
+            <CheckCircle2 className={`h-3 w-3 inline ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
+            {t.admin.confirmedStatus}
           </span>
         )
       case "pending":
         return (
           <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-500">
-            <Clock className="h-3 w-3 inline mr-1" />
-            En attente
+            <Clock className={`h-3 w-3 inline ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
+            {t.admin.pendingStatus}
           </span>
         )
       case "cancelled":
         return (
           <span className="px-3 py-1 rounded-full text-xs font-medium bg-destructive/20 text-destructive">
-            <XCircle className="h-3 w-3 inline mr-1" />
-            Annulé
+            <XCircle className={`h-3 w-3 inline ${dir === 'rtl' ? 'ml-1' : 'mr-1'}`} />
+            {t.admin.cancelledStatus}
           </span>
         )
       default:
@@ -167,21 +171,21 @@ export default function AdminDashboard() {
       <AdminSidebar />
 
       {/* Main Content */}
-      <main className="lg:ml-64 p-4 sm:p-6 lg:p-10 pt-20 lg:pt-10">
+      <main className={`${dir === 'rtl' ? 'lg:mr-64' : 'lg:ml-64'} p-4 sm:p-6 lg:p-10 pt-20 lg:pt-10`}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
           <div>
-            <h1 className="text-3xl font-bold">Tableau de bord</h1>
-            <p className="text-foreground/60">Gérez vos réservations et clients</p>
+            <h1 className="text-3xl font-bold">{t.admin.dashboard}</h1>
+            <p className="text-foreground/60">{t.admin.manageReservationsDesc}</p>
           </div>
           <div className="flex items-center gap-4">
             <button className="relative p-2 rounded-xl bg-card border border-border hover:bg-muted">
               <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
+              <span className={`absolute top-1 ${dir === 'rtl' ? 'left-1' : 'right-1'} w-2 h-2 bg-accent rounded-full`} />
             </button>
             <Link href="/">
               <Button variant="outline" className="bg-transparent">
-                Voir le site
+                {t.admin.viewSite}
               </Button>
             </Link>
           </div>
@@ -213,30 +217,30 @@ export default function AdminDashboard() {
         <div className="rounded-2xl bg-card border border-border overflow-hidden">
           <div className="p-4 sm:p-6 border-b border-border">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <h2 className="text-xl font-semibold">Réservations récentes</h2>
+              <h2 className="text-xl font-semibold">{t.admin.recentReservations}</h2>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40" />
+                  <Search className={`absolute ${dir === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40`} />
                   <Input
-                    placeholder="Rechercher..."
+                    placeholder={t.admin.searchPlaceholder}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-full sm:w-64 bg-muted border-0"
+                    className={`${dir === 'rtl' ? 'pr-10' : 'pl-10'} w-full sm:w-64 bg-muted border-0`}
                   />
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="bg-transparent">
-                      <Filter className="h-4 w-4 mr-2" />
-                      Statut
-                      <ChevronDown className="h-4 w-4 ml-2" />
+                      <Filter className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                      {t.admin.statusFilter}
+                      <ChevronDown className={`h-4 w-4 ${dir === 'rtl' ? 'mr-2' : 'ml-2'}`} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => setStatusFilter("all")}>Tous</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setStatusFilter("confirmed")}>Confirmés</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setStatusFilter("pending")}>En attente</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setStatusFilter("cancelled")}>Annulés</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter("all")}>{t.admin.allStatus}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter("confirmed")}>{t.admin.confirmedStatus}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter("pending")}>{t.admin.pendingStatus}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter("cancelled")}>{t.admin.cancelledStatus}</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -247,11 +251,11 @@ export default function AdminDashboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left p-4 text-sm font-medium text-foreground/60">Client</th>
-                  <th className="text-left p-4 text-sm font-medium text-foreground/60">Service</th>
-                  <th className="text-left p-4 text-sm font-medium text-foreground/60">Date & Heure</th>
-                  <th className="text-left p-4 text-sm font-medium text-foreground/60">Statut</th>
-                  <th className="text-left p-4 text-sm font-medium text-foreground/60">Actions</th>
+                  <th className={`${dir === 'rtl' ? 'text-right' : 'text-left'} p-4 text-sm font-medium text-foreground/60`}>{t.admin.client}</th>
+                  <th className={`${dir === 'rtl' ? 'text-right' : 'text-left'} p-4 text-sm font-medium text-foreground/60`}>{t.admin.service}</th>
+                  <th className={`${dir === 'rtl' ? 'text-right' : 'text-left'} p-4 text-sm font-medium text-foreground/60`}>{t.admin.dateTime}</th>
+                  <th className={`${dir === 'rtl' ? 'text-right' : 'text-left'} p-4 text-sm font-medium text-foreground/60`}>{t.admin.status}</th>
+                  <th className={`${dir === 'rtl' ? 'text-right' : 'text-left'} p-4 text-sm font-medium text-foreground/60`}>{t.admin.actions}</th>
                 </tr>
               </thead>
               <tbody>
@@ -267,7 +271,7 @@ export default function AdminDashboard() {
                     <td className="p-4">
                       <div>
                         <p className="font-medium">
-                          {new Date(reservation.date).toLocaleDateString("fr-FR", {
+                          {new Date(reservation.date).toLocaleDateString(locale, {
                             day: "numeric",
                             month: "short",
                           })}
@@ -276,22 +280,22 @@ export default function AdminDashboard() {
                       </div>
                     </td>
                     <td className="p-4">{getStatusBadge(reservation.status)}</td>
-                    <td className="p-4">
+                    <td className="p-4 text-center sm:text-start">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="p-2 rounded-lg hover:bg-muted">
                             <MoreHorizontal className="h-4 w-4" />
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align={dir === 'rtl' ? "start" : "end"}>
                           <DropdownMenuItem onClick={() => setSelectedReservation(reservation)}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            Voir détails
+                            <Eye className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                            {t.admin.viewDetails}
                           </DropdownMenuItem>
                           {reservation.status === "pending" && (
                             <DropdownMenuItem onClick={() => updateReservationStatus(reservation.id, "confirmed")}>
-                              <CheckCircle2 className="h-4 w-4 mr-2" />
-                              Confirmer
+                              <CheckCircle2 className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                              {t.admin.confirm}
                             </DropdownMenuItem>
                           )}
                           {reservation.status !== "cancelled" && (
@@ -299,8 +303,8 @@ export default function AdminDashboard() {
                               onClick={() => updateReservationStatus(reservation.id, "cancelled")}
                               className="text-destructive"
                             >
-                              <XCircle className="h-4 w-4 mr-2" />
-                              Annuler
+                              <XCircle className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                              {t.admin.cancel}
                             </DropdownMenuItem>
                           )}
                         </DropdownMenuContent>
@@ -314,7 +318,7 @@ export default function AdminDashboard() {
 
           {filteredReservations.length === 0 && (
             <div className="p-12 text-center">
-              <p className="text-foreground/60">Aucune réservation trouvée</p>
+              <p className="text-foreground/60">{t.admin.noReservationsFound}</p>
             </div>
           )}
         </div>
@@ -332,33 +336,33 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, scale: 1 }}
             className="relative bg-card rounded-2xl border border-border p-8 max-w-md w-full"
           >
-            <h3 className="text-xl font-bold mb-6">Détails de la réservation</h3>
+            <h3 className="text-xl font-bold mb-6">{t.admin.reservationDetails}</h3>
 
             <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-foreground/60">Client:</span>
+                <span className="text-foreground/60">{t.admin.client}:</span>
                 <span className="font-medium">{selectedReservation.client}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-foreground/60">Email:</span>
+                <span className="text-foreground/60">{t.admin.email}:</span>
                 <span>{selectedReservation.email}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-foreground/60">Téléphone:</span>
+                <span className="text-foreground/60">{t.admin.phone}:</span>
                 <span>{selectedReservation.phone}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-foreground/60">Entreprise:</span>
+                <span className="text-foreground/60">{t.admin.company}:</span>
                 <span>{selectedReservation.company}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-foreground/60">Service:</span>
+                <span className="text-foreground/60">{t.admin.service}:</span>
                 <span>{selectedReservation.service}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-foreground/60">Date:</span>
+                <span className="text-foreground/60">{t.admin.date}:</span>
                 <span>
-                  {new Date(selectedReservation.date).toLocaleDateString("fr-FR", {
+                  {new Date(selectedReservation.date).toLocaleDateString(locale, {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
@@ -366,25 +370,25 @@ export default function AdminDashboard() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-foreground/60">Heure:</span>
+                <span className="text-foreground/60">{t.admin.time}:</span>
                 <span>{selectedReservation.time}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-foreground/60">Statut:</span>
+                <span className="text-foreground/60">{t.admin.status}:</span>
                 {getStatusBadge(selectedReservation.status)}
               </div>
             </div>
 
             <div className="flex gap-3 mt-8">
               <Button variant="outline" onClick={() => setSelectedReservation(null)} className="flex-1 bg-transparent">
-                Fermer
+                {t.admin.close}
               </Button>
               {selectedReservation.status === "pending" && (
                 <Button
                   onClick={() => updateReservationStatus(selectedReservation.id, "confirmed")}
-                  className="flex-1 glow-primary"
+                  className="flex-1 glow-primary bg-[#a80202] text-white hover:bg-[#8a0101] border-0"
                 >
-                  Confirmer
+                  {t.admin.confirm}
                 </Button>
               )}
             </div>

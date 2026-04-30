@@ -12,7 +12,7 @@ import { useLanguage } from "@/lib/i18n/language-context"
 export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -99,6 +99,7 @@ export default function Hero() {
 
   const title = t.hero.title
   const subtitle = t.hero.subtitle
+  const isRtl = dir === "rtl"
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -135,49 +136,70 @@ export default function Hero() {
             <span className="text-xs sm:text-sm font-medium text-foreground/90">{t.hero.badge}</span>
           </motion.div>
 
-          {/* Main Title with 3D perspective */}
+          {/* Main Title */}
           <h1
             ref={titleRef}
             className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 perspective-1000 px-2 sm:px-4"
             style={{ transformStyle: "preserve-3d" }}
           >
-            <span className="block leading-tight mb-1 sm:mb-2" style={{ transformStyle: "preserve-3d" }}>
-              {title.split("").map((letter, index) => (
-                <span
-                  key={index}
-                  className="hero-letter inline-block gradient-text hover:scale-110 transition-transform cursor-default"
-                  style={{
-                    display: letter === " " ? "inline" : "inline-block",
-                    transformStyle: "preserve-3d",
-                  }}
-                >
-                  {letter === " " ? "\u00A0" : letter}
+            {isRtl ? (
+              /*
+               * Arabic is a cursive connected script — splitting into individual
+               * letter <span>s with inline-block breaks every ligature and letter
+               * connection, making text completely unreadable. Render as whole text.
+               */
+              <>
+                <span className="hero-letter block leading-tight mb-1 sm:mb-2 gradient-text cursor-default">
+                  {title}
                 </span>
-              ))}
-            </span>
-            <span className="block mt-1 sm:mt-2 md:mt-4 leading-tight text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl" style={{ transformStyle: "preserve-3d", wordBreak: "keep-all", whiteSpace: "normal" }}>
-              {subtitle.split(" ").map((word, wordIndex) => (
-                <span key={wordIndex} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
-                  {word.split("").map((letter, letterIndex) => (
+                <span className="hero-letter block mt-1 sm:mt-2 md:mt-4 leading-tight text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-foreground cursor-default">
+                  {subtitle}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="block leading-tight mb-1 sm:mb-2" style={{ transformStyle: "preserve-3d" }}>
+                  {title.split("").map((letter, index) => (
                     <span
-                      key={letterIndex}
-                      className="hero-letter inline-block text-foreground transition-colors cursor-default"
+                      key={index}
+                      className="hero-letter inline-block gradient-text hover:scale-110 transition-transform cursor-default"
                       style={{
+                        display: letter === " " ? "inline" : "inline-block",
                         transformStyle: "preserve-3d",
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
-                      onMouseLeave={(e) => e.currentTarget.style.color = ''}
                     >
-                      {letter}
+                      {letter === " " ? " " : letter}
                     </span>
                   ))}
-                  {wordIndex < subtitle.split(" ").length - 1 && <span style={{ display: "inline" }}>&nbsp;</span>}
                 </span>
-              ))}
-            </span>
+                <span
+                  className="block mt-1 sm:mt-2 md:mt-4 leading-tight text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                  style={{ transformStyle: "preserve-3d", wordBreak: "keep-all", whiteSpace: "normal" }}
+                >
+                  {subtitle.split(" ").map((word, wordIndex) => (
+                    <span key={wordIndex} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                      {word.split("").map((letter, letterIndex) => (
+                        <span
+                          key={letterIndex}
+                          className="hero-letter inline-block text-foreground transition-colors cursor-default"
+                          style={{ transformStyle: "preserve-3d" }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = "#a80202")}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = "")}
+                        >
+                          {letter}
+                        </span>
+                      ))}
+                      {wordIndex < subtitle.split(" ").length - 1 && (
+                        <span style={{ display: "inline" }}>&nbsp;</span>
+                      )}
+                    </span>
+                  ))}
+                </span>
+              </>
+            )}
           </h1>
 
-          {/* Subtitle */}
+          {/* Description */}
           <p
             ref={subtitleRef}
             className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground/70 max-w-2xl mx-auto mb-8 sm:mb-10 md:mb-14 leading-relaxed px-4 sm:px-6"
@@ -189,10 +211,17 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-5 px-4">
             <Magnetic strength={0.4}>
               <Link href="/reservation" className="hero-cta block w-full sm:w-auto">
-                <Button size="lg" className="group text-sm sm:text-base md:text-lg px-5 sm:px-8 md:px-10 py-5 sm:py-6 md:py-7 relative overflow-hidden w-full sm:w-auto bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
+                <Button
+                  size="lg"
+                  className="group text-sm sm:text-base md:text-lg px-5 sm:px-8 md:px-10 py-5 sm:py-6 md:py-7 relative overflow-hidden w-full sm:w-auto bg-[#a80202] hover:bg-[#8a0101] text-white border-0"
+                >
                   <span className="relative z-10 flex items-center justify-center font-semibold whitespace-nowrap">
                     {t.hero.cta}
-                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-2" />
+                    <ArrowRight
+                      className={`h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-2 rtl:group-hover:-translate-x-2 ${
+                        isRtl ? "mr-2 rotate-180" : "ml-2"
+                      }`}
+                    />
                   </span>
                   <div
                     className="absolute inset-0 bg-gradient-to-r from-[#a80202] via-[#c00000] to-[#a80202] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -209,14 +238,18 @@ export default function Hero() {
                   size="lg"
                   className="text-sm sm:text-base md:text-lg px-5 sm:px-8 md:px-10 py-5 sm:py-6 md:py-7 border-primary/40 hover:bg-primary/20 bg-transparent group relative overflow-hidden w-full sm:w-auto"
                 >
-                  <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-125 transition-transform" />
+                  <Play
+                    className={`h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-125 transition-transform ${
+                      isRtl ? "ml-2" : "mr-2"
+                    }`}
+                  />
                   <span className="whitespace-nowrap">{t.hero.ctaSecondary}</span>
                 </Button>
               </Link>
             </Magnetic>
           </div>
 
-          {/* Stats with enhanced animation */}
+          {/* Stats */}
           <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mt-12 sm:mt-16 md:mt-24 max-w-3xl mx-auto px-2 sm:px-4">
             {[
               { value: "100+", label: t.stats.projects },
@@ -230,7 +263,9 @@ export default function Hero() {
                 <div className="stat-value text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold gradient-text mb-1 sm:mb-2 md:mb-3 group-hover:scale-110 transition-transform">
                   {stat.value}
                 </div>
-                <div className="text-[10px] sm:text-xs md:text-sm text-foreground/60 font-medium leading-tight">{stat.label}</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-foreground/60 font-medium leading-tight">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>

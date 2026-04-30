@@ -8,13 +8,14 @@ import { Menu, X, ChevronRight, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/lib/i18n/language-context"
 import LanguageSelector from "@/components/language-selector"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const pathname = usePathname()
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   const navItems = [
     { href: "/", label: t.common.home },
@@ -24,8 +25,8 @@ export default function Navigation() {
     {
       label: t.common.ourCabinet,
       submenu: [
-        { href: "/etudes-de-cas", label: "Études de cas" },
-        { href: "/politique-confidentialite", label: "Politique de confidentialité" },
+        { href: "/etudes-de-cas", label: t.footer.caseStudies },
+        { href: "/politique-confidentialite", label: t.footer.privacyPolicy },
       ]
     },
     { href: "/reservation", label: t.common.reservation },
@@ -50,14 +51,13 @@ export default function Navigation() {
       >
         <nav className="container mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="relative group">
-            <motion.span
-              className="text-2xl font-bold gradient-text"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
+              className="flex items-center"
             >
-              IMBT
-            </motion.span>
-            <span className="text-foreground/60 text-sm ml-2 hidden sm:inline">{t.nav.consulting}</span>
+              <img src="/logo.png" alt="IMBT Consulting" className="h-16 sm:h-20 w-auto -my-4 sm:-my-6" />
+            </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -81,7 +81,7 @@ export default function Navigation() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-full left-0 mt-2 w-64 glass rounded-2xl p-2 shadow-xl"
+                        className={`absolute top-full mt-2 w-64 glass rounded-2xl p-2 shadow-xl ${dir === 'rtl' ? 'right-0' : 'left-0'}`}
                       >
                         {item.submenu.map((subItem) => (
                           <Link
@@ -99,15 +99,14 @@ export default function Navigation() {
               ) : (
                 <Link key={item.href} href={item.href} className="relative group">
                   <span
-                    className={`text-sm font-medium transition-colors ${
-                      pathname === item.href ? "text-foreground/70 hover:text-foreground" : "text-foreground/70 hover:text-foreground"
-                    }`}
+                    className={`text-sm font-medium transition-colors ${pathname === item.href ? "text-foreground/70 hover:text-foreground" : "text-foreground/70 hover:text-foreground"
+                      }`}
                     style={pathname === item.href ? { color: '#a80202' } : {}}
                   >
                     {item.label}
                   </span>
                   <motion.span
-                    className="absolute -bottom-1 left-0 h-0.5 bg-[#a80202]"
+                    className={`absolute -bottom-1 h-0.5 bg-[#a80202] ${dir === 'rtl' ? 'right-0' : 'left-0'}`}
                     initial={{ width: 0 }}
                     animate={{ width: pathname === item.href ? "100%" : 0 }}
                     whileHover={{ width: "100%" }}
@@ -119,6 +118,7 @@ export default function Navigation() {
           </div>
 
           <div className="hidden lg:flex items-center gap-4">
+            <ModeToggle />
             <LanguageSelector />
             <Link href="/auth/signin">
               <Button variant="ghost" size="sm" className="hover:bg-[#a80202]/10">
@@ -128,7 +128,7 @@ export default function Navigation() {
             <Link href="/reservation">
               <Button size="sm" className="bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
                 {t.common.reserve}
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight className={`h-4 w-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 ${dir === 'rtl' ? 'mr-1 rotate-180' : 'ml-1'}`} />
               </Button>
             </Link>
           </div>
@@ -144,18 +144,18 @@ export default function Navigation() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }}
+            initial={{ opacity: 0, x: dir === 'rtl' ? "-100%" : "100%" }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
+            exit={{ opacity: 0, x: dir === 'rtl' ? "-100%" : "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-40 lg:hidden"
           >
             <div className="absolute inset-0 bg-background/80 backdrop-blur-xl" onClick={() => setIsOpen(false)} />
             <motion.nav
-              className="absolute right-0 top-0 bottom-0 w-80 bg-card p-8 pt-24 flex flex-col gap-6"
-              initial={{ x: "100%" }}
+              className={`absolute top-0 bottom-0 w-80 bg-card p-8 pt-24 flex flex-col gap-6 ${dir === 'rtl' ? 'left-0' : 'right-0'}`}
+              initial={{ x: dir === 'rtl' ? "-100%" : "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              exit={{ x: dir === 'rtl' ? "-100%" : "100%" }}
             >
               {navItems.map((item, index) => (
                 <motion.div
@@ -179,16 +179,15 @@ export default function Navigation() {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            className="ml-4 mt-2 space-y-2 overflow-hidden"
+                            className={`mt-2 space-y-2 overflow-hidden ${dir === 'rtl' ? 'mr-4' : 'ml-4'}`}
                           >
                             {item.submenu.map((subItem) => (
                               <Link
                                 key={subItem.href}
                                 href={subItem.href}
                                 onClick={() => setIsOpen(false)}
-                                className={`text-lg block py-2 ${
-                                  pathname === subItem.href ? "" : "text-foreground/60"
-                                }`}
+                                className={`text-lg block py-2 ${pathname === subItem.href ? "" : "text-foreground/60"
+                                  }`}
                                 style={pathname === subItem.href ? { color: '#a80202' } : {}}
                               >
                                 {subItem.label}
@@ -202,9 +201,8 @@ export default function Navigation() {
                     <Link
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`text-2xl font-medium block py-2 ${
-                        pathname === item.href ? "" : "text-foreground/70"
-                      }`}
+                      className={`text-2xl font-medium block py-2 ${pathname === item.href ? "" : "text-foreground/70"
+                        }`}
                       style={pathname === item.href ? { color: '#a80202' } : {}}
                     >
                       {item.label}
@@ -213,7 +211,8 @@ export default function Navigation() {
                 </motion.div>
               ))}
               <div className="mt-auto flex flex-col gap-3">
-                <div className="mb-3">
+                <div className="mb-3 flex items-center gap-4">
+                  <ModeToggle />
                   <LanguageSelector />
                 </div>
                 <Link href="/auth/signin" onClick={() => setIsOpen(false)}>

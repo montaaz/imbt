@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
 
+interface Setting {
+  id: number
+  key: string
+  value: string
+  category: string
+  description: string
+  is_public: boolean
+  updated_at: string
+}
+
 // GET all settings
 export async function GET(request: NextRequest) {
   try {
@@ -17,14 +27,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all settings
-    const result = await query(`
+    const result = await query<Setting>(`
       SELECT id, key, value, category, description, is_public, updated_at
       FROM settings
       ORDER BY category, key
     `)
 
     // Group settings by category
-    const settingsByCategory: Record<string, any[]> = {}
+    const settingsByCategory: Record<string, Setting[]> = {}
     result.rows.forEach((setting) => {
       if (!settingsByCategory[setting.category]) {
         settingsByCategory[setting.category] = []

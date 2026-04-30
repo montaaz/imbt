@@ -13,7 +13,7 @@ export default function CTASection() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
   const [particles, setParticles] = useState<Array<{ id: number; left: number; bottom: number }>>([])
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   useEffect(() => {
     setParticles(
@@ -115,9 +115,9 @@ export default function CTASection() {
               <Link href="/reservation">
                 <Button size="lg" className="group text-lg px-10 py-7 relative overflow-hidden bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
                   <span className="relative z-10 flex items-center font-semibold">
-                    <Calendar className="mr-2 h-5 w-5" />
+                    <Calendar className={`h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                     {t.ctaSection.bookConsultation}
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
+                    <ArrowRight className={`h-5 w-5 group-hover:translate-x-2 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                   </span>
                   <div
                     className="absolute inset-0 bg-gradient-to-r from-[#a80202] via-[#c00000] to-[#a80202] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"
@@ -134,7 +134,7 @@ export default function CTASection() {
                   size="lg"
                   className="text-lg px-10 py-7 border-primary/40 hover:bg-primary/20 bg-transparent group"
                 >
-                  <Mail className="mr-2 h-5 w-5" />
+                  <Mail className={`h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                   {t.ctaSection.contactUs}
                 </Button>
               </Link>

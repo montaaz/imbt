@@ -55,7 +55,7 @@ const servicesConfig = [
 function ServiceCard({ service, index }: { service: (typeof servicesConfig)[0]; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return
@@ -169,9 +169,9 @@ function ServiceCard({ service, index }: { service: (typeof servicesConfig)[0]; 
       >
         <span className="relative">
           {t.servicesSection.learnMore}
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent group-hover:w-full transition-all duration-400" />
+          <span className={`absolute bottom-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent group-hover:w-full transition-all duration-400 ${dir === 'rtl' ? 'right-0' : 'left-0'}`} />
         </span>
-        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform" />
+        <ArrowRight className={`h-4 w-4 transition-transform group-hover:translate-x-2 ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
       </Link>
 
       {/* Corner icon */}
@@ -186,7 +186,7 @@ export default function ServicesPreview() {
   const sectionRef = useRef<HTMLElement>(null)
   const cardsRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
-  const { t } = useLanguage()
+  const { t, dir } = useLanguage()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -287,7 +287,7 @@ export default function ServicesPreview() {
               >
                 <span className="relative z-10 flex items-center font-semibold">
                   {t.servicesSection.viewAll}
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight className={`h-5 w-5 group-hover:translate-x-2 transition-transform ${dir === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`} />
                 </span>
               </Button>
             </Link>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -160,31 +161,43 @@ interface TextRevealProps {
 
 export function TextReveal({ text, className = "", as: Component = "h2" }: TextRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const { dir } = useLanguage()
+  const isRtl = dir === "rtl"
 
   useEffect(() => {
     if (!containerRef.current) return
 
-    const chars = containerRef.current.querySelectorAll(".char")
-
-    gsap.set(chars, {
-      opacity: 0,
-      y: 100,
-      rotateX: -90,
-    })
-
-    gsap.to(chars, {
-      opacity: 1,
-      y: 0,
-      rotateX: 0,
-      duration: 0.5,
-      stagger: 0.02,
-      ease: "back.out(1.7)",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse",
-      },
-    })
+    if (isRtl) {
+      // Arabic: animate the whole element, not individual chars
+      gsap.set(containerRef.current, { opacity: 0, y: 60 })
+      gsap.to(containerRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      })
+    } else {
+      const chars = containerRef.current.querySelectorAll(".char")
+      gsap.set(chars, { opacity: 0, y: 100, rotateX: -90 })
+      gsap.to(chars, {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        duration: 0.5,
+        stagger: 0.02,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      })
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => {
@@ -193,7 +206,16 @@ export function TextReveal({ text, className = "", as: Component = "h2" }: TextR
         }
       })
     }
-  }, [text])
+  }, [text, isRtl])
+
+  if (isRtl) {
+    // Arabic: render as plain text — no per-character spans
+    return (
+      <div ref={containerRef} className="overflow-hidden perspective-1000">
+        <Component className={className}>{text}</Component>
+      </div>
+    )
+  }
 
   const words = text.split(" ")
 

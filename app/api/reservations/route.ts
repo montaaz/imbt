@@ -217,6 +217,28 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
+    const isAvailabilityCheck = searchParams.get('availability') === 'true'
+    const date = searchParams.get('date')
+
+    if (isAvailabilityCheck) {
+      if (!date) {
+        return NextResponse.json({ error: 'Date requise' }, { status: 400 })
+      }
+      const result = await query(
+        'SELECT time FROM reservations WHERE date = $1 AND status != $2',
+        [date, 'cancelled']
+      )
+      return NextResponse.json({
+        bookedSlots: result.rows.map(r => {
+          // Normalize time format to HH:mm
+          const time = r.time;
+          return typeof time === 'string' && time.includes(':') 
+            ? time.split(':').slice(0, 2).join(':') 
+            : time;
+        })
+      })
+    }
+
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
     const status = searchParams.get('status') || ''

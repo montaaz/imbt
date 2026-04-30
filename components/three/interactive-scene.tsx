@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Sphere, MeshDistortMaterial, Float, MeshTransmissionMaterial, Sparkles } from "@react-three/drei"
+import { Sphere, MeshDistortMaterial, Float, Sparkles } from "@react-three/drei"
 import * as THREE from "three"
 
 // Interactive hoverable sphere
@@ -33,7 +33,7 @@ function InteractiveSphere({
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
       <Sphere
         ref={meshRef}
-        args={[1, 64, 64]}
+        args={[1, 32, 32]}
         position={position}
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
@@ -67,20 +67,14 @@ function GlassCube({ position }: { position: [number, number, number] }) {
     <Float speed={1} rotationIntensity={1} floatIntensity={0.5}>
       <mesh ref={meshRef} position={position}>
         <boxGeometry args={[1.5, 1.5, 1.5]} />
-        <MeshTransmissionMaterial
-          backside
-          samples={16}
-          resolution={512}
-          transmission={0.95}
-          roughness={0.1}
-          thickness={0.5}
-          ior={1.5}
-          chromaticAberration={0.1}
-          anisotropy={0.3}
-          distortion={0.2}
-          distortionScale={0.3}
-          temporalDistortion={0.1}
+        <meshStandardMaterial
           color="#6366f1"
+          metalness={0.95}
+          roughness={0.05}
+          transparent
+          opacity={0.7}
+          emissive="#6366f1"
+          emissiveIntensity={0.2}
         />
       </mesh>
     </Float>
@@ -130,9 +124,9 @@ function ParticleExplosion() {
     <group onClick={() => setExploded(true)}>
       <points ref={pointsRef}>
         <bufferGeometry>
-          <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         </bufferGeometry>
-        <pointMaterial
+        <pointsMaterial
           size={0.05}
           color="#14b8a6"
           transparent
@@ -189,12 +183,12 @@ function OrbitRings() {
 export default function InteractiveScene() {
   return (
     <div className="absolute inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 10], fov: 50 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 10], fov: 50 }} dpr={1} gl={{ antialias: false, powerPreference: "high-performance" }} performance={{ min: 0.5 }}>
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={2} color="#6366f1" />
         <pointLight position={[-10, -10, -10]} intensity={1.5} color="#14b8a6" />
 
-        <Sparkles count={200} scale={15} size={2} speed={0.5} color="#6366f1" />
+        <Sparkles count={80} scale={15} size={2} speed={0.5} color="#6366f1" />
 
         <InteractiveSphere position={[-4, 2, 0]} color="#6366f1" scale={0.8} />
         <InteractiveSphere position={[4, -1, -2]} color="#14b8a6" scale={0.6} />

@@ -92,7 +92,8 @@ interface DashboardData {
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, language, dir } = useLanguage()
+  const locale = language === 'ar' ? 'ar-TN' : language === 'en' ? 'en-US' : 'fr-FR'
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -224,18 +225,17 @@ export default function DashboardPage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold gradient-text">IMBT</span>
-              <span className="text-sm text-foreground/60">Consulting</span>
+              <img src="/logo.png" alt="IMBT Consulting" className="h-8 w-auto" />
             </Link>
             <div className="flex items-center gap-3">
               <Link href="/">
                 <Button variant="outline" size="sm" className="bg-transparent">
-                  <Home className="h-4 w-4 mr-2" />
+                  <Home className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                   {t.common.home}
                 </Button>
               </Link>
               <Button onClick={handleLogout} variant="outline" size="sm" className="bg-transparent">
-                <LogOut className="h-4 w-4 mr-2" />
+                <LogOut className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                 {t.common.logout}
               </Button>
             </div>
@@ -261,7 +261,7 @@ export default function DashboardPage() {
               {t.dashboard.welcome}, {data.client.firstName}!
             </h1>
             <p className="text-foreground/60 flex items-center gap-2">
-              <Mail className="h-4 w-4" />
+              <Mail className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
               {data.client.email}
             </p>
           </div>
@@ -341,15 +341,15 @@ export default function DashboardPage() {
           <Tabs defaultValue="reservations" className="space-y-6">
             <TabsList className="glass p-1">
               <TabsTrigger value="reservations" className="data-[state=active]:bg-primary/20">
-                <Calendar className="h-4 w-4 mr-2" />
+                <Calendar className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                 {t.dashboard.myReservations}
               </TabsTrigger>
               <TabsTrigger value="purchases" className="data-[state=active]:bg-primary/20">
-                <Package className="h-4 w-4 mr-2" />
+                <Package className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                 {t.dashboard.myPurchases}
               </TabsTrigger>
               <TabsTrigger value="profile" className="data-[state=active]:bg-primary/20">
-                <User className="h-4 w-4 mr-2" />
+                <User className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                 {t.dashboard.profile}
               </TabsTrigger>
             </TabsList>
@@ -378,8 +378,8 @@ export default function DashboardPage() {
                       <div>
                         <h3 className="text-xl font-bold mb-1">{reservation.serviceName}</h3>
                         <p className="text-foreground/60 flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          {new Date(reservation.date).toLocaleDateString('fr-FR', {
+                          <Calendar className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                          {new Date(reservation.date).toLocaleDateString(locale, {
                             weekday: 'long',
                             day: 'numeric',
                             month: 'long',
@@ -392,7 +392,7 @@ export default function DashboardPage() {
 
                     <div className="space-y-2 border-t border-border/30 pt-4">
                       <div className="flex items-center text-sm text-foreground/70">
-                        <Clock className="h-4 w-4 mr-2" />
+                        <Clock className={`h-4 w-4 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
                         {t.dashboard.duration}: {reservation.duration} minutes
                       </div>
                       {reservation.message && (
@@ -401,7 +401,7 @@ export default function DashboardPage() {
                         </p>
                       )}
                       <p className="text-xs text-foreground/50 pl-6">
-                        {t.dashboard.createdOn}: {new Date(reservation.createdAt).toLocaleDateString('fr-FR')}
+                        {t.dashboard.createdOn}: {new Date(reservation.createdAt).toLocaleDateString(locale)}
                       </p>
                     </div>
                   </motion.div>
@@ -458,14 +458,14 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-foreground/60">{t.dashboard.ordered}:</span>
                         <span className="text-foreground/80">
-                          {new Date(purchase.createdAt).toLocaleDateString('fr-FR')}
+                          {new Date(purchase.createdAt).toLocaleDateString(locale)}
                         </span>
                       </div>
                       {purchase.paidAt && (
                         <div className="flex items-center justify-between text-sm col-span-2">
                           <span className="text-foreground/60">{t.dashboard.paid}:</span>
                           <span className="text-accent">
-                            {new Date(purchase.paidAt).toLocaleDateString('fr-FR')}
+                            {new Date(purchase.paidAt).toLocaleDateString(locale)}
                           </span>
                         </div>
                       )}
@@ -473,7 +473,7 @@ export default function DashboardPage() {
                         <div className="flex items-center justify-between text-sm col-span-2">
                           <span className="text-foreground/60">{t.dashboard.delivered}:</span>
                           <span className="text-green-500">
-                            {new Date(purchase.deliveredAt).toLocaleDateString('fr-FR')}
+                            {new Date(purchase.deliveredAt).toLocaleDateString(locale)}
                           </span>
                         </div>
                       )}
@@ -577,7 +577,7 @@ export default function DashboardPage() {
                   </div>
 
                   <p className="text-sm text-foreground/60">
-                    {t.dashboard.memberSince}: {new Date(data.client.createdAt).toLocaleDateString('fr-FR', {
+                    {t.dashboard.memberSince}: {new Date(data.client.createdAt).toLocaleDateString(locale, {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric'
@@ -586,7 +586,7 @@ export default function DashboardPage() {
 
                   {data.client.lastLogin && (
                     <p className="text-sm text-foreground/60">
-                      {t.dashboard.lastLogin}: {new Date(data.client.lastLogin).toLocaleDateString('fr-FR', {
+                      {t.dashboard.lastLogin}: {new Date(data.client.lastLogin).toLocaleDateString(locale, {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric',

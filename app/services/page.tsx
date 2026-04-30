@@ -36,12 +36,7 @@ export default function ServicesPage() {
       icon: Rocket,
       titleKey: t.serviceCards.transformation.title,
       descriptionKey: t.serviceCards.transformation.description,
-      features: [
-        "Audit digital complet",
-        "Stratégie de transformation",
-        "Accompagnement au changement",
-        "Mesure des performances",
-      ],
+      features: t.serviceCards.transformation.features,
       color: "from-primary to-primary/50",
       link: "/services/conseil-transformation-digitale",
     },
@@ -49,7 +44,7 @@ export default function ServicesPage() {
       icon: Monitor,
       titleKey: t.serviceCards.development.title,
       descriptionKey: t.serviceCards.development.description,
-      features: ["Sites web sur mesure", "Applications mobiles", "E-commerce", "Maintenance & support"],
+      features: t.serviceCards.development.features,
       color: "from-accent to-accent/50",
       link: "/services/developpement-gestion-it",
     },
@@ -57,7 +52,7 @@ export default function ServicesPage() {
       icon: GraduationCap,
       titleKey: t.serviceCards.training.title,
       descriptionKey: t.serviceCards.training.description,
-      features: ["Formations personnalisées", "Ateliers pratiques", "Certifications reconnues", "Suivi post-formation"],
+      features: t.serviceCards.training.features,
       color: "from-primary to-accent",
       link: "/services/formations-digitales",
     },
@@ -65,12 +60,7 @@ export default function ServicesPage() {
       icon: Users,
       titleKey: t.serviceCards.crm.title,
       descriptionKey: t.serviceCards.crm.description,
-      features: [
-        "Analyse des besoins CRM",
-        "Implémentation Salesforce/HubSpot",
-        "Migration des données",
-        "Formation des équipes",
-      ],
+      features: t.serviceCards.crm.features,
       color: "from-accent to-primary",
       link: "/services/crm-gestion-relation-client",
     },
@@ -78,12 +68,7 @@ export default function ServicesPage() {
       icon: Settings,
       titleKey: t.serviceCards.erp.title,
       descriptionKey: t.serviceCards.erp.description,
-      features: [
-        "Audit des processus",
-        "Sélection de solution ERP",
-        "Déploiement & intégration",
-        "Optimisation continue",
-      ],
+      features: t.serviceCards.erp.features,
       color: "from-primary/80 to-accent/80",
       link: "/services/erp-gestion-integree",
     },
@@ -91,16 +76,16 @@ export default function ServicesPage() {
       icon: TrendingUp,
       titleKey: t.serviceCards.marketing.title,
       descriptionKey: t.serviceCards.marketing.description,
-      features: ["SEO & SEA", "Réseaux sociaux", "Email marketing", "Analytics & reporting"],
+      features: t.serviceCards.marketing.features,
       color: "from-accent/80 to-primary/80",
       link: "/services/marketing-digital",
     },
   ]
 
   const benefits = [
-    { icon: Zap, title: "Rapidité", description: "Résultats visibles en quelques semaines" },
-    { icon: Shield, title: "Expertise", description: "10+ ans d'expérience dans le digital" },
-    { icon: Clock, title: "Support 24/7", description: "Accompagnement continu" },
+    { icon: Zap, title: t.benefits.speed.title, description: t.benefits.speed.description },
+    { icon: Shield, title: t.benefits.expertise.title, description: t.benefits.expertise.description },
+    { icon: Clock, title: t.benefits.support.title, description: t.benefits.support.description },
   ]
   const heroRef = useRef<HTMLElement>(null)
   const servicesRef = useRef<HTMLDivElement>(null)
@@ -206,9 +191,9 @@ export default function ServicesPage() {
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link href={service.link}>
-                      <Button className="group">
+                        <Button className="group">
                         {t.servicesSection.learnMore}
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="rtl:rotate-180 ml-2 rtl:ml-0 rtl:mr-2 h-4 w-4 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
                       </Button>
                     </Link>
                     <Link href="/reservation">
@@ -267,7 +252,7 @@ export default function ServicesPage() {
               <Link href="/reservation">
                 <Button size="lg" className="glow-primary">
                   {t.ctaSection.bookConsultation}
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="rtl:rotate-180 ml-2 rtl:ml-0 rtl:mr-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/contact">

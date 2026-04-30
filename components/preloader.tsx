@@ -51,15 +51,15 @@ export default function Preloader({ onLoadingComplete }: PreloaderProps) {
               transition={{ duration: 0.5 }}
               className="text-center"
             >
-              <motion.h1
-                className="text-6xl font-bold gradient-text mb-8"
+              <motion.div
+                className="mb-8 flex justify-center"
                 animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  scale: [1, 1.05, 1],
                 }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               >
-                IMBT
-              </motion.h1>
+                <img src="/logo.png" alt="IMBT Consulting" className="h-16 w-auto" />
+              </motion.div>
 
               {/* Progress Bar */}
               <div className="relative w-64 h-1 bg-foreground/10 rounded-full overflow-hidden">

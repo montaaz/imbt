@@ -1,12 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Geist_Mono } from "next/font/google"
+import { Inter, Geist_Mono, Cairo } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import ClientProviders from "@/components/client-providers"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const cairo = Cairo({ subsets: ["arabic"], variable: "--font-cairo" })
 
 export const metadata: Metadata = {
   title: "IMBT Consulting | Transformation Digitale",
@@ -27,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${inter.className} font-sans antialiased`}>
+      <body className={`${inter.variable} ${cairo.variable} font-sans antialiased`}>
         <ClientProviders>
           {children}
         </ClientProviders>

@@ -4,6 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import type { JSX } from "react/jsx-runtime"
+import { useLanguage } from "@/lib/i18n/language-context"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -64,49 +65,74 @@ export function RevealOnScroll({
 export function SplitTextAnimation({
   text,
   className = "",
-  tag: Tag = "h2",
+  tag: TagName = "h2",
 }: {
   text: string
   className?: string
   tag?: keyof JSX.IntrinsicElements
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const { dir } = useLanguage()
+  const isRtl = dir === "rtl"
 
   useEffect(() => {
     if (!containerRef.current) return
 
-    const chars = containerRef.current.querySelectorAll(".char")
-
-    gsap.fromTo(
-      chars,
-      {
-        opacity: 0,
-        y: 50,
-        rotateX: -90,
-        transformOrigin: "0% 50% -50",
-      },
-      {
-        opacity: 1,
-        y: 0,
-        rotateX: 0,
-        duration: 0.8,
-        stagger: 0.03,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
+    if (isRtl) {
+      // Arabic: animate the whole block — never split cursive letters
+      gsap.fromTo(
+        containerRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
         },
-      },
+      )
+    } else {
+      const chars = containerRef.current.querySelectorAll(".char")
+      gsap.fromTo(
+        chars,
+        { opacity: 0, y: 50, rotateX: -90, transformOrigin: "0% 50% -50" },
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 0.8,
+          stagger: 0.03,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      )
+    }
+  }, [text, isRtl])
+
+  const Tag = TagName as any
+
+  if (isRtl) {
+    return (
+      <div ref={containerRef}>
+        <Tag className={className}>{text}</Tag>
+      </div>
     )
-  }, [text])
+  }
 
   return (
     <div ref={containerRef}>
       <Tag className={className}>
         {text.split("").map((char, i) => (
           <span key={i} className="char inline-block" style={{ display: char === " " ? "inline" : "inline-block" }}>
-            {char === " " ? "\u00A0" : char}
+            {char === " " ? " " : char}
           </span>
         ))}
       </Tag>
