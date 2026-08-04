@@ -238,7 +238,7 @@ export default function AboutPage() {
                       />
                     ))}
                     <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center relative z-10 p-5">
-                      <Logo alt="IMBT" className="w-full h-full object-contain" />
+                      <Logo alt="IMBT" variant="onColor" className="w-full h-full object-contain" />
                     </div>
                   </div>
                 </div>

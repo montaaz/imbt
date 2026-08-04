@@ -357,6 +357,8 @@ export interface Translations {
     author: string
     views: string
     recentReservations: string
+    markAllRead: string
+    noNotifications: string
     client: string
     service: string
     dateTime: string
@@ -948,6 +950,8 @@ export const translations: Record<Language, Translations> = {
       author: 'Auteur',
       views: 'Vues',
       recentReservations: 'Réservations récentes',
+      markAllRead: 'Tout marquer comme lu',
+      noNotifications: 'Aucune notification',
       client: 'Client',
       service: 'Service',
       dateTime: 'Date & Heure',
@@ -1660,6 +1664,8 @@ export const translations: Record<Language, Translations> = {
       author: 'Author',
       views: 'Views',
       recentReservations: 'Recent Reservations',
+      markAllRead: 'Mark all as read',
+      noNotifications: 'No notifications',
       client: 'Client',
       service: 'Service',
       dateTime: 'Date & Time',
@@ -2499,6 +2505,8 @@ export const translations: Record<Language, Translations> = {
       author: 'الكاتب',
       views: 'المشاهدات',
       recentReservations: 'الحجوزات الأخيرة',
+      markAllRead: 'تحديد الكل كمقروء',
+      noNotifications: 'لا توجد إشعارات',
       client: 'العميل',
       service: 'الخدمة',
       dateTime: 'التاريخ والوقت',

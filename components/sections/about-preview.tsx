@@ -139,7 +139,7 @@ export default function AboutPreview() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 blur-xl absolute" />
                       <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center relative shadow-2xl p-4">
-                        <Logo alt="IMBT" className="w-full h-full object-contain" />
+                        <Logo alt="IMBT" variant="onColor" className="w-full h-full object-contain" />
                       </div>
                     </div>
 

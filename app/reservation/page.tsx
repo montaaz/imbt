@@ -41,6 +41,28 @@ const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"
 
 const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"]
 
+/**
+ * Minimum notice before an appointment can start, so a slot is not offered
+ * moments before it begins.
+ */
+const MIN_LEAD_MINUTES = 60
+
+/** Local YYYY-MM-DD (avoids the UTC shift of toISOString). */
+function toDateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+}
+
+/** Slots on today's date that are still far enough in the future to book. */
+function remainingSlotsToday(now: Date = new Date()) {
+  const cutoff = now.getTime() + MIN_LEAD_MINUTES * 60 * 1000
+
+  return timeSlots.filter((slot) => {
+    const [h, m] = slot.split(":").map(Number)
+    const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m).getTime()
+    return slotTime >= cutoff
+  })
+}
+
 function FullCalendar({
   selectedDate,
   onSelectDate,
@@ -102,8 +124,17 @@ function FullCalendar({
 
   const isDateDisabled = (date: Date) => {
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    // Disable past dates, today, and weekends
-    return date <= todayStart || date.getDay() === 0 || date.getDay() === 6
+
+    // Weekends are never bookable.
+    if (date.getDay() === 0 || date.getDay() === 6) return true
+
+    // Past days are never bookable.
+    if (date < todayStart) return true
+
+    // Today stays open as long as at least one slot is still ahead of us.
+    if (date.getTime() === todayStart.getTime()) return remainingSlotsToday().length === 0
+
+    return false
   }
 
   const isPastMonth = () => {
@@ -169,7 +200,7 @@ function FullCalendar({
               return <div key={`empty-${index}`} className="aspect-square" />
             }
 
-            const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+            const dateStr = toDateKey(date)
             const isSelected = selectedDate === dateStr
             const isDisabled = isDateDisabled(date)
             const isToday = date.toDateString() === today.toDateString()
@@ -655,7 +686,12 @@ export default function ReservationPage() {
                             )}
                             {timeSlots.map((time, index) => {
                               const isSelected = formData.time === time
-                              const isBooked = bookedSlots.includes(time)
+                              // A slot is unavailable if someone already booked it,
+                              // or if it has already passed on today's date.
+                              const isPast =
+                                formData.date === toDateKey(new Date()) &&
+                                !remainingSlotsToday().includes(time)
+                              const isBooked = bookedSlots.includes(time) || isPast
                               return (
                                 <motion.button
                                   key={time}

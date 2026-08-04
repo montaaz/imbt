@@ -31,8 +31,8 @@ async function createTestUsers() {
     }
   ]
 
-  console.log('Creating test users...')
-  console.log('Password for all users: password123\n')
+  //console.log('Creating test users...')
+  //console.log('Password for all users: password123\n')
 
   for (const user of users) {
     try {
@@ -45,16 +45,16 @@ async function createTestUsers() {
         [user.email, hashedPassword, user.firstName, user.lastName, user.role]
       )
 
-      console.log(`✓ Created/Updated ${user.role}: ${user.email}`)
-      console.log(`  Name: ${user.firstName} ${user.lastName}`)
-      console.log(`  ID: ${result.rows[0].id}\n`)
+      //console.log(`✓ Created/Updated ${user.role}: ${user.email}`)
+      //console.log(`  Name: ${user.firstName} ${user.lastName}`)
+      //console.log(`  ID: ${result.rows[0].id}\n`)
     } catch (error) {
       console.error(`✗ Failed to create ${user.email}:`, error.message)
     }
   }
 
   await pool.end()
-  console.log('Done!')
+  //console.log('Done!')
 }
 
 createTestUsers().catch(error => {

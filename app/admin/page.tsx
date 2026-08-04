@@ -11,7 +11,6 @@ import {
   XCircle,
   Eye,
   MoreHorizontal,
-  Bell,
   Search,
   Filter,
   ChevronDown,
@@ -83,6 +82,7 @@ const mockReservations = [
 ]
 
 import { useLanguage } from "@/lib/i18n/language-context"
+import NotificationBell from "@/components/notification-bell"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -179,10 +179,7 @@ export default function AdminDashboard() {
             <p className="text-foreground/60">{t.admin.manageReservationsDesc}</p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="relative p-2 rounded-xl bg-card border border-border hover:bg-muted">
-              <Bell className="h-5 w-5" />
-              <span className={`absolute top-1 ${dir === 'rtl' ? 'left-1' : 'right-1'} w-2 h-2 bg-accent rounded-full`} />
-            </button>
+            <NotificationBell />
             <Link href="/">
               <Button variant="outline" className="bg-transparent">
                 {t.admin.viewSite}

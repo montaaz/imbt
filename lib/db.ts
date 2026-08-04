@@ -22,7 +22,7 @@ export async function query<T extends QueryResultRow = any>(text: string, params
     const res = await pool.query<T>(text, params)
     const duration = Date.now() - start
     if (process.env.NODE_ENV === 'development') {
-      console.log('Executed query', { text, duration, rows: res.rowCount })
+      // console.log('Executed query', { text, duration, rows: res.rowCount })
     }
     return res
   } catch (error) {

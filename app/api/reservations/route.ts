@@ -41,6 +41,45 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Reject slots in the past. Same-day booking is allowed, so this cannot be
+    // a simple date comparison — the time of day matters too.
+    const [slotYear, slotMonth, slotDay] = String(date).split('-').map(Number)
+    const [slotHour, slotMinute] = String(time).split(':').map(Number)
+    const slotStart = new Date(slotYear, (slotMonth || 1) - 1, slotDay, slotHour || 0, slotMinute || 0)
+
+    if (Number.isNaN(slotStart.getTime())) {
+      return NextResponse.json({ error: 'Date ou heure invalide' }, { status: 400 })
+    }
+
+    if (slotStart.getTime() < Date.now()) {
+      return NextResponse.json(
+        { error: 'Ce créneau est déjà passé. Veuillez en choisir un autre.' },
+        { status: 400 }
+      )
+    }
+
+    // Weekends are not open for appointments.
+    const weekday = slotStart.getDay()
+    if (weekday === 0 || weekday === 6) {
+      return NextResponse.json(
+        { error: 'Les réservations ne sont pas disponibles le week-end.' },
+        { status: 400 }
+      )
+    }
+
+    // Guard against two people booking the same slot concurrently — the client
+    // only knows what was free when the page loaded.
+    const clash = await query(
+      'SELECT id FROM reservations WHERE date = $1 AND time = $2 AND status != $3 LIMIT 1',
+      [date, time, 'cancelled']
+    )
+    if (clash.rows.length > 0) {
+      return NextResponse.json(
+        { error: 'Ce créneau vient d’être réservé. Veuillez en choisir un autre.' },
+        { status: 409 }
+      )
+    }
+
     // Map service ID to database enum value
     const serviceType = SERVICE_TYPE_MAP[service]
     if (!serviceType) {
