@@ -16,15 +16,20 @@ export const metadata: Metadata = {
   description:
     "IMBT Consulting - Votre partenaire stratégique pour la transformation digitale, le développement sur mesure et le marketing digital.",
   keywords: ["consulting", "transformation digitale", "développement web", "marketing digital", "CRM", "ERP"],
-  generator: "v0.app",
+  applicationName: "IMBT Consulting",
+  // The IMBT mark is a transparent PNG, so a single set works on light and dark
+  // browser chrome without needing per-scheme variants.
   icons: {
     icon: [
-      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-16.png", type: "image/png", sizes: "16x16" },
+      { url: "/icon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
     ],
     apple: "/apple-icon.png",
+    shortcut: "/favicon.ico",
   },
+  manifest: "/site.webmanifest",
 }
 
 export default function RootLayout({

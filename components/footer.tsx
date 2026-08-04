@@ -147,7 +147,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=36.8225558%2C10.1950646"
+                  href="https://maps.app.goo.gl/ohGC63eMTPkKAk9Z7"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-2 text-foreground/60 transition-colors"

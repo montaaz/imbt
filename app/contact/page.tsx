@@ -16,10 +16,14 @@ import { Label } from "@/components/ui/label"
 const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"), { ssr: false })
 
 /** Office location — Immeuble Omar bloc A, Montplaisir 1073, Tunis. */
-const OFFICE_COORDS = "36.8225558,10.1950646"
+const OFFICE_COORDS = "36.8228344,10.1950871"
 
-/** Single source of truth for every "open in Google Maps" link on this page. */
-const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE_COORDS)}`
+/**
+ * Single source of truth for every "open in Google Maps" link on this page.
+ * Points at the IMBT Consulting Google Business listing, so it opens the
+ * business card with hours, photos and directions.
+ */
+const MAPS_URL = "https://maps.app.goo.gl/ohGC63eMTPkKAk9Z7"
 
 import { useLanguage } from "@/lib/i18n/language-context"
 
@@ -252,12 +256,11 @@ export default function ContactPage() {
               className="relative h-full min-h-[400px]"
             >
               <div className="absolute inset-0 rounded-3xl glass overflow-hidden glow-accent border border-border/50">
-                {/* Centred on the office in Montplaisir (36.8225558, 10.1950646).
-                    `ll` pins the map centre explicitly; using `q` alone made Google
-                    attempt a place lookup at those coordinates, which fails with
-                    "Impossible de charger les informations sur le lieu". */}
+                {/* Queried by business name so the embed resolves to the IMBT
+                    Consulting listing (name, hours, directions) instead of a bare
+                    pin; `ll` keeps the view centred on the office regardless. */}
                 <iframe
-                  src="https://maps.google.com/maps?ll=36.8225558,10.1950646&q=36.8225558,10.1950646&z=17&hl=fr&output=embed"
+                  src={`https://maps.google.com/maps?q=IMBT+Consulting,+Montplaisir,+Tunis&ll=${OFFICE_COORDS}&z=17&hl=fr&output=embed`}
                   title="IMBT Consulting — Immeuble Omar bloc A, Montplaisir, Tunis"
                   width="100%"
                   height="100%"

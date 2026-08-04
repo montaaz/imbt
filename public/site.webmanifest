@@ -1,0 +1,15 @@
+{
+  "name": "IMBT Consulting",
+  "short_name": "IMBT",
+  "description": "IMBT Consulting - Transformation digitale, développement sur mesure et marketing digital.",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "theme_color": "#a80202",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "lang": "fr"
+}
