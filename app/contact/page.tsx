@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, Phone, MapPin, Send, Clock, MessageSquare } from "lucide-react"
+import { Mail, Phone, MapPin, Send, Clock, MessageSquare, ExternalLink } from "lucide-react"
 import dynamic from "next/dynamic"
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
@@ -15,32 +15,11 @@ import { Label } from "@/components/ui/label"
 
 const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"), { ssr: false })
 
-const contactInfo = [
-  {
-    icon: Mail,
-    title: "Email",
-    value: "contact@imbt-consulting.com",
-    href: "mailto:contact@imbt-consulting.com",
-  },
-  {
-    icon: Phone,
-    title: "Téléphone",
-    value: "+33 1 23 45 67 89",
-    href: "tel:+33123456789",
-  },
-  {
-    icon: MapPin,
-    title: "Adresse",
-    value: "Tunis, Tunisia",
-    href: "#",
-  },
-  {
-    icon: Clock,
-    title: "Horaires",
-    value: "Lun-Ven: 9h-18h",
-    href: "#",
-  },
-]
+/** Office location — Immeuble Omar bloc A, Montplaisir 1073, Tunis. */
+const OFFICE_COORDS = "36.8225558,10.1950646"
+
+/** Single source of truth for every "open in Google Maps" link on this page. */
+const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE_COORDS)}`
 
 import { useLanguage } from "@/lib/i18n/language-context"
 
@@ -73,7 +52,9 @@ export default function ContactPage() {
       icon: MapPin,
       title: t.contactPage.info.address.title,
       value: "Immeuble Omar bloc A bur 3-2, Montplaisir, Tunis",
-      href: "https://maps.app.goo.gl/q6ZXD1L7xKXNSD499",
+      // Explicit coordinates rather than a shortlink, so the pin always lands on
+      // the office and stays in sync with the embedded map above.
+      href: MAPS_URL,
     },
     {
       icon: Clock,
@@ -271,8 +252,13 @@ export default function ContactPage() {
               className="relative h-full min-h-[400px]"
             >
               <div className="absolute inset-0 rounded-3xl glass overflow-hidden glow-accent border border-border/50">
+                {/* Centred on the office in Montplaisir (36.8225558, 10.1950646).
+                    `ll` pins the map centre explicitly; using `q` alone made Google
+                    attempt a place lookup at those coordinates, which fails with
+                    "Impossible de charger les informations sur le lieu". */}
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194.1354714652433!2d10.183344675765964!3d36.81559817224419!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd3461427c3857%3A0xe5432d665f8d9560!2sImmeuble%20Omar!5e0!3m2!1sen!2stn!4v1714485000000!5m2!1sen!2stn"
+                  src="https://maps.google.com/maps?ll=36.8225558,10.1950646&q=36.8225558,10.1950646&z=17&hl=fr&output=embed"
+                  title="IMBT Consulting — Immeuble Omar bloc A, Montplaisir, Tunis"
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: 'grayscale(0.5) invert(0.9) contrast(0.9)' }}
@@ -281,15 +267,24 @@ export default function ContactPage() {
                   referrerPolicy="no-referrer-when-downgrade"
                   className="dark:opacity-80"
                 />
-                <div className="absolute bottom-4 left-4 right-4 glass p-4 rounded-xl flex items-center gap-3">
+                {/* Our own link to the office location. Google's built-in
+                    "Open in Maps" overlay inside the iframe points wherever the
+                    embed resolves, so we surface an explicit control instead. */}
+                <a
+                  href={MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-4 left-4 right-4 glass p-4 rounded-xl flex items-center gap-3 transition-colors hover:bg-card/80 group"
+                >
                   <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
                     <MapPin className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-wider text-primary">{t.contactPage.info.address.title}</p>
                     <p className="text-sm font-medium">Immeuble Omar bloc A, Montplaisir, Tunis</p>
                   </div>
-                </div>
+                  <ExternalLink className={`h-4 w-4 text-foreground/50 group-hover:text-primary transition-colors shrink-0 ${dir === 'rtl' ? 'mr-auto' : 'ml-auto'}`} />
+                </a>
               </div>
             </motion.div>
           </div>

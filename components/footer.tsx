@@ -146,10 +146,17 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <span className="flex items-start gap-2 text-foreground/60">
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=36.8225558%2C10.1950646"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-2 text-foreground/60 transition-colors"
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#a80202'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                >
                   <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
                   Immeuble Omar bloc A bureau 3-2 Montplaisir 1073, Tunis, Tunisie
-                </span>
+                </a>
               </li>
             </ul>
           </div>

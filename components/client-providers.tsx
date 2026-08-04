@@ -9,6 +9,10 @@ const CustomCursor = dynamic(() => import("@/components/three/custom-cursor"), {
   ssr: false,
 })
 
+const GsapPerformanceGuard = dynamic(() => import("@/components/gsap-performance-guard"), {
+  ssr: false,
+})
+
 export default function ClientProviders({ children }: { children?: React.ReactNode }) {
   return (
     <ThemeProvider
@@ -19,6 +23,7 @@ export default function ClientProviders({ children }: { children?: React.ReactNo
     >
       <LanguageProvider>
         <CustomCursor />
+        <GsapPerformanceGuard />
         {children}
       </LanguageProvider>
     </ThemeProvider>

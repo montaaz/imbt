@@ -348,6 +348,12 @@ export function Magnetic({ children, className = "", strength = 0.3 }: MagneticP
   useEffect(() => {
     if (!magneticRef.current) return
 
+    // Pointer-follow is meaningless without a real cursor, and on touch devices
+    // it only costs work. Skip it there and when reduced motion is requested.
+    const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (!hasFinePointer || prefersReducedMotion) return
+
     const element = magneticRef.current
 
     const handleMouseMove = (e: MouseEvent) => {

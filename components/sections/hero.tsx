@@ -8,35 +8,33 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Magnetic } from "@/components/gsap/section-transitions"
 import { useLanguage } from "@/lib/i18n/language-context"
+import { useLiteAnimations } from "@/hooks/use-lite-animations"
 
 export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
   const { t, dir } = useLanguage()
+  const lite = useLiteAnimations()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ delay: 0.1 })
 
+      // On phones the title animates as two blocks instead of ~40 separate
+      // letter spans, which otherwise each become their own composited layer.
       tl.fromTo(
-        ".hero-letter",
+        lite ? ".hero-title-line" : ".hero-letter",
         {
-          y: 100,
+          y: lite ? 24 : 100,
           opacity: 0,
-          rotateX: -90,
-          scale: 0.8,
-          transformOrigin: "50% 100%",
+          ...(lite ? {} : { rotateX: -90, scale: 0.8, transformOrigin: "50% 100%" }),
         },
         {
           y: 0,
           opacity: 1,
-          rotateX: 0,
-          scale: 1,
-          duration: 0.4,
-          stagger: {
-            each: 0.01,
-            from: "center",
-          },
+          ...(lite ? {} : { rotateX: 0, scale: 1 }),
+          duration: lite ? 0.35 : 0.4,
+          stagger: lite ? 0.08 : { each: 0.01, from: "center" },
           ease: "power3.out",
         },
       )
@@ -59,26 +57,31 @@ export default function Hero() {
           "-=0.1",
         )
 
-      gsap.to(".float-element", {
-        y: -40,
-        rotation: 5,
-        duration: 4,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        stagger: {
-          each: 0.3,
-          from: "random",
-        },
-      })
+      // The looping orb animations are the most expensive thing in the hero:
+      // they continuously re-rasterize 600-800px surfaces under a 64px blur.
+      // Run them only where there is GPU headroom.
+      if (!lite) {
+        gsap.to(".float-element", {
+          y: -40,
+          rotation: 5,
+          duration: 4,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          stagger: {
+            each: 0.3,
+            from: "random",
+          },
+        })
 
-      gsap.to(".gradient-orb", {
-        rotation: 360,
-        scale: 1.1,
-        duration: 25,
-        repeat: -1,
-        ease: "none",
-      })
+        gsap.to(".gradient-orb", {
+          rotation: 360,
+          scale: 1.1,
+          duration: 25,
+          repeat: -1,
+          ease: "none",
+        })
+      }
 
       gsap.fromTo(
         ".stat-value",
@@ -95,7 +98,7 @@ export default function Hero() {
     })
 
     return () => ctx.revert()
-  }, [])
+  }, [lite])
 
   const title = t.hero.title
   const subtitle = t.hero.subtitle
@@ -103,12 +106,14 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      <div className="gradient-orb absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-primary/40 via-accent/30 to-transparent rounded-full blur-3xl float-element opacity-60" />
+      {/* Decorative glow. Smaller with a cheaper blur on phones, where a large
+          blurred surface is expensive for the GPU to rasterize. */}
+      <div className="gradient-orb absolute top-1/4 left-1/4 w-[280px] h-[280px] lg:w-[600px] lg:h-[600px] bg-gradient-to-br from-primary/40 via-accent/30 to-transparent rounded-full blur-2xl lg:blur-3xl float-element opacity-60" />
       <div
-        className="gradient-orb absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-tl from-accent/40 via-primary/30 to-transparent rounded-full blur-3xl float-element opacity-60"
+        className="gradient-orb absolute bottom-1/4 right-1/4 w-[240px] h-[240px] lg:w-[500px] lg:h-[500px] bg-gradient-to-tl from-accent/40 via-primary/30 to-transparent rounded-full blur-2xl lg:blur-3xl float-element opacity-60"
         style={{ animationDelay: "1s" }}
       />
-      <div className="gradient-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/20 via-accent/10 to-transparent rounded-full blur-3xl" />
+      <div className="gradient-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] lg:w-[800px] lg:h-[800px] bg-gradient-radial from-primary/20 via-accent/10 to-transparent rounded-full blur-2xl lg:blur-3xl" />
 
       <div className="absolute inset-0 overflow-hidden opacity-30">
         <div
@@ -142,17 +147,20 @@ export default function Hero() {
             className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 perspective-1000 px-2 sm:px-4"
             style={{ transformStyle: "preserve-3d" }}
           >
-            {isRtl ? (
+            {isRtl || lite ? (
               /*
-               * Arabic is a cursive connected script — splitting into individual
-               * letter <span>s with inline-block breaks every ligature and letter
-               * connection, making text completely unreadable. Render as whole text.
+               * Two cases render the title as whole lines rather than per-letter
+               * spans:
+               *  - Arabic is a cursive connected script, and inline-block letter
+               *    spans break every ligature, making the text unreadable.
+               *  - On phones, ~40 animated spans each become a composited layer,
+               *    which is a major source of jank for no visual gain at that size.
                */
               <>
-                <span className="hero-letter block leading-tight mb-1 sm:mb-2 gradient-text cursor-default">
+                <span className="hero-title-line block leading-tight mb-1 sm:mb-2 gradient-text cursor-default">
                   {title}
                 </span>
-                <span className="hero-letter block mt-1 sm:mt-2 md:mt-4 leading-tight text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-foreground cursor-default">
+                <span className="hero-title-line block mt-1 sm:mt-2 md:mt-4 leading-tight text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-foreground cursor-default">
                   {subtitle}
                 </span>
               </>

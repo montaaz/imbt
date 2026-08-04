@@ -352,3 +352,47 @@
   right: auto;
   left: 0;
 }
+
+/* ---------------------------------------------------------------------------
+   Mobile / low-power performance
+   Continuously animating large blurred surfaces is the main source of jank on
+   phones. Below the lg breakpoint we keep the visual design but stop paying for
+   the parts that cost the most per frame.
+--------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  /* Animating background-position on every letter of the title forces a repaint
+     per frame; keep the gradient, drop the loop. */
+  .gradient-text {
+    animation: none;
+  }
+
+  /* backdrop-filter is one of the most expensive effects on mobile GPUs. */
+  .glass {
+    backdrop-filter: blur(10px);
+  }
+
+  /* Purely decorative infinite loops. */
+  .animate-shimmer,
+  .animate-pulse-glow,
+  .animate-morph {
+    animation: none;
+  }
+
+  /* Large soft glows: a smaller blur radius is visually near-identical at this
+     size but far cheaper to rasterize. */
+  .blur-3xl {
+    --tw-blur: blur(40px);
+  }
+}
+
+/* Respect the OS-level reduced-motion setting everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
