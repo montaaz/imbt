@@ -1,11 +1,10 @@
 "use client"
 
-import { useRef, useMemo, useEffect } from "react"
+import { useRef, useMemo, useEffect, useState } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import {
   Float,
   MeshDistortMaterial,
-  Environment,
   Sphere,
   Box,
   Torus,
@@ -528,8 +527,6 @@ function Scene({
       <WireframeTunnel scrollRef={scrollRef} />
       <GlassCrystal scrollRef={scrollRef} mouseRef={mouseRef} />
       <EnergyBeams scrollRef={scrollRef} />
-
-      <Environment preset="night" />
     </>
   )
 }
@@ -567,6 +564,17 @@ function ScrollIndicator() {
 export default function ScrollExperience() {
   const scrollRef = useScrollRef()
   const mouseRef = useMouseRef()
+  const [enabled, setEnabled] = useState(false)
+
+  useEffect(() => {
+    // This backdrop is decorative and expensive: skip it on small screens
+    // (where it mostly drains battery) and when the visitor asked for
+    // reduced motion. Deciding here also keeps `window` out of render.
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    setEnabled(window.innerWidth >= 1024 && !prefersReducedMotion)
+  }, [])
+
+  if (!enabled) return <ScrollIndicator />
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, useEffect, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Points, PointMaterial, Sphere, MeshDistortMaterial, Trail, Float } from "@react-three/drei"
 import * as THREE from "three"
@@ -296,10 +296,23 @@ function MouseLight() {
 export default function ParticleField() {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
+  const [enabled, setEnabled] = useState(false)
+
+  useEffect(() => {
+    // Decorative background: skip on small screens and for reduced-motion users.
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    setEnabled(window.innerWidth >= 1024 && !prefersReducedMotion)
+  }, [])
+
+  if (!enabled) return null
 
   return (
     <div className="absolute inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 12], fov: 60 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+      <Canvas
+        camera={{ position: [0, 0, 12], fov: 60 }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+      >
         <ambientLight intensity={isDark ? 0.3 : 0.8} />
         <pointLight position={[10, 10, 10]} intensity={isDark ? 1.5 : 1} color="#6366f1" />
         <pointLight position={[-10, -10, -10]} intensity={isDark ? 1 : 0.5} color="#14b8a6" />

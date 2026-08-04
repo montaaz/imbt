@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useLanguage } from '@/lib/i18n/language-context'
+import { clearAuth } from '@/hooks/use-auth'
+import Logo from "@/components/logo"
 import {
   Calendar,
   Package,
@@ -117,9 +119,7 @@ export default function DashboardPage() {
       })
 
       if (response.status === 401) {
-        localStorage.removeItem('client_token')
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        clearAuth()
         router.push('/auth/signin')
         return
       }
@@ -138,9 +138,7 @@ export default function DashboardPage() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('client_token')
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    clearAuth()
     router.push('/')
   }
 
@@ -225,7 +223,7 @@ export default function DashboardPage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/logo.png" alt="IMBT Consulting" className="h-8 w-auto" />
+              <Logo className="h-8 w-auto" />
             </Link>
             <div className="flex items-center gap-3">
               <Link href="/">

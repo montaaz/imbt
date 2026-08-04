@@ -32,9 +32,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { GoogleSignInButton } from "@/components/google-signin-button-simple"
+import { GoogleSignInButton, isGoogleSignInEnabled } from "@/components/google-signin-button-simple"
 import { useLanguage } from "@/lib/i18n/language-context"
 import { PhoneInput } from "@/components/ui/phone-input"
+import { notifyAuthChange } from "@/hooks/use-auth"
 
 const FloatingShapes = dynamic(() => import("@/components/three/floating-shapes"), { ssr: false })
 
@@ -337,6 +338,7 @@ export default function ReservationPage() {
             name: `${formData.firstName} ${formData.lastName}`,
           })
         )
+        notifyAuthChange()
       }
 
       // Success
@@ -411,16 +413,18 @@ export default function ReservationPage() {
                   <p className="text-foreground/60 mb-4 text-sm leading-relaxed">
                     {t.reservation.createAccountPrompt}
                   </p>
-                  <div className="flex justify-center">
-                    <GoogleSignInButton
-                      onSuccess={() => {
-                        window.location.href = '/dashboard'
-                      }}
-                      onError={(error) => {
-                        console.error('Google sign-in error:', error)
-                      }}
-                    />
-                  </div>
+                  {isGoogleSignInEnabled && (
+                    <div className="flex justify-center">
+                      <GoogleSignInButton
+                        onSuccess={() => {
+                          window.location.href = '/dashboard'
+                        }}
+                        onError={(error) => {
+                          console.error('Google sign-in error:', error)
+                        }}
+                      />
+                    </div>
+                  )}
                   <div className="mt-4 text-center">
                     <Link href="/auth/client-login" className="text-sm text-primary hover:underline font-medium">
                       {t.reservation.orSignInWithPassword}

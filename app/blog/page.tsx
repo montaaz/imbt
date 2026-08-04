@@ -9,6 +9,7 @@ import Footer from '@/components/footer'
 import { Calendar, User, Eye, ArrowRight, Search, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useLanguage } from '@/lib/i18n/language-context'
 
 const ParticleField = dynamic(() => import('@/components/three/particle-field'), {
   ssr: false,
@@ -17,8 +18,12 @@ const ParticleField = dynamic(() => import('@/components/three/particle-field'),
 interface BlogPost {
   id: number
   title: string
+  title_en: string | null
+  title_ar: string | null
   slug: string
   excerpt: string
+  excerpt_en: string | null
+  excerpt_ar: string | null
   featured_image: string | null
   author_name: string
   published_at: string
@@ -32,6 +37,15 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const { t, dir, language } = useLanguage()
+
+  const getLocalizedValue = (post: BlogPost, field: 'title' | 'excerpt') => {
+    if (language === 'ar' && field === 'title' && post.title_ar) return post.title_ar
+    if (language === 'ar' && field === 'excerpt' && post.excerpt_ar) return post.excerpt_ar
+    if (language === 'en' && field === 'title' && post.title_en) return post.title_en
+    if (language === 'en' && field === 'excerpt' && post.excerpt_en) return post.excerpt_en
+    return post[field] // Fallback to French
+  }
 
   useEffect(() => {
     fetchPosts()
@@ -39,7 +53,7 @@ export default function BlogPage() {
 
   useEffect(() => {
     filterPosts()
-  }, [searchQuery, selectedTag, posts])
+  }, [searchQuery, selectedTag, posts, language])
 
   const fetchPosts = async () => {
     try {
@@ -62,9 +76,12 @@ export default function BlogPage() {
     // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(
-        (post) =>
-          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase())
+        (post) => {
+          const title = getLocalizedValue(post, 'title')
+          const excerpt = getLocalizedValue(post, 'excerpt')
+          return title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                 excerpt?.toLowerCase().includes(searchQuery.toLowerCase())
+        }
       )
     }
 
@@ -83,7 +100,7 @@ export default function BlogPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString(language === 'ar' ? 'ar-TN' : language === 'fr' ? 'fr-FR' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -91,7 +108,7 @@ export default function BlogPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background" dir={dir}>
       <ParticleField />
       <Navigation />
 
@@ -110,11 +127,10 @@ export default function BlogPage() {
             className="text-center max-w-3xl mx-auto mb-12"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Notre <span className="gradient-text">Blog</span>
+              {t.blog.title.split(' ')[0]} <span className="gradient-text">{t.blog.title.split(' ').slice(1).join(' ') || 'Blog'}</span>
             </h1>
             <p className="text-xl text-foreground/60">
-              Découvrez nos articles, conseils et analyses sur la transformation
-              digitale, le CRM, l'ERP et le marketing digital.
+              {t.blog.description}
             </p>
           </motion.div>
 
@@ -128,13 +144,13 @@ export default function BlogPage() {
             <div className="p-6 rounded-3xl glass glow-primary mb-8">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
+                  <Search className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40`} />
                   <Input
                     type="text"
-                    placeholder="Rechercher un article..."
+                    placeholder={t.blog.searchPlaceholder}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 bg-card/50 border-border/50"
+                    className={`${dir === 'rtl' ? 'pr-12' : 'pl-12'} bg-card/50 border-border/50`}
                   />
                 </div>
               </div>
@@ -150,7 +166,7 @@ export default function BlogPage() {
                         : 'bg-card/50 text-foreground/60 hover:bg-card'
                     }`}
                   >
-                    Tous
+                    {t.blog.allTags}
                   </button>
                   {allTags.map((tag) => (
                     <button
@@ -179,14 +195,14 @@ export default function BlogPage() {
           {isLoading ? (
             <div className="text-center py-20">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-              <p className="mt-4 text-foreground/60">Chargement des articles...</p>
+              <p className="mt-4 text-foreground/60">{t.blog.loading}</p>
             </div>
           ) : filteredPosts.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-foreground/60 text-lg">
                 {searchQuery || selectedTag
-                  ? 'Aucun article trouvé avec ces critères.'
-                  : 'Aucun article publié pour le moment.'}
+                  ? t.blog.noArticlesFound
+                  : t.blog.noArticles}
               </p>
             </div>
           ) : (
@@ -227,13 +243,13 @@ export default function BlogPage() {
 
                       {/* Title */}
                       <h3 className="text-xl font-bold mb-3 line-clamp-2">
-                        {post.title}
+                        {getLocalizedValue(post, 'title')}
                       </h3>
 
                       {/* Excerpt */}
-                      {post.excerpt && (
+                      {getLocalizedValue(post, 'excerpt') && (
                         <p className="text-foreground/60 mb-4 line-clamp-3">
-                          {post.excerpt}
+                          {getLocalizedValue(post, 'excerpt')}
                         </p>
                       )}
 
@@ -260,8 +276,8 @@ export default function BlogPage() {
                       {/* Read More */}
                       <div className="mt-4">
                         <Button variant="ghost" className="w-full group">
-                          Lire l'article
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          {t.blog.readArticle}
+                          <ArrowRight className={`ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform ${dir === 'rtl' ? 'rotate-180' : ''}`} />
                         </Button>
                       </div>
                     </div>

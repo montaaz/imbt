@@ -66,14 +66,27 @@ export async function PUT(
     const body = await request.json()
     const {
       title,
+      title_en,
+      title_ar,
       newSlug,
       excerpt,
+      excerpt_en,
+      excerpt_ar,
       content,
+      content_en,
+      content_ar,
       featuredImage,
       status,
       tags,
       metaTitle,
+      metaTitle_en,
+      metaTitle_ar,
       metaDescription,
+      metaDescription_en,
+      metaDescription_ar,
+      subtitle,
+      subtitle_en,
+      subtitle_ar,
     } = body
 
     // Build update query dynamically
@@ -84,6 +97,18 @@ export async function PUT(
     if (title !== undefined) {
       updates.push(`title = $${paramCount}`)
       values.push(title)
+      paramCount++
+    }
+
+    if (title_en !== undefined) {
+      updates.push(`title_en = $${paramCount}`)
+      values.push(title_en)
+      paramCount++
+    }
+
+    if (title_ar !== undefined) {
+      updates.push(`title_ar = $${paramCount}`)
+      values.push(title_ar)
       paramCount++
     }
 
@@ -112,9 +137,33 @@ export async function PUT(
       paramCount++
     }
 
+    if (excerpt_en !== undefined) {
+      updates.push(`excerpt_en = $${paramCount}`)
+      values.push(excerpt_en)
+      paramCount++
+    }
+
+    if (excerpt_ar !== undefined) {
+      updates.push(`excerpt_ar = $${paramCount}`)
+      values.push(excerpt_ar)
+      paramCount++
+    }
+
     if (content !== undefined) {
       updates.push(`content = $${paramCount}`)
       values.push(content)
+      paramCount++
+    }
+
+    if (content_en !== undefined) {
+      updates.push(`content_en = $${paramCount}`)
+      values.push(content_en)
+      paramCount++
+    }
+
+    if (content_ar !== undefined) {
+      updates.push(`content_ar = $${paramCount}`)
+      values.push(content_ar)
       paramCount++
     }
 
@@ -147,9 +196,51 @@ export async function PUT(
       paramCount++
     }
 
+    if (metaTitle_en !== undefined) {
+      updates.push(`meta_title_en = $${paramCount}`)
+      values.push(metaTitle_en)
+      paramCount++
+    }
+
+    if (metaTitle_ar !== undefined) {
+      updates.push(`meta_title_ar = $${paramCount}`)
+      values.push(metaTitle_ar)
+      paramCount++
+    }
+
     if (metaDescription !== undefined) {
       updates.push(`meta_description = $${paramCount}`)
       values.push(metaDescription)
+      paramCount++
+    }
+
+    if (metaDescription_en !== undefined) {
+      updates.push(`meta_description_en = $${paramCount}`)
+      values.push(metaDescription_en)
+      paramCount++
+    }
+
+    if (metaDescription_ar !== undefined) {
+      updates.push(`meta_description_ar = $${paramCount}`)
+      values.push(metaDescription_ar)
+      paramCount++
+    }
+
+    if (subtitle !== undefined) {
+      updates.push(`subtitle = $${paramCount}`)
+      values.push(subtitle)
+      paramCount++
+    }
+
+    if (subtitle_en !== undefined) {
+      updates.push(`subtitle_en = $${paramCount}`)
+      values.push(subtitle_en)
+      paramCount++
+    }
+
+    if (subtitle_ar !== undefined) {
+      updates.push(`subtitle_ar = $${paramCount}`)
+      values.push(subtitle_ar)
       paramCount++
     }
 

@@ -9,6 +9,7 @@ import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
 import { Calendar, User, Eye, ArrowLeft, Share2, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useLanguage } from '@/lib/i18n/language-context'
 
 const ParticleField = dynamic(() => import('@/components/three/particle-field'), {
   ssr: false,
@@ -17,9 +18,15 @@ const ParticleField = dynamic(() => import('@/components/three/particle-field'),
 interface BlogPost {
   id: number
   title: string
+  title_en: string | null
+  title_ar: string | null
   slug: string
   excerpt: string
+  excerpt_en: string | null
+  excerpt_ar: string | null
   content: string
+  content_en: string | null
+  content_ar: string | null
   featured_image: string | null
   author_name: string
   author_email: string
@@ -27,7 +34,11 @@ interface BlogPost {
   views: number
   tags: string[]
   meta_title: string
+  meta_title_en: string | null
+  meta_title_ar: string | null
   meta_description: string
+  meta_description_en: string | null
+  meta_description_ar: string | null
 }
 
 export default function BlogPostPage() {
@@ -36,12 +47,37 @@ export default function BlogPostPage() {
   const [post, setPost] = useState<BlogPost | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [showShareMenu, setShowShareMenu] = useState(false)
+  const { t, dir, language } = useLanguage()
+
+  const getLocalizedValue = (post: BlogPost, field: 'title' | 'excerpt' | 'content' | 'meta_title' | 'meta_description') => {
+    if (language === 'ar' && post[`${field}_ar` as keyof BlogPost]) return post[`${field}_ar` as keyof BlogPost] as string
+    if (language === 'en' && post[`${field}_en` as keyof BlogPost]) return post[`${field}_en` as keyof BlogPost] as string
+    return post[field as keyof BlogPost] as string // Fallback to French
+  }
 
   useEffect(() => {
     if (slug) {
       fetchPost()
     }
   }, [slug])
+
+  // Update meta tags when language or post changes
+  useEffect(() => {
+    if (post) {
+      const metaTitle = getLocalizedValue(post, 'meta_title')
+      const metaDesc = getLocalizedValue(post, 'meta_description')
+      
+      if (metaTitle) {
+        document.title = metaTitle
+      }
+      if (metaDesc) {
+        const metaDescription = document.querySelector('meta[name="description"]')
+        if (metaDescription) {
+          metaDescription.setAttribute('content', metaDesc)
+        }
+      }
+    }
+  }, [post, language])
 
   const fetchPost = async () => {
     try {
@@ -55,17 +91,6 @@ export default function BlogPostPage() {
 
       const data = await response.json()
       setPost(data.post)
-
-      // Update meta tags dynamically
-      if (data.post.meta_title) {
-        document.title = data.post.meta_title
-      }
-      if (data.post.meta_description) {
-        const metaDescription = document.querySelector('meta[name="description"]')
-        if (metaDescription) {
-          metaDescription.setAttribute('content', data.post.meta_description)
-        }
-      }
     } catch (error) {
       console.error('Error fetching post:', error)
     } finally {
@@ -96,12 +121,12 @@ export default function BlogPostPage() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href)
-    alert('Lien copié dans le presse-papier!')
+    alert(t.blog.linkCopied)
   }
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString(language === 'ar' ? 'ar-TN' : language === 'fr' ? 'fr-FR' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -110,10 +135,10 @@ export default function BlogPostPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-background flex items-center justify-center">
+      <main className="min-h-screen bg-background flex items-center justify-center" dir={dir}>
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-          <p className="mt-4 text-foreground/60">Chargement de l'article...</p>
+          <p className="mt-4 text-foreground/60">{t.blog.loadingArticle}</p>
         </div>
       </main>
     )
@@ -121,17 +146,17 @@ export default function BlogPostPage() {
 
   if (!post) {
     return (
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background" dir={dir}>
         <Navigation />
         <div className="container mx-auto px-6 py-32 text-center">
-          <h1 className="text-4xl font-bold mb-4">Article non trouvé</h1>
+          <h1 className="text-4xl font-bold mb-4">{t.blog.articleNotFound}</h1>
           <p className="text-foreground/60 mb-8">
-            Désolé, cet article n'existe pas ou a été supprimé.
+            {t.blog.articleNotFoundDesc}
           </p>
           <Link href="/blog">
             <Button>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Retour au blog
+              <ArrowLeft className={`mr-2 h-4 w-4 ${dir === 'rtl' ? 'rotate-180 ml-2 mr-0' : ''}`} />
+              {t.blog.backToBlog}
             </Button>
           </Link>
         </div>
@@ -140,7 +165,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background" dir={dir}>
       <ParticleField />
       <Navigation />
 
@@ -163,8 +188,8 @@ export default function BlogPostPage() {
               href="/blog"
               className="inline-flex items-center gap-2 text-foreground/60 hover:text-foreground mb-8 transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" />
-              Retour au blog
+              <ArrowLeft className={`h-4 w-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+              {t.blog.backToBlog}
             </Link>
 
             {/* Tags */}
@@ -183,11 +208,11 @@ export default function BlogPostPage() {
             )}
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">{getLocalizedValue(post, 'title')}</h1>
 
             {/* Excerpt */}
-            {post.excerpt && (
-              <p className="text-xl text-foreground/70 mb-8">{post.excerpt}</p>
+            {getLocalizedValue(post, 'excerpt') && (
+              <p className="text-xl text-foreground/70 mb-8">{getLocalizedValue(post, 'excerpt')}</p>
             )}
 
             {/* Meta Info */}
@@ -202,7 +227,7 @@ export default function BlogPostPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Eye className="h-5 w-5" />
-                <span>{post.views} vues</span>
+                <span>{post.views} {t.blog.views}</span>
               </div>
             </div>
 
@@ -210,7 +235,7 @@ export default function BlogPostPage() {
             <div className="p-6 rounded-2xl glass glow-accent mb-8">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Share2 className="h-5 w-5 text-accent" />
-                Partager cet article
+                {t.blog.shareTitle}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
@@ -220,7 +245,7 @@ export default function BlogPostPage() {
                   <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
-                  Partager sur Facebook
+                  {t.blog.shareOnFacebook}
                 </button>
 
                 <button
@@ -230,12 +255,12 @@ export default function BlogPostPage() {
                   <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                   </svg>
-                  Partager sur LinkedIn
+                  {t.blog.shareOnLinkedIn}
                 </button>
               </div>
 
               <div className="mt-3 text-center text-sm text-foreground/60">
-                Cliquez pour partager cet article avec votre réseau
+                {t.blog.shareDesc}
               </div>
             </div>
           </motion.div>
@@ -254,7 +279,7 @@ export default function BlogPostPage() {
             >
               <img
                 src={post.featured_image}
-                alt={post.title}
+                alt={getLocalizedValue(post, 'title')}
                 className="w-full h-auto"
               />
             </motion.div>
@@ -272,7 +297,7 @@ export default function BlogPostPage() {
             className="max-w-4xl mx-auto"
           >
             <div
-              className="prose prose-lg prose-invert max-w-none
+              className={`prose prose-lg prose-invert max-w-none
                 prose-headings:font-bold prose-headings:text-foreground
                 prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
                 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4
@@ -283,15 +308,15 @@ export default function BlogPostPage() {
                 prose-li:mb-2
                 prose-strong:text-foreground prose-strong:font-semibold
                 prose-code:text-primary prose-code:bg-primary/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-                prose-img:rounded-2xl prose-img:my-8"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+                prose-img:rounded-2xl prose-img:my-8 ${dir === 'rtl' ? 'text-right' : ''}`}
+              dangerouslySetInnerHTML={{ __html: getLocalizedValue(post, 'content') }}
             />
 
             {/* Share Again at Bottom - Simple & Clean */}
             <div className="mt-16 pt-8 border-t border-border/30">
               <div className="p-6 rounded-2xl glass text-center">
-                <h3 className="text-xl font-bold mb-4">Cet article vous a plu ?</h3>
-                <p className="text-foreground/60 mb-6">Partagez-le avec votre réseau !</p>
+                <h3 className="text-xl font-bold mb-4">{t.blog.didYouLike}</h3>
+                <p className="text-foreground/60 mb-6">{t.blog.shareWithNetwork}</p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <button
                     onClick={shareOnFacebook}
@@ -300,7 +325,7 @@ export default function BlogPostPage() {
                     <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                     </svg>
-                    Partager sur Facebook
+                    {t.blog.shareOnFacebook}
                   </button>
 
                   <button
@@ -310,7 +335,7 @@ export default function BlogPostPage() {
                     <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                     </svg>
-                    Partager sur LinkedIn
+                    {t.blog.shareOnLinkedIn}
                   </button>
                 </div>
               </div>
@@ -320,8 +345,8 @@ export default function BlogPostPage() {
             <div className="mt-12 text-center">
               <Link href="/blog">
                 <Button variant="outline" size="lg">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour au blog
+                  <ArrowLeft className={`mr-2 h-4 w-4 ${dir === 'rtl' ? 'rotate-180 ml-2 mr-0' : ''}`} />
+                  {t.blog.backToBlog}
                 </Button>
               </Link>
             </div>

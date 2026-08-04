@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Logo from "@/components/logo"
 
 interface PreloaderProps {
   onLoadingComplete: () => void
@@ -12,26 +13,38 @@ export default function Preloader({ onLoadingComplete }: PreloaderProps) {
   const [isComplete, setIsComplete] = useState(false)
 
   useEffect(() => {
-    // Simulate loading progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setTimeout(() => {
-            setIsComplete(true)
-            setTimeout(onLoadingComplete, 300)
-          }, 200)
-          return 100
-        }
-        // Speed up progressively
-        if (prev >= 90) return prev + 5
-        if (prev >= 70) return prev + 4
-        if (prev >= 50) return prev + 3
-        return prev + 2.5
-      })
-    }, 20)
+    let finished = false
 
-    return () => clearInterval(interval)
+    const finish = () => {
+      if (finished) return
+      finished = true
+      clearInterval(interval)
+      setProgress(100)
+      setIsComplete(true)
+      // Matches the exit transition below so content swaps in without a flash.
+      setTimeout(onLoadingComplete, 300)
+    }
+
+    // Creep towards 90% while the page is still loading; real readiness (below)
+    // is what actually dismisses the preloader.
+    const interval = setInterval(() => {
+      setProgress((prev) => (prev >= 90 ? prev : prev + 6))
+    }, 40)
+
+    if (document.readyState === "complete") {
+      finish()
+    } else {
+      window.addEventListener("load", finish)
+    }
+
+    // Safety net so a slow third-party asset can never trap visitors here.
+    const timeout = setTimeout(finish, 2000)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeout)
+      window.removeEventListener("load", finish)
+    }
   }, [onLoadingComplete])
 
   return (
@@ -58,7 +71,7 @@ export default function Preloader({ onLoadingComplete }: PreloaderProps) {
                 }}
                 transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               >
-                <img src="/logo.png" alt="IMBT Consulting" className="h-16 w-auto" />
+                <Logo className="h-16 w-auto" />
               </motion.div>
 
               {/* Progress Bar */}

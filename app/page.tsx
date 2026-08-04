@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import dynamic from "next/dynamic"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import Navigation from "@/components/navigation"
 import Hero from "@/components/sections/hero"
 import ServicesPreview from "@/components/sections/services-preview"
@@ -18,27 +18,26 @@ const ScrollExperience = dynamic(() => import("@/components/three/scroll-experie
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
 
+  // The page is always mounted (so markup is parsed and painted while the
+  // preloader overlay is still up); only the 3D backdrop waits, since it is
+  // decorative and the most expensive thing on the page.
   return (
     <>
       <Preloader onLoadingComplete={() => setIsLoading(false)} />
-      <AnimatePresence>
-        {!isLoading && (
-          <motion.main
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="min-h-screen bg-background"
-          >
-            <ScrollExperience />
-            <Navigation />
-            <Hero />
-            <ServicesPreview />
-            <AboutPreview />
-            <CTASection />
-            <Footer />
-          </motion.main>
-        )}
-      </AnimatePresence>
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 0.3 }}
+        className="min-h-screen bg-background"
+      >
+        {!isLoading && <ScrollExperience />}
+        <Navigation />
+        <Hero />
+        <ServicesPreview />
+        <AboutPreview />
+        <CTASection />
+        <Footer />
+      </motion.main>
     </>
   )
 }

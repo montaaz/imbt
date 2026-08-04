@@ -8,6 +8,8 @@ import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import { useLanguage } from "@/lib/i18n/language-context"
+import { clearAuth } from "@/hooks/use-auth"
+import Logo from "@/components/logo"
 import { ModeToggle } from "@/components/mode-toggle"
 
 export default function AdminSidebar() {
@@ -30,8 +32,7 @@ export default function AdminSidebar() {
   }, [pathname])
 
   const handleLogout = () => {
-    localStorage.removeItem("user")
-    localStorage.removeItem("token")
+    clearAuth()
     router.push("/")
   }
 
@@ -47,7 +48,7 @@ export default function AdminSidebar() {
     <>
       <div className="flex items-center justify-between mb-10">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="IMBT Consulting" className="h-8 w-auto" />
+          <Logo className="h-8 w-auto" />
           <span className="text-xs text-foreground/50">Admin</span>
         </Link>
         <ModeToggle />

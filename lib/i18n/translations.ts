@@ -212,6 +212,19 @@ export interface Translations {
     company: string
     rememberMe: string
     forgotPassword: string
+    forgotPasswordTitle: string
+    forgotPasswordSubtitle: string
+    sendResetLink: string
+    resetLinkSent: string
+    checkSpamFolder: string
+    backToSignIn: string
+    resetPasswordTitle: string
+    resetPasswordSubtitle: string
+    resetPasswordButton: string
+    newPassword: string
+    passwordResetSuccess: string
+    invalidResetLink: string
+    requestNewLink: string
     noAccount: string
     alreadyHaveAccount: string
     createAccount: string
@@ -456,10 +469,58 @@ export interface Translations {
   blog: {
     title: string
     subtitle: string
+    description: string
+    searchPlaceholder: string
+    allTags: string
     readArticle: string
     shareOn: string
+    shareOnFacebook: string
+    shareOnLinkedIn: string
     relatedArticles: string
     tags: string
+    loading: string
+    noArticles: string
+    noArticlesFound: string
+    backToBlog: string
+    views: string
+    articleNotFound: string
+    articleNotFoundDesc: string
+    shareTitle: string
+    shareDesc: string
+    didYouLike: string
+    shareWithNetwork: string
+    linkCopied: string
+    loadingArticle: string
+  }
+
+  caseStudiesPage: {
+    hero: {
+      badge: string
+      title: string
+      subtitle: string
+      description: string
+      back: string
+    }
+    sections: {
+      context: string
+      challenges: string
+      solution: string
+      results: string
+      studyNumber: string
+      ctaTitle: string
+      ctaDescription: string
+      ctaButton: string
+    }
+    items: {
+      id: number
+      title: string
+      subtitle: string
+      context: string
+      challenges: string[]
+      solution: string
+      results: { metric: string; description: string }[]
+      testimonial: string
+    }[]
   }
 
   // Contact
@@ -746,6 +807,19 @@ export const translations: Record<Language, Translations> = {
       company: 'Entreprise',
       rememberMe: 'Se souvenir de moi',
       forgotPassword: 'Mot de passe oublié ?',
+      forgotPasswordTitle: 'Mot de passe oublié',
+      forgotPasswordSubtitle: 'Saisissez votre email pour recevoir un lien de réinitialisation',
+      sendResetLink: 'Envoyer le lien',
+      resetLinkSent: 'Si un compte existe pour cette adresse, un lien de réinitialisation vient d’être envoyé.',
+      checkSpamFolder: 'Pensez à vérifier vos courriers indésirables.',
+      backToSignIn: 'Retour à la connexion',
+      resetPasswordTitle: 'Nouveau mot de passe',
+      resetPasswordSubtitle: 'Choisissez un nouveau mot de passe pour votre compte',
+      resetPasswordButton: 'Réinitialiser le mot de passe',
+      newPassword: 'Nouveau mot de passe',
+      passwordResetSuccess: 'Votre mot de passe a été réinitialisé avec succès.',
+      invalidResetLink: 'Ce lien de réinitialisation est invalide ou a expiré.',
+      requestNewLink: 'Demander un nouveau lien',
       noAccount: 'Pas encore de compte ?',
       createAccount: 'Créer un compte',
       alreadyHaveAccount: 'Déjà un compte ?',
@@ -983,11 +1057,130 @@ export const translations: Record<Language, Translations> = {
     },
     blog: {
       title: 'Blog',
-      subtitle: 'Actualités et conseils en transformation digitale',
+      subtitle: 'Notre Blog',
+      description: 'Découvrez nos articles, conseils et analyses sur la transformation digitale, le CRM, l\'ERP et le marketing digital.',
+      searchPlaceholder: 'Rechercher un article...',
+      allTags: 'Tous',
       readArticle: 'Lire l\'article',
       shareOn: 'Partager sur',
+      shareOnFacebook: 'Partager sur Facebook',
+      shareOnLinkedIn: 'Partager sur LinkedIn',
       relatedArticles: 'Articles similaires',
       tags: 'Tags',
+      loading: 'Chargement des articles...',
+      noArticles: 'Aucun article publié pour le moment.',
+      noArticlesFound: 'Aucun article trouvé avec ces critères.',
+      backToBlog: 'Retour au blog',
+      views: 'vues',
+      articleNotFound: 'Article non trouvé',
+      articleNotFoundDesc: 'Désolé, cet article n\'existe pas ou a été supprimé.',
+      shareTitle: 'Partager cet article',
+      shareDesc: 'Cliquez pour partager cet article avec votre réseau',
+      didYouLike: 'Cet article vous a plu ?',
+      shareWithNetwork: 'Partagez-le avec votre réseau !',
+      linkCopied: 'Lien copié dans le presse-papier!',
+      loadingArticle: 'Chargement de l\'article...',
+    },
+    caseStudiesPage: {
+      hero: {
+        badge: 'Nos Réussites',
+        title: 'Études de Cas',
+        subtitle: 'Cas',
+        description: 'Découvrez comment IMBT Consulting a transformé les entreprises grâce à des solutions digitales innovantes',
+        back: 'Retour',
+      },
+      sections: {
+        context: 'Contexte',
+        challenges: 'Défis',
+        solution: 'Solution',
+        results: 'Résultats',
+        studyNumber: 'Étude de Cas #',
+        ctaTitle: 'Prêt à transformer votre entreprise ?',
+        ctaDescription: 'Contactez-nous pour découvrir comment nous pouvons vous aider à atteindre vos objectifs',
+        ctaButton: 'Demander une consultation',
+      },
+      items: [
+        {
+          id: 1,
+          title: "GRT Security - Implémentation ERP",
+          subtitle: "Transformation digitale d'une entreprise de sécurité privée",
+          context: "Une entreprise de sécurité privée en pleine croissance ayant besoin d'améliorer son efficacité opérationnelle.",
+          challenges: [
+            "Systèmes de gestion multiples et déconnectés",
+            "Difficultés de centralisation des informations",
+            "Manque de visibilité en temps réel sur la performance",
+            "Processus manuels source d'erreurs",
+          ],
+          solution: "IMBT Consulting a déployé un système ERP intégré comprenant la gestion RH, la planification des interventions, des modules de facturation/comptabilité, et des tableaux de bord de reporting en temps réel.",
+          results: [
+            { metric: "30%", description: "Réduction des erreurs administratives" },
+            { metric: "Efficacité", description: "Amélioration du temps de planification et d'administration du personnel" },
+            { metric: "Satisfaction", description: "Amélioration de la satisfaction client grâce à une meilleure gestion" },
+            { metric: "KPI", description: "Suivi précis avec des rapports en temps réel" },
+          ],
+          testimonial: "La mise en œuvre a 'transformé la façon dont nous gérons notre entreprise. Nous avons gagné en efficacité et en réactivité, avec une meilleure visibilité sur la performance' nous permettant de nous concentrer sur nos services de sécurité principaux.",
+        },
+        {
+          id: 2,
+          title: "Oxygène Print - Plateforme de Collaboration Interne",
+          subtitle: "Optimisation de la communication inter-départementale",
+          context: "Une entreprise d'impression et de communication visuelle nécessitant une amélioration de la communication inter-départementale avec l'expansion de l'équipe.",
+          challenges: [
+            "Silos d'information entre les départements",
+            "Outils de gestion de projet dispersés",
+            "Difficulté à suivre la progression en temps réel",
+            "Mauvaise coordination entre les équipes créatives, production et logistique",
+          ],
+          solution: "IMBT Consulting a développé une plateforme de collaboration personnalisée avec gestion centralisée des projets, espaces de communication en temps réel, partage de fichiers, et planification intégrée.",
+          results: [
+            { metric: "25%", description: "Augmentation de la productivité grâce à une meilleure coordination d'équipe" },
+            { metric: "40%", description: "Réduction du temps de gestion de projet" },
+            { metric: "Collaboration", description: "Amélioration de la collaboration inter-départementale" },
+            { metric: "Temps réel", description: "Suivi des tâches en temps réel permettant une gestion proactive" },
+          ],
+          testimonial: "La plateforme a 'révolutionné notre façon de travailler. Nous avons gagné en fluidité et en efficacité, avec une collaboration améliorée se reflétant dans la qualité de service.'",
+        },
+        {
+          id: 3,
+          title: "Digitalisation.Services - Implémentation CRM",
+          subtitle: "Optimisation de la gestion de la relation client",
+          context: "Un cabinet de conseil en transformation digitale nécessitant une amélioration de la gestion interne de la relation client malgré une croissance rapide.",
+          challenges: [
+            "Suivi désorganisé des interactions clients à travers des canaux dispersés",
+            "Difficulté à prioriser les opportunités commerciales",
+            "Manque de visibilité sur le pipeline de vente",
+            "Processus de gestion de projet non structurés",
+          ],
+          solution: "IMBT Consulting a mis en œuvre un CRM personnalisé avec suivi centralisé des interactions clients, gestion des opportunités commerciales, outils de collaboration interne, automatisation des tâches, et reporting de performance.",
+          results: [
+            { metric: "40%", description: "Amélioration de la productivité commerciale" },
+            { metric: "35%", description: "Réduction du temps de gestion client" },
+            { metric: "Satisfaction", description: "Amélioration de la satisfaction client grâce au suivi précis" },
+            { metric: "Pipeline", description: "Augmentation de la visibilité du pipeline de vente soutenant les décisions stratégiques" },
+          ],
+          testimonial: "Le CRM a 'transformé la façon dont nous gérons nos clients et projets. Nous avons gagné en efficacité et pouvons offrir une meilleure expérience client, essentielle pour la croissance.'",
+        },
+        {
+          id: 4,
+          title: "Cyris360 - Optimisation Marketing Digital",
+          subtitle: "Stratégie omnicanale pour croissance en ligne",
+          context: "Une entreprise de solutions technologiques en expansion manquant d'approches marketing cohésives et basées sur les données pour la croissance en ligne.",
+          challenges: [
+            "Absence de stratégie omnicanale avec des campagnes dispersées",
+            "Faibles taux de conversion malgré les investissements publicitaires",
+            "Outils analytiques limités",
+            "Faible visibilité en ligne",
+          ],
+          solution: "IMBT Consulting a déployé une stratégie marketing digital omnicanale complète incluant des audits de campagnes, l'optimisation SEO, la gestion de publicité payante, la création de contenu personnalisé, la mise en œuvre d'analytics, et l'automatisation marketing.",
+          results: [
+            { metric: "50%", description: "Augmentation des leads qualifiés" },
+            { metric: "35%", description: "Amélioration des taux de conversion" },
+            { metric: "ROI", description: "Augmentation du ROI publicitaire grâce à une gestion affinée des campagnes" },
+            { metric: "Visibilité", description: "Renforcement de la visibilité en ligne avec un meilleur positionnement SEO" },
+          ],
+          testimonial: "La stratégie digitale leur a permis de 'booster la présence en ligne et générer des résultats tangibles. Le suivi des performances en temps réel nous garde compétitifs.'",
+        },
+      ],
     },
     contactPage: {
       title: 'Contact',
@@ -1326,6 +1519,19 @@ export const translations: Record<Language, Translations> = {
       company: 'Company',
       rememberMe: 'Remember me',
       forgotPassword: 'Forgot password?',
+      forgotPasswordTitle: 'Forgot password',
+      forgotPasswordSubtitle: 'Enter your email to receive a reset link',
+      sendResetLink: 'Send reset link',
+      resetLinkSent: 'If an account exists for this address, a reset link has just been sent.',
+      checkSpamFolder: 'Remember to check your spam folder.',
+      backToSignIn: 'Back to sign in',
+      resetPasswordTitle: 'New password',
+      resetPasswordSubtitle: 'Choose a new password for your account',
+      resetPasswordButton: 'Reset password',
+      newPassword: 'New password',
+      passwordResetSuccess: 'Your password has been reset successfully.',
+      invalidResetLink: 'This reset link is invalid or has expired.',
+      requestNewLink: 'Request a new link',
       noAccount: 'No account yet?',
       createAccount: 'Create account',
       alreadyHaveAccount: 'Already have an account?',
@@ -1563,11 +1769,130 @@ export const translations: Record<Language, Translations> = {
     },
     blog: {
       title: 'Blog',
-      subtitle: 'News and advice on digital transformation',
+      subtitle: 'Our Blog',
+      description: 'Discover our articles, tips and analyses on digital transformation, CRM, ERP and digital marketing.',
+      searchPlaceholder: 'Search for an article...',
+      allTags: 'All',
       readArticle: 'Read article',
       shareOn: 'Share on',
+      shareOnFacebook: 'Share on Facebook',
+      shareOnLinkedIn: 'Share on LinkedIn',
       relatedArticles: 'Related articles',
       tags: 'Tags',
+      loading: 'Loading articles...',
+      noArticles: 'No articles published yet.',
+      noArticlesFound: 'No articles found with these criteria.',
+      backToBlog: 'Back to blog',
+      views: 'views',
+      articleNotFound: 'Article not found',
+      articleNotFoundDesc: 'Sorry, this article doesn\'t exist or has been deleted.',
+      shareTitle: 'Share this article',
+      shareDesc: 'Click to share this article with your network',
+      didYouLike: 'Did you like this article?',
+      shareWithNetwork: 'Share it with your network!',
+      linkCopied: 'Link copied to clipboard!',
+      loadingArticle: 'Loading article...',
+    },
+    caseStudiesPage: {
+      hero: {
+        badge: 'Our Success Stories',
+        title: 'Case',
+        subtitle: 'Studies',
+        description: 'Discover how IMBT Consulting has transformed businesses through innovative digital solutions',
+        back: 'Back',
+      },
+      sections: {
+        context: 'Context',
+        challenges: 'Challenges',
+        solution: 'Solution',
+        results: 'Results',
+        studyNumber: 'Case Study #',
+        ctaTitle: 'Ready to transform your business?',
+        ctaDescription: 'Contact us to find out how we can help you achieve your goals',
+        ctaButton: 'Request a consultation',
+      },
+      items: [
+        {
+          id: 1,
+          title: "GRT Security - ERP Implementation",
+          subtitle: "Digital transformation of a private security company",
+          context: "A fast-growing private security company needing to improve its operational efficiency.",
+          challenges: [
+            "Multiple and disconnected management systems",
+            "Difficulties in centralizing information",
+            "Lack of real-time visibility on performance",
+            "Manual processes prone to errors",
+          ],
+          solution: "IMBT Consulting deployed an integrated ERP system including HR management, intervention planning, billing/accounting modules, and real-time reporting dashboards.",
+          results: [
+            { metric: "30%", description: "Reduction in administrative errors" },
+            { metric: "Efficiency", description: "Improved planning and personnel administration time" },
+            { metric: "Satisfaction", description: "Improved customer satisfaction through better management" },
+            { metric: "KPI", description: "Accurate tracking with real-time reports" },
+          ],
+          testimonial: "The implementation 'transformed the way we manage our business. We have gained efficiency and responsiveness, with better visibility on performance' allowing us to focus on our core security services.",
+        },
+        {
+          id: 2,
+          title: "Oxygène Print - Internal Collaboration Platform",
+          subtitle: "Optimization of inter-departmental communication",
+          context: "A printing and visual communication company requiring improved inter-departmental communication with the expansion of the team.",
+          challenges: [
+            "Information silos between departments",
+            "Scattered project management tools",
+            "Difficulty tracking progress in real-time",
+            "Poor coordination between creative, production and logistics teams",
+          ],
+          solution: "IMBT Consulting developed a custom collaboration platform with centralized project management, real-time communication spaces, file sharing, and integrated planning.",
+          results: [
+            { metric: "25%", description: "Increase in productivity through better team coordination" },
+            { metric: "40%", description: "Reduction in project management time" },
+            { metric: "Collaboration", description: "Improved inter-departmental collaboration" },
+            { metric: "Real-time", description: "Real-time task tracking allowing proactive management" },
+          ],
+          testimonial: "The platform 'revolutionized the way we work. We have gained fluidity and efficiency, with improved collaboration reflected in the quality of service.'",
+        },
+        {
+          id: 3,
+          title: "Digitalisation.Services - CRM Implementation",
+          subtitle: "Optimization of customer relationship management",
+          context: "A digital transformation consulting firm needing to improve internal customer relationship management despite rapid growth.",
+          challenges: [
+            "Disorganized tracking of customer interactions across scattered channels",
+            "Difficulty prioritizing business opportunities",
+            "Lack of visibility on the sales pipeline",
+            "Unstructured project management processes",
+          ],
+          solution: "IMBT Consulting implemented a custom CRM with centralized tracking of customer interactions, business opportunity management, internal collaboration tools, task automation, and performance reporting.",
+          results: [
+            { metric: "40%", description: "Improvement in sales productivity" },
+            { metric: "35%", description: "Reduction in customer management time" },
+            { metric: "Satisfaction", description: "Improved customer satisfaction through precise tracking" },
+            { metric: "Pipeline", description: "Increased visibility of the sales pipeline supporting strategic decisions" },
+          ],
+          testimonial: "The CRM 'transformed the way we manage our customers and projects. We have gained efficiency and can offer a better customer experience, essential for growth.'",
+        },
+        {
+          id: 4,
+          title: "Cyris360 - Digital Marketing Optimization",
+          subtitle: "Omnichannel strategy for online growth",
+          context: "An expanding technology solutions company lacking cohesive and data-driven marketing approaches for online growth.",
+          challenges: [
+            "Absence of omnichannel strategy with scattered campaigns",
+            "Low conversion rates despite advertising investment",
+            "Limited analytical tools",
+            "Low online visibility",
+          ],
+          solution: "IMBT Consulting deployed a comprehensive omnichannel digital marketing strategy including campaign audits, SEO optimization, paid advertising management, custom content creation, analytics implementation, and marketing automation.",
+          results: [
+            { metric: "50%", description: "Increase in qualified leads" },
+            { metric: "35%", description: "Improvement in conversion rates" },
+            { metric: "ROI", description: "Increase in advertising ROI through refined campaign management" },
+            { metric: "Visibility", description: "Strengthening online visibility with better SEO positioning" },
+          ],
+          testimonial: "The digital strategy allowed them to 'boost online presence and generate tangible results. Real-time performance tracking keeps us competitive.'",
+        },
+      ],
     },
     contactPage: {
       title: 'Contact',
@@ -1906,6 +2231,19 @@ export const translations: Record<Language, Translations> = {
       company: 'الشركة',
       rememberMe: 'تذكرني',
       forgotPassword: 'نسيت كلمة المرور؟',
+      forgotPasswordTitle: 'نسيت كلمة المرور',
+      forgotPasswordSubtitle: 'أدخل بريدك الإلكتروني لتلقي رابط إعادة التعيين',
+      sendResetLink: 'إرسال الرابط',
+      resetLinkSent: 'إذا كان هناك حساب مرتبط بهذا العنوان، فقد تم إرسال رابط إعادة التعيين.',
+      checkSpamFolder: 'يرجى التحقق من مجلد الرسائل غير المرغوب فيها.',
+      backToSignIn: 'العودة إلى تسجيل الدخول',
+      resetPasswordTitle: 'كلمة مرور جديدة',
+      resetPasswordSubtitle: 'اختر كلمة مرور جديدة لحسابك',
+      resetPasswordButton: 'إعادة تعيين كلمة المرور',
+      newPassword: 'كلمة المرور الجديدة',
+      passwordResetSuccess: 'تمت إعادة تعيين كلمة المرور بنجاح.',
+      invalidResetLink: 'رابط إعادة التعيين غير صالح أو منتهي الصلاحية.',
+      requestNewLink: 'طلب رابط جديد',
       noAccount: 'ليس لديك حساب؟',
       createAccount: 'إنشاء حساب',
       alreadyHaveAccount: 'لديك حساب بالفعل؟',
@@ -2017,6 +2355,133 @@ export const translations: Record<Language, Translations> = {
       required: 'مطلوب',
       days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
       months: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+    },
+    blog: {
+      title: 'المدونة',
+      subtitle: 'مدونتنا',
+      description: 'اكتشف مقالاتنا ونصائحنا وتحليلاتنا حول التحول الرقمي وإدارة علاقات العملاء وتخطيط موارد المؤسسات والتسويق الرقمي.',
+      searchPlaceholder: 'ابحث عن مقال...',
+      allTags: 'الكل',
+      readArticle: 'اقرأ المقال',
+      shareOn: 'شارك على',
+      shareOnFacebook: 'مشاركة على فيسبوك',
+      shareOnLinkedIn: 'مشاركة على لينكد إن',
+      relatedArticles: 'مقالات ذات صلة',
+      tags: 'الوسوم',
+      loading: 'جاري تحميل المقالات...',
+      noArticles: 'لا توجد مقالات منشورة بعد.',
+      noArticlesFound: 'لم يتم العثور على مقالات بهذه المعايير.',
+      backToBlog: 'العودة للمدونة',
+      views: 'مشاهدات',
+      articleNotFound: 'المقال غير موجود',
+      articleNotFoundDesc: 'عذرًا، هذا المقال غير موجود أو تم حذفه.',
+      shareTitle: 'شارك هذا المقال',
+      shareDesc: 'انقر لمشاركة هذا المقال مع شبكتك',
+      didYouLike: 'هل أعجبك هذا المقال؟',
+      shareWithNetwork: 'شاركه مع شبكتك!',
+      linkCopied: 'تم نسخ الرابط إلى الحافظة!',
+      loadingArticle: 'جاري تحميل المقال...',
+    },
+    caseStudiesPage: {
+      hero: {
+        badge: 'قصص نجاحنا',
+        title: 'دراسات',
+        subtitle: 'الحالة',
+        description: 'اكتشف كيف قامت IMBT Consulting بتحويل الشركات من خلال حلول رقمية مبتكرة',
+        back: 'رجوع',
+      },
+      sections: {
+        context: 'السياق',
+        challenges: 'التحديات',
+        solution: 'الحل',
+        results: 'النتائج',
+        studyNumber: 'دراسة حالة #',
+        ctaTitle: 'هل أنت مستعد لتحويل عملك؟',
+        ctaDescription: 'اتصل بنا لمعرفة كيف يمكننا مساعدتك في تحقيق أهدافك',
+        ctaButton: 'اطلب استشارة',
+      },
+      items: [
+        {
+          id: 1,
+          title: "GRT Security - تنفيذ نظام ERP",
+          subtitle: "التحول الرقمي لشركة أمن خاص",
+          context: "شركة أمن خاص سريعة النمو تحتاج إلى تحسين كفاءتها التشغيلية.",
+          challenges: [
+            "أنظمة إدارة متعددة ومنفصلة",
+            "صعوبات في مركزية المعلومات",
+            "نقص الرؤية في الوقت الفعلي للأداء",
+            "عمليات يدوية عرضة للأخطاء",
+          ],
+          solution: "قامت IMBT Consulting بنشر نظام ERP متكامل يتضمن إدارة الموارد البشرية، وتخطيط التدخلات، ووحدات الفوترة/المحاسبة، ولوحات معلومات التقارير في الوقت الفعلي.",
+          results: [
+            { metric: "30%", description: "تقليل الأخطاء الإدارية" },
+            { metric: "كفاءة", description: "تحسين وقت التخطيط وإدارة الأفراد" },
+            { metric: "رضا", description: "تحسين رضا العملاء من خلال إدارة أفضل" },
+            { metric: "KPI", description: "تتبع دقيق مع تقارير في الوقت الفعلي" },
+          ],
+          testimonial: "لقد أدى التنفيذ إلى 'تحويل الطريقة التي ندير بها أعمالنا. لقد اكتسبنا الكفاءة والاستجابة، مع رؤية أفضل للأداء' مما سمح لنا بالتركيز على خدماتنا الأمنية الأساسية.",
+        },
+        {
+          id: 2,
+          title: "Oxygène Print - منصة التعاون الداخلي",
+          subtitle: "تحسين التواصل بين الإدارات",
+          context: "شركة طباعة واتصال مرئي تتطلب تحسين التواصل بين الإدارات مع توسع الفريق.",
+          challenges: [
+            "صوامع المعلومات بين الإدارات",
+            "أدوات إدارة مشاريع مشتتة",
+            "صعوبة تتبع التقدم في الوقت الفعلي",
+            "ضعف التنسيق بين الفرق الإبداعية والإنتاج والخدمات اللوجستية",
+          ],
+          solution: "طورت IMBT Consulting منصة تعاون مخصصة مع إدارة مركزية للمشاريع، ومساحات تواصل في الوقت الفعلي، ومشاركة الملفات، وتخطيط متكامل.",
+          results: [
+            { metric: "25%", description: "زيادة الإنتاجية من خلال تنسيق أفضل للفريق" },
+            { metric: "40%", description: "تقليل وقت إدارة المشاريع" },
+            { metric: "تعاون", description: "تحسين التعاون بين الإدارات" },
+            { metric: "وقت فعلي", description: "تتبع المهام في الوقت الفعلي مما يسمح بإدارة استباقية" },
+          ],
+          testimonial: "لقد أحدثت المنصة 'ثورة في طريقة عملنا. لقد اكتسبنا سلاسة وكفاءة، مع انعكاس التعاون المحسن في جودة الخدمة'.",
+        },
+        {
+          id: 3,
+          title: "Digitalisation.Services - تنفيذ نظام CRM",
+          subtitle: "تحسين إدارة علاقات العملاء",
+          context: "شركة استشارية في التحول الرقمي تحتاج إلى تحسين إدارة علاقات العملاء الداخلية رغم النمو السريع.",
+          challenges: [
+            "تتبع غير منظم لتفاعلات العملاء عبر قنوات مشتتة",
+            "صعوبة في تحديد أولويات الفرص التجارية",
+            "نقص الرؤية في خط أنابيب المبيعات",
+            "عمليات إدارة مشاريع غير منظمة",
+          ],
+          solution: "نفذت IMBT Consulting نظام CRM مخصصاً مع تتبع مركزي لتفاعلات العملاء، وإدارة الفرص التجارية، وأدوات التعاون الداخلي، وأتمتة المهام، وتقارير الأداء.",
+          results: [
+            { metric: "40%", description: "تحسين إنتاجية المبيعات" },
+            { metric: "35%", description: "تقليل وقت إدارة العملاء" },
+            { metric: "رضا", description: "تحسين رضا العملاء من خلال تتبع دقيق" },
+            { metric: "Pipeline", description: "زيادة الرؤية لخط أنابيب المبيعات لدعم القرارات الاستراتيجية" },
+          ],
+          testimonial: "لقد حول نظام CRM 'الطريقة التي ندير بها عملاءنا ومشاريعنا. لقد اكتسبنا الكفاءة ويمكننا تقديم تجربة أفضل للعملاء، وهو أمر أساسي للنمو'.",
+        },
+        {
+          id: 4,
+          title: "Cyris360 - تحسين التسويق الرقمي",
+          subtitle: "استراتيجية متعددة القنوات للنمو عبر الإنترنت",
+          context: "شركة حلول تكنولوجية متوسعة تفتقر إلى مناهج تسويقية متماسكة وقائمة على البيانات للنمو عبر الإنترنت.",
+          challenges: [
+            "غياب استراتيجية متعددة القنوات مع حملات مشتتة",
+            "معدلات تحويل منخفضة رغم الاستثمار الإعلاني",
+            "أدوات تحليلية محدودة",
+            "رؤية منخفضة عبر الإنترنت",
+          ],
+          solution: "نشرت IMBT Consulting استراتيجية تسويق رقمي شاملة متعددة القنوات تتضمن تدقيق الحملات، وتحسين محركات البحث (SEO)، وإدارة الإعلانات المدفوعة، وإنشاء محتوى مخصص، وتنفيذ التحليلات، وأتمتة التسويق.",
+          results: [
+            { metric: "50%", description: "زيادة في العملاء المحتملين المؤهلين" },
+            { metric: "35%", description: "تحسين معدلات التحويل" },
+            { metric: "ROI", description: "زيادة في العائد على الاستثمار الإعلاني من خلال إدارة دقيقة للحملات" },
+            { metric: "رؤية", description: "تعزيز الرؤية عبر الإنترنت مع وضع أفضل في محركات البحث" },
+          ],
+          testimonial: "سمحت لهم الاستراتيجية الرقمية بـ 'تعزيز التواجد عبر الإنترنت وتوليد نتائج ملموسة. تتبع الأداء في الوقت الفعلي يبقينا في دائرة المنافسة'.",
+        },
+      ],
     },
     admin: {
       dashboard: 'لوحة القيادة',
@@ -2140,14 +2605,6 @@ export const translations: Record<Language, Translations> = {
       publicBadge: 'عام',
       enabled: 'مفعل',
       disabled: 'معطل',
-    },
-    blog: {
-      title: 'المدونة',
-      subtitle: 'أخبار ونصائح حول التحول الرقمي',
-      readArticle: 'اقرأ المقال',
-      shareOn: 'شارك على',
-      relatedArticles: 'مقالات ذات صلة',
-      tags: 'العلامات',
     },
     contactPage: {
       title: 'اتصل بنا',

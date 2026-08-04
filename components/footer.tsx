@@ -1,13 +1,25 @@
 "use client"
 
 import Link from "next/link"
-import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook, Instagram } from "lucide-react"
+import { Mail, Phone, MapPin, Linkedin, Facebook, Instagram, Youtube } from "lucide-react"
 import { useLanguage } from "@/lib/i18n/language-context"
+import Logo from "@/components/logo"
+
+/** lucide-react ships no TikTok glyph, so we inline the official mark. */
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.6 5.82a4.28 4.28 0 0 1-1.05-2.82h-3.19v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1-2.59-2.59 2.59 2.59 0 0 1 3.2-2.51v-3.2a5.79 5.79 0 0 0-.61-.04A5.79 5.79 0 0 0 4 15.31 5.79 5.79 0 0 0 9.79 21.1a5.79 5.79 0 0 0 5.79-5.79V9.01a7.45 7.45 0 0 0 4.35 1.39V7.21a4.28 4.28 0 0 1-3.33-1.39z" />
+    </svg>
+  )
+}
 
 const socialLinks = [
   { icon: Linkedin, href: "https://www.linkedin.com/company/imbt-consulting", label: "LinkedIn" },
   { icon: Instagram, href: "https://www.instagram.com/imbt.consulting", label: "Instagram" },
   { icon: Facebook, href: "https://www.facebook.com/IMBT.Consulting", label: "Facebook" },
+  { icon: TikTokIcon, href: "https://www.tiktok.com/@imbt.consulting", label: "TikTok" },
+  { icon: Youtube, href: "https://www.youtube.com/@IMBT-Consulting", label: "YouTube" },
 ]
 
 export default function Footer() {
@@ -39,16 +51,18 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <img src="/logo.png" alt="IMBT Consulting" className="h-30 w-auto" />
+              <Logo className="h-30 w-auto" />
             </Link>
             <p className="text-foreground/60 leading-relaxed mb-6 max-w-sm">
               {t.footer.description}
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:text-primary-foreground transition-colors"
                   style={{
                     transition: 'background-color 0.3s, color 0.3s'

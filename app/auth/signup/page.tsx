@@ -12,9 +12,11 @@ import Navigation from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { GoogleSignInButton } from "@/components/google-signin-button-simple"
+import { GoogleSignInButton, isGoogleSignInEnabled } from "@/components/google-signin-button-simple"
 import { useLanguage } from "@/lib/i18n/language-context"
 import { PhoneInput } from "@/components/ui/phone-input"
+import { notifyAuthChange } from "@/hooks/use-auth"
+import Logo from "@/components/logo"
 
 const ParticleField = dynamic(() => import("@/components/three/particle-field"), { ssr: false })
 
@@ -86,6 +88,8 @@ export default function SignUpPage() {
         }),
       )
 
+      notifyAuthChange()
+
       // Redirect to dashboard
       router.push("/dashboard")
     } catch (error) {
@@ -115,7 +119,7 @@ export default function SignUpPage() {
           >
             <div className="text-center mb-8">
               <Link href="/" className="inline-block mb-6">
-                <img src="/logo.png" alt="IMBT Consulting" className="h-12 w-auto mx-auto" />
+                <Logo className="h-12 w-auto mx-auto" />
               </Link>
               <h1 className="text-3xl font-bold mb-2">{t.auth.signUp}</h1>
               <p className="text-foreground/60">{t.auth.joinIMBT}</p>
@@ -270,15 +274,17 @@ export default function SignUpPage() {
                 </Button>
               </form>
 
-              <div className="my-6 flex items-center gap-4">
-                <div className="flex-1 border-t border-border/50"></div>
-                <span className="text-sm text-foreground/40">{t.auth.or}</span>
-                <div className="flex-1 border-t border-border/50"></div>
-              </div>
+              {isGoogleSignInEnabled && (
+                <>
+                  <div className="my-6 flex items-center gap-4">
+                    <div className="flex-1 border-t border-border/50"></div>
+                    <span className="text-sm text-foreground/40">{t.auth.or}</span>
+                    <div className="flex-1 border-t border-border/50"></div>
+                  </div>
 
-              <GoogleSignInButton
-                onError={(error) => setError(error)}
-              />
+                  <GoogleSignInButton onError={(error) => setError(error)} />
+                </>
+              )}
 
               <div className="mt-6 text-center">
                 <p className="text-foreground/60 text-sm">

@@ -75,17 +75,30 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const {
       title,
+      title_en,
+      title_ar,
       slug,
       excerpt,
+      excerpt_en,
+      excerpt_ar,
       content,
+      content_en,
+      content_ar,
       featuredImage,
       status = 'draft',
       tags = [],
       metaTitle,
+      metaTitle_en,
+      metaTitle_ar,
       metaDescription,
+      metaDescription_en,
+      metaDescription_ar,
+      subtitle,
+      subtitle_en,
+      subtitle_ar,
     } = body
 
-    // Validate required fields
+    // Validate required fields (at least French version)
     if (!title || !slug || !content) {
       return NextResponse.json(
         { error: 'Title, slug, and content are required' },
@@ -109,21 +122,43 @@ export async function POST(request: NextRequest) {
     // Insert new blog post
     const result = await query(
       `INSERT INTO blog_posts
-        (title, slug, excerpt, content, featured_image, author_id, status, published_at, tags, meta_title, meta_description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        (
+          title, title_en, title_ar, 
+          slug, 
+          excerpt, excerpt_en, excerpt_ar, 
+          content, content_en, content_ar, 
+          featured_image, author_id, status, published_at, tags, 
+          meta_title, meta_title_en, meta_title_ar, 
+          meta_description, meta_description_en, meta_description_ar,
+          subtitle, subtitle_en, subtitle_ar
+        )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
       RETURNING *`,
       [
         title,
+        title_en || null,
+        title_ar || null,
         slug,
-        excerpt,
+        excerpt || null,
+        excerpt_en || null,
+        excerpt_ar || null,
         content,
+        content_en || null,
+        content_ar || null,
         featuredImage || null,
         decoded.userId,
         status,
         status === 'published' ? new Date() : null,
         tags,
         metaTitle || title,
-        metaDescription || excerpt,
+        metaTitle_en || title_en || null,
+        metaTitle_ar || title_ar || null,
+        metaDescription || excerpt || null,
+        metaDescription_en || excerpt_en || null,
+        metaDescription_ar || excerpt_ar || null,
+        subtitle || null,
+        subtitle_en || null,
+        subtitle_ar || null,
       ]
     )
 

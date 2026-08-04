@@ -4,11 +4,13 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, ChevronRight, ChevronDown } from "lucide-react"
+import { Menu, X, ChevronRight, ChevronDown, LayoutDashboard, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/lib/i18n/language-context"
 import LanguageSelector from "@/components/language-selector"
 import { ModeToggle } from "@/components/mode-toggle"
+import Logo from "@/components/logo"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,6 +18,15 @@ export default function Navigation() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const pathname = usePathname()
   const { t, dir } = useLanguage()
+  const { user, loading: authLoading, logout } = useAuth()
+
+  // Admins/managers land on the admin panel, everyone else on the client dashboard.
+  const dashboardHref = user?.role === "admin" || user?.role === "manager" ? "/admin" : "/dashboard"
+
+  const handleLogout = () => {
+    logout()
+    setIsOpen(false)
+  }
 
   const navItems = [
     { href: "/", label: t.common.home },
@@ -56,7 +67,7 @@ export default function Navigation() {
               transition={{ type: "spring", stiffness: 400 }}
               className="flex items-center"
             >
-              <img src="/logo.png" alt="IMBT Consulting" className="h-16 sm:h-20 w-auto -my-4 sm:-my-6" />
+              <Logo className="h-16 sm:h-20 w-auto -my-4 sm:-my-6" />
             </motion.div>
           </Link>
 
@@ -120,11 +131,34 @@ export default function Navigation() {
           <div className="hidden lg:flex items-center gap-4">
             <ModeToggle />
             <LanguageSelector />
-            <Link href="/auth/signin">
-              <Button variant="ghost" size="sm" className="hover:bg-[#a80202]/10">
-                {t.common.login}
-              </Button>
-            </Link>
+            {authLoading ? (
+              <div className="h-8 w-20 rounded-md bg-foreground/5 animate-pulse" />
+            ) : user ? (
+              <>
+                <Link href={dashboardHref}>
+                  <Button variant="ghost" size="sm" className="hover:bg-[#a80202]/10 max-w-[12rem]">
+                    <LayoutDashboard className={`h-4 w-4 ${dir === "rtl" ? "ml-2" : "mr-2"}`} />
+                    <span className="truncate">{user.name}</span>
+                  </Button>
+                </Link>
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost"
+                  size="sm"
+                  className="hover:bg-[#a80202]/10"
+                  aria-label={t.common.logout}
+                  title={t.common.logout}
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <Link href="/auth/signin">
+                <Button variant="ghost" size="sm" className="hover:bg-[#a80202]/10">
+                  {t.common.login}
+                </Button>
+              </Link>
+            )}
             <Link href="/reservation">
               <Button size="sm" className="bg-[#a80202] hover:bg-[#8a0101] text-white border-0">
                 {t.common.reserve}
@@ -215,11 +249,30 @@ export default function Navigation() {
                   <ModeToggle />
                   <LanguageSelector />
                 </div>
-                <Link href="/auth/signin" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full bg-transparent hover:bg-[#a80202]/10">
-                    {t.common.login}
-                  </Button>
-                </Link>
+                {!authLoading && user ? (
+                  <>
+                    <Link href={dashboardHref} onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full bg-transparent hover:bg-[#a80202]/10">
+                        <LayoutDashboard className={`h-4 w-4 ${dir === "rtl" ? "ml-2" : "mr-2"}`} />
+                        <span className="truncate">{user.name}</span>
+                      </Button>
+                    </Link>
+                    <Button
+                      onClick={handleLogout}
+                      variant="outline"
+                      className="w-full bg-transparent hover:bg-[#a80202]/10"
+                    >
+                      <LogOut className={`h-4 w-4 ${dir === "rtl" ? "ml-2" : "mr-2"}`} />
+                      {t.common.logout}
+                    </Button>
+                  </>
+                ) : (
+                  <Link href="/auth/signin" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full bg-transparent hover:bg-[#a80202]/10">
+                      {t.common.login}
+                    </Button>
+                  </Link>
+                )}
                 <Link href="/reservation" onClick={() => setIsOpen(false)}>
                   <Button className="w-full bg-[#a80202] hover:bg-[#8a0101] text-white border-0">{t.common.reserve}</Button>
                 </Link>

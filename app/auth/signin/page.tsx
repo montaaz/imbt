@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/lib/i18n/language-context"
+import { notifyAuthChange } from "@/hooks/use-auth"
+import Logo from "@/components/logo"
 
 const ParticleField = dynamic(() => import("@/components/three/particle-field"), { ssr: false })
 
@@ -64,6 +66,9 @@ export default function SignInPage() {
         })
       )
 
+      // Let the navigation (and any other listener) pick up the new session
+      notifyAuthChange()
+
       // Redirect based on user role
       if (data.user.role === "admin" || data.user.role === "manager") {
         // Admins and managers go to admin dashboard
@@ -72,6 +77,7 @@ export default function SignInPage() {
         // Regular users go to their client dashboard
         // Also store client_token for dashboard compatibility
         localStorage.setItem("client_token", data.token)
+        notifyAuthChange()
         router.push("/dashboard")
       }
     } catch (error) {
@@ -101,7 +107,7 @@ export default function SignInPage() {
           >
             <div className="text-center mb-8">
               <Link href="/" className="inline-block mb-6">
-                <img src="/logo.png" alt="IMBT Consulting" className="h-12 w-auto mx-auto" />
+                <Logo className="h-12 w-auto mx-auto" />
               </Link>
               <h1 className="text-3xl font-bold mb-2">{t.auth.signIn}</h1>
               <p className="text-foreground/60">{t.auth.allRolesSpace}</p>
@@ -186,25 +192,6 @@ export default function SignInPage() {
                     {t.auth.createAccount}
                   </Link>
                 </p>
-              </div>
-
-              {/* Demo credentials */}
-              <div className="mt-6 p-4 rounded-lg bg-accent/10 border border-accent/20">
-                <p className="text-sm text-foreground/60 mb-3 font-medium">{t.auth.demoAccountsAvailable}</p>
-                <div className="space-y-3 text-xs">
-                  <div className="pb-2 border-b border-accent/20">
-                    <p className="text-foreground/70 font-medium mb-1">👨‍💼 {t.auth.administrator}:</p>
-                    <p className="text-foreground/50 font-mono">admin@imbt-consulting.com / admin123</p>
-                  </div>
-                  <div className="pb-2 border-b border-accent/20">
-                    <p className="text-foreground/70 font-medium mb-1">👔 {t.auth.manager}:</p>
-                    <p className="text-foreground/50 font-mono">manager@test.com / password123</p>
-                  </div>
-                  <div>
-                    <p className="text-foreground/70 font-medium mb-1">👤 {t.auth.client}:</p>
-                    <p className="text-foreground/50 font-mono">client@test.com / password123</p>
-                  </div>
-                </div>
               </div>
             </div>
           </motion.div>
